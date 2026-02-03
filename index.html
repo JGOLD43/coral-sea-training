@@ -3,470 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Coral Sea Training - Nationally accredited First Aid courses in Townsville and Wide Bay. CPR, First Aid, Childcare First Aid, and Advanced Resuscitation. RTO #32221">
-    <meta name="keywords" content="first aid course, CPR training, Townsville, Wide Bay, HLTAID011, HLTAID009, childcare first aid, RTO">
+    <meta name="description" content="Coral Sea Training - Nationally accredited First Aid courses in Townsville and Wide Bay. CPR, First Aid, Childcare First Aid & Advanced Resuscitation. RTO #32221.">
     <title>Coral Sea Training | First Aid Courses Townsville & Wide Bay | RTO #32221</title>
 
-    <!-- Preconnect for performance -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
-
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23c41e3a' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='50' font-weight='bold'%3E+%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-    <!-- Sticky Header -->
+    <!-- Header -->
     <header class="header" id="header">
-        <div class="container header-inner">
-            <a href="/" class="logo">
-                <span class="logo-icon">+</span>
-                <div class="logo-text">
-                    <span class="logo-name">Coral Sea Training</span>
-                    <span class="logo-rto">RTO #32221</span>
-                </div>
-            </a>
-            <nav class="nav" id="nav">
-                <a href="#courses" class="nav-link">Courses</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#testimonials" class="nav-link">Reviews</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </nav>
-            <div class="header-cta">
-                <a href="tel:0419675022" class="phone-link">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                    </svg>
-                    <span>0419 675 022</span>
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo">
+                    <div class="logo-mark">+</div>
+                    <div class="logo-text">
+                        <span class="logo-name">Coral Sea Training</span>
+                        <span class="logo-tagline">RTO #32221</span>
+                    </div>
                 </a>
-                <a href="#courses" class="btn btn-primary">Book Now</a>
+
+                <nav class="nav">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="courses.html" class="nav-link">Courses</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </nav>
+
+                <div class="header-actions">
+                    <a href="tel:0419675022" class="header-phone">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        0419 675 022
+                    </a>
+                    <a href="courses.html" class="btn btn-primary">Book Course</a>
+                    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="courses.html" class="nav-link">Courses</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">Nationally Accredited Training</div>
-                <h1 class="hero-title">Learn First Aid Skills That <span class="highlight">Save Lives</span></h1>
-                <p class="hero-subtitle">Quality training that generates peace of mind. Get certified with Queensland's trusted First Aid training provider.</p>
-                <div class="hero-cta">
-                    <a href="#courses" class="btn btn-primary btn-lg">View Courses & Book</a>
-                    <a href="tel:0419675022" class="btn btn-outline btn-lg">Call Us Now</a>
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-eyebrow">
+                        <span class="hero-eyebrow-dot"></span>
+                        Nationally Accredited Training
+                    </div>
+                    <h1 class="hero-title">Learn First Aid Skills That <span>Save Lives</span></h1>
+                    <p class="hero-description">Quality training that generates peace of mind. Get certified with Queensland's most trusted First Aid training provider, serving Townsville and Wide Bay for over 20 years.</p>
+                    <div class="hero-cta">
+                        <a href="courses.html" class="btn btn-primary btn-lg">View All Courses</a>
+                        <a href="contact.html" class="btn btn-outline btn-lg">Get in Touch</a>
+                    </div>
+                    <div class="hero-trust">
+                        <div class="trust-item">
+                            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            <span class="trust-text">RTO #32221</span>
+                        </div>
+                        <div class="trust-item">
+                            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                            <span class="trust-text">ARC Member</span>
+                        </div>
+                        <div class="trust-item">
+                            <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <span class="trust-text">20+ Years</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="hero-trust">
-                    <div class="trust-item">
-                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm-1 14l-4-4 1.41-1.41L11 13.17l6.59-6.59L19 8l-8 8z"/></svg>
-                        <span>RTO #32221</span>
-                    </div>
-                    <div class="trust-item">
-                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                        <span>Australian Resuscitation Council</span>
-                    </div>
-                    <div class="trust-item">
-                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                        <span>20+ Years Experience</span>
+                <div class="hero-media">
+                    <div class="hero-image-wrapper">
+                        <img src="https://images.pexels.com/photos/6303559/pexels-photo-6303559.jpeg?auto=compress&cs=tinysrgb&w=800" alt="First Aid Training - CPR demonstration in a professional training environment" class="hero-image">
+                        <div class="hero-badge">
+                            <div class="hero-badge-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </div>
+                            <div class="hero-badge-text">
+                                <span class="hero-badge-label">Courses from</span>
+                                <span class="hero-badge-value">$60</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1587556930799-8dca6fda9c7f?w=600&h=500&fit=crop&crop=center" alt="First Aid Training - CPR demonstration" class="hero-photo">
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
+    <!-- Stats Bar -->
+    <section class="stats-bar">
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <span class="stat-number" data-count="20">20+</span>
-                    <span class="stat-label">Years Experience</span>
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Years Experience</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">2</span>
-                    <span class="stat-label">Locations</span>
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Training Locations</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">5</span>
-                    <span class="stat-label">Professional Memberships</span>
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Industry Memberships</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Nationally Accredited</span>
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Nationally Accredited</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Courses Section -->
-    <section class="courses" id="courses">
+    <section class="section" id="courses">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">Our Courses</span>
+                <span class="section-eyebrow">Our Courses</span>
                 <h2 class="section-title">Nationally Accredited First Aid Training</h2>
-                <p class="section-subtitle">Choose the course that fits your needs. All courses include certification valid for 3 years (CPR requires annual renewal).</p>
+                <p class="section-description">Choose the course that fits your needs. All courses include certification and follow Australian Resuscitation Council guidelines.</p>
             </div>
+
             <div class="courses-grid">
                 <!-- CPR Course -->
                 <div class="course-card">
-                    <div class="course-badge">Most Popular</div>
+                    <span class="course-badge">Popular</span>
                     <div class="course-header">
                         <h3 class="course-title">CPR Course</h3>
                         <p class="course-code">HLTAID009</p>
                     </div>
-                    <div class="course-price">
-                        <span class="price-from">From</span>
-                        <span class="price-amount">$60</span>
+                    <div class="course-price">$60 <span>from</span></div>
+                    <div class="course-features">
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Cardiopulmonary Resuscitation
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            AED Defibrillator Training
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            12 Month Certification
+                        </div>
                     </div>
-                    <ul class="course-features">
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Cardiopulmonary Resuscitation (CPR)
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Defibrillator (AED) Training
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Australian Resuscitation Council Guidelines
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Certificate valid for 12 months
-                        </li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary btn-block">Book CPR Course</a>
+                    <a href="courses.html" class="btn btn-primary" style="width: 100%;">Book Now</a>
                 </div>
 
                 <!-- First Aid Course -->
                 <div class="course-card featured">
-                    <div class="course-badge">Best Value</div>
+                    <span class="course-badge">Best Value</span>
                     <div class="course-header">
                         <h3 class="course-title">Provide First Aid</h3>
                         <p class="course-code">HLTAID011</p>
                     </div>
-                    <div class="course-price">
-                        <span class="price-from">From</span>
-                        <span class="price-amount">$120</span>
-                    </div>
-                    <ul class="course-features">
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    <div class="course-price">$120 <span>from</span></div>
+                    <div class="course-features">
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             Includes CPR (HLTAID009)
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Basic Emergency Life Support (HLTAID010)
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Workplace & Home First Aid Skills
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Certificate valid for 3 years
-                        </li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary btn-block">Book First Aid Course</a>
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Workplace First Aid Skills
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            3 Year Certification
+                        </div>
+                    </div>
+                    <a href="courses.html" class="btn btn-white" style="width: 100%;">Book Now</a>
                 </div>
 
                 <!-- Childcare First Aid -->
                 <div class="course-card">
-                    <div class="course-badge">Childcare</div>
+                    <span class="course-badge">Childcare</span>
                     <div class="course-header">
                         <h3 class="course-title">Childcare First Aid</h3>
                         <p class="course-code">HLTAID012</p>
                     </div>
-                    <div class="course-price">
-                        <span class="price-from">From</span>
-                        <span class="price-amount">$140</span>
-                    </div>
-                    <ul class="course-features">
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Includes CPR & First Aid
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Anaphylaxis Management
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Asthma Emergency Response
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    <div class="course-price">$140 <span>from</span></div>
+                    <div class="course-features">
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            CPR + First Aid Included
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Anaphylaxis & Asthma
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             ACECQA Approved
-                        </li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary btn-block">Book Childcare Course</a>
+                        </div>
+                    </div>
+                    <a href="courses.html" class="btn btn-primary" style="width: 100%;">Book Now</a>
                 </div>
 
                 <!-- Advanced Resuscitation -->
                 <div class="course-card">
-                    <div class="course-badge">Advanced</div>
+                    <span class="course-badge">Advanced</span>
                     <div class="course-header">
-                        <h3 class="course-title">Advanced Resuscitation</h3>
+                        <h3 class="course-title">Advanced Resus</h3>
                         <p class="course-code">HLTAID015</p>
                     </div>
-                    <div class="course-price">
-                        <span class="price-from">From</span>
-                        <span class="price-amount">$140</span>
-                    </div>
-                    <ul class="course-features">
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Oxygen Therapy Administration
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    <div class="course-price">$140 <span>from</span></div>
+                    <div class="course-features">
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Oxygen Therapy
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             Advanced Defibrillation
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Ideal for Divers & Medical Settings
-                        </li>
-                        <li>
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                            Requires current HLTAID011
-                        </li>
-                    </ul>
-                    <a href="#contact" class="btn btn-primary btn-block">Book Advanced Course</a>
+                        </div>
+                        <div class="course-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Ideal for Divers
+                        </div>
+                    </div>
+                    <a href="courses.html" class="btn btn-primary" style="width: 100%;">Book Now</a>
                 </div>
-            </div>
-            <div class="courses-cta">
-                <p>Need training for your team? We offer <strong>on-site workplace training</strong> throughout Townsville and Wide Bay regions.</p>
-                <a href="#contact" class="btn btn-outline">Enquire About Group Training</a>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="about" id="about">
+    <!-- Why Choose Us -->
+    <section class="section section-gray">
         <div class="container">
-            <div class="about-grid">
-                <div class="about-content">
-                    <span class="section-badge">About Us</span>
+            <div class="features-grid">
+                <div class="features-content">
+                    <span class="section-eyebrow">Why Choose Us</span>
                     <h2 class="section-title">Quality Training Generates Peace of Mind</h2>
-                    <p>Coral Sea Training is a locally owned and operated Registered Training Organisation (RTO #32221) providing nationally accredited First Aid courses throughout the Townsville and Wide Bay regions of Queensland.</p>
-                    <p>We believe first aid training should never be intimidating. Our experienced trainers create a supportive learning environment, equipping you with the confidence and practical skills to assist others during emergencies.</p>
-                    <div class="about-features">
-                        <div class="about-feature">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                            <span>Smaller group sizes for better learning</span>
+                    <p class="section-description">We believe first aid training should never be intimidating. Our experienced trainers create a supportive learning environment, equipping you with confidence and practical skills.</p>
+
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Small Group Sizes</h4>
+                                <p>Personalised attention with smaller class sizes for enhanced learning.</p>
+                            </div>
                         </div>
-                        <div class="about-feature">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                            <span>Flexible delivery for all learning styles</span>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Mobile Training Available</h4>
+                                <p>We come to your workplace throughout Townsville and Wide Bay regions.</p>
+                            </div>
                         </div>
-                        <div class="about-feature">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                            <span>Mobile training at your workplace</span>
-                        </div>
-                        <div class="about-feature">
-                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                            <span>Affordable first aid kits available</span>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Experienced Trainers</h4>
+                                <p>20+ years of professional first aid experience and real-world scenarios.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="about-memberships">
-                    <h3>Professional Memberships</h3>
-                    <div class="memberships-list">
-                        <div class="membership-item">Australian Resuscitation Council</div>
-                        <div class="membership-item">Australian Emergency Care Providers (AECP)</div>
-                        <div class="membership-item">Safety Institute of Australia Inc (SIA)</div>
-                        <div class="membership-item">Anaphylaxis Australia</div>
-                        <div class="membership-item">Asthma Foundation of Queensland</div>
-                    </div>
+                <div class="features-media">
+                    <img src="https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=800" alt="First aid trainer demonstrating bandaging technique" class="features-image">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials" id="testimonials">
+    <!-- Testimonials -->
+    <section class="section">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">Testimonials</span>
+                <span class="section-eyebrow">Testimonials</span>
                 <h2 class="section-title">What Our Students Say</h2>
-                <p class="section-subtitle">Join thousands of satisfied students who have gained life-saving skills with Coral Sea Training.</p>
+                <p class="section-description">Join thousands of satisfied students who have gained life-saving skills with Coral Sea Training.</p>
             </div>
+
             <div class="testimonials-grid">
                 <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">"One of the best I've been to. Very thorough and would be the best Trainer I have had, very easy to understand and delivered the course easily."</p>
+                    <div class="testimonial-rating">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">"One of the best courses I've been to. Very thorough and would be the best Trainer I have had, very easy to understand and delivered the course easily."</p>
                     <p class="testimonial-author">Course Participant</p>
+                    <p class="testimonial-role">First Aid Refresher</p>
                 </div>
+
                 <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
+                    <div class="testimonial-rating">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
                     <p class="testimonial-text">"Quick and well presented. You have always been our preferred First Aid provider and I have been back many times over 20 years in Child Care."</p>
-                    <p class="testimonial-author">Childcare Provider</p>
+                    <p class="testimonial-author">Childcare Director</p>
+                    <p class="testimonial-role">Returning Student</p>
                 </div>
+
                 <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">"Professional and stimulating training. Delivered in an easy to understand and follow format. The Presenter's knowledge and ability to use practical applications was outstanding."</p>
-                    <p class="testimonial-author">Course Participant</p>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">"I appreciated the simplicity of your presentation. There were no scary/overwhelming stories. Very informative and considerate of everyone's needs and pace."</p>
-                    <p class="testimonial-author">Course Participant</p>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">"Each time I have completed training at CST I am learning more and feeling more confident. Clear and most concise course I've done for my first aid refresher."</p>
-                    <p class="testimonial-author">Returning Student</p>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">★★★★★</div>
-                    <p class="testimonial-text">"Mark always gives a great presentation, clear and well presented. Course was enjoyable and informative. Thanks so much."</p>
-                    <p class="testimonial-author">Course Participant</p>
+                    <div class="testimonial-rating">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <p class="testimonial-text">"Professional and stimulating training. Delivered in an easy to understand format. The Presenter's knowledge and practical applications was outstanding."</p>
+                    <p class="testimonial-author">Workplace Participant</p>
+                    <p class="testimonial-role">Corporate Training</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Locations Section -->
-    <section class="locations">
+    <!-- Locations -->
+    <section class="section section-gray">
         <div class="container">
             <div class="section-header">
-                <span class="section-badge">Locations</span>
+                <span class="section-eyebrow">Our Locations</span>
                 <h2 class="section-title">Training Locations</h2>
-                <p class="section-subtitle">Two convenient locations plus mobile training throughout Queensland.</p>
+                <p class="section-description">Two convenient locations plus mobile training throughout Queensland.</p>
             </div>
+
             <div class="locations-grid">
                 <div class="location-card">
-                    <div class="location-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
+                    <img src="https://images.pexels.com/photos/1427541/pexels-photo-1427541.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Townsville coastline" class="location-image">
+                    <div class="location-content">
+                        <h3 class="location-name">Townsville</h3>
+                        <div class="location-address">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>40 Charles Street<br>Aitkenvale QLD 4814</span>
+                        </div>
+                        <a href="tel:0419675022" class="location-phone">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            0419 675 022
+                        </a>
+                        <p class="location-areas">Servicing: Burdekin, Charters Towers, Ingham & surrounds</p>
                     </div>
-                    <h3>Townsville</h3>
-                    <p class="location-address">40 Charles Street<br>Aitkenvale QLD 4814</p>
-                    <a href="tel:0419675022" class="location-phone">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        0419 675 022
-                    </a>
-                    <p class="location-areas">Servicing: Burdekin, Charters Towers, Ingham & surrounds</p>
                 </div>
-                <div class="location-card">
-                    <div class="location-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
-                    </div>
-                    <h3>Wide Bay</h3>
-                    <p class="location-address">60 John Street<br>Maryborough QLD 4650</p>
-                    <a href="tel:0488488467" class="location-phone">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        0488 488 467
-                    </a>
-                    <p class="location-areas">Servicing: Wide Bay region & surrounds</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <span class="section-badge">Contact Us</span>
-                    <h2 class="section-title">Ready to Get Certified?</h2>
-                    <p>Book your First Aid course today or get in touch with any questions. We're here to help you gain the skills and confidence to save lives.</p>
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            <div>
-                                <strong>Townsville</strong>
-                                <a href="tel:0419675022">0419 675 022</a>
-                            </div>
+                <div class="location-card">
+                    <img src="https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Wide Bay region" class="location-image">
+                    <div class="location-content">
+                        <h3 class="location-name">Wide Bay</h3>
+                        <div class="location-address">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>60 John Street<br>Maryborough QLD 4650</span>
                         </div>
-                        <div class="contact-item">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            <div>
-                                <strong>Wide Bay</strong>
-                                <a href="tel:0488488467">0488 488 467</a>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            <div>
-                                <strong>Email</strong>
-                                <a href="mailto:admin@coralseatraining.com.au">admin@coralseatraining.com.au</a>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <div>
-                                <strong>Business Hours</strong>
-                                <span>Mon-Fri: 8:00 AM - 4:30 PM<br>Sat-Sun: By Appointment</span>
-                            </div>
-                        </div>
+                        <a href="tel:0488488467" class="location-phone">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            0488 488 467
+                        </a>
+                        <p class="location-areas">Servicing: Wide Bay region & surrounds</p>
                     </div>
-                </div>
-                <div class="contact-form-wrapper">
-                    <form class="contact-form" id="contactForm">
-                        <h3>Send Us a Message</h3>
-                        <div class="form-group">
-                            <label for="name">Your Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input type="tel" id="phone" name="phone">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="course">Interested In</label>
-                            <select id="course" name="course">
-                                <option value="">Select a course...</option>
-                                <option value="cpr">CPR Course (HLTAID009) - From $60</option>
-                                <option value="first-aid">Provide First Aid (HLTAID011) - From $120</option>
-                                <option value="childcare">Childcare First Aid (HLTAID012) - From $140</option>
-                                <option value="advanced">Advanced Resuscitation (HLTAID015) - From $140</option>
-                                <option value="group">Group/Workplace Training</option>
-                                <option value="other">Other Enquiry</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message *</label>
-                            <textarea id="message" name="message" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-                    </form>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
+    <section class="cta-section">
         <div class="container">
             <div class="cta-content">
                 <h2>Ready to Learn Life-Saving Skills?</h2>
                 <p>Book your nationally accredited First Aid course today and gain the confidence to help others in an emergency.</p>
                 <div class="cta-buttons">
                     <a href="tel:0419675022" class="btn btn-white btn-lg">Call Now: 0419 675 022</a>
-                    <a href="mailto:admin@coralseatraining.com.au" class="btn btn-outline-white btn-lg">Email Us</a>
+                    <a href="contact.html" class="btn btn-outline btn-lg" style="color: white; border-color: white;">Contact Us</a>
                 </div>
             </div>
         </div>
@@ -477,34 +408,36 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="/" class="logo">
-                        <span class="logo-icon">+</span>
+                    <a href="index.html" class="logo">
+                        <div class="logo-mark">+</div>
                         <div class="logo-text">
                             <span class="logo-name">Coral Sea Training</span>
-                            <span class="logo-rto">RTO #32221</span>
+                            <span class="logo-tagline">RTO #32221</span>
                         </div>
                     </a>
-                    <p>Quality Training Generates Peace of Mind</p>
-                    <p class="footer-tagline">Nationally accredited First Aid training in Townsville and Wide Bay regions of Queensland.</p>
+                    <p>Quality Training Generates Peace of Mind. Nationally accredited First Aid training in Queensland.</p>
                 </div>
-                <div class="footer-links">
+
+                <div class="footer-nav">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#courses">Our Courses</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#testimonials">Testimonials</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="courses.html">Our Courses</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-                <div class="footer-links">
+
+                <div class="footer-nav">
                     <h4>Courses</h4>
                     <ul>
-                        <li><a href="#courses">CPR (HLTAID009)</a></li>
-                        <li><a href="#courses">First Aid (HLTAID011)</a></li>
-                        <li><a href="#courses">Childcare First Aid (HLTAID012)</a></li>
-                        <li><a href="#courses">Advanced Resuscitation (HLTAID015)</a></li>
+                        <li><a href="courses.html">CPR (HLTAID009)</a></li>
+                        <li><a href="courses.html">First Aid (HLTAID011)</a></li>
+                        <li><a href="courses.html">Childcare (HLTAID012)</a></li>
+                        <li><a href="courses.html">Advanced (HLTAID015)</a></li>
                     </ul>
                 </div>
+
                 <div class="footer-contact">
                     <h4>Contact</h4>
                     <p><strong>Townsville:</strong> <a href="tel:0419675022">0419 675 022</a></p>
@@ -512,9 +445,10 @@
                     <p><a href="mailto:admin@coralseatraining.com.au">admin@coralseatraining.com.au</a></p>
                 </div>
             </div>
+
             <div class="footer-bottom">
                 <p>&copy; 2024 Coral Sea Training. All rights reserved. RTO #32221</p>
-                <p class="footer-admin"><a href="admin/">Admin Login</a></p>
+                <p><a href="admin/">Admin</a></p>
             </div>
         </div>
     </footer>

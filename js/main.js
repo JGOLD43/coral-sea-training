@@ -1,32 +1,10 @@
 /**
  * Coral Sea Training - Main JavaScript
- * Conversion-optimized interactions
+ * Premium Website Interactions
  */
 
 (function() {
     'use strict';
-
-    // =====================================================
-    // Mobile Menu Toggle
-    // =====================================================
-
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const nav = document.getElementById('nav');
-
-    if (mobileMenuBtn && nav) {
-        mobileMenuBtn.addEventListener('click', function() {
-            this.classList.toggle('active');
-            nav.classList.toggle('mobile-open');
-        });
-
-        // Close menu when clicking a link
-        nav.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
-                nav.classList.remove('mobile-open');
-            });
-        });
-    }
 
     // =====================================================
     // Header Scroll Effect
@@ -35,19 +13,38 @@
     const header = document.getElementById('header');
 
     if (header) {
-        let lastScroll = 0;
-
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-
-            if (currentScroll > 50) {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
+        };
 
-            lastScroll = currentScroll;
-        }, { passive: true });
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Initial check
+    }
+
+    // =====================================================
+    // Mobile Menu Toggle
+    // =====================================================
+
+    const mobileToggle = document.getElementById('mobileToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (mobileToggle && mobileMenu) {
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            mobileToggle.classList.toggle('active');
+        });
+
+        // Close menu when clicking links
+        mobileMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                mobileToggle.classList.remove('active');
+            });
+        });
     }
 
     // =====================================================
@@ -57,14 +54,11 @@
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-
             if (targetId === '#') return;
 
             const target = document.querySelector(targetId);
-
             if (target) {
                 e.preventDefault();
-
                 const headerHeight = header ? header.offsetHeight : 0;
                 const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
 
@@ -89,19 +83,14 @@
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
 
-            // Show loading state
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
 
-            // Collect form data
             const formData = new FormData(this);
             const data = Object.fromEntries(formData.entries());
 
-            // For static hosting, we'll use a mailto fallback or external service
-            // In production, you'd send this to your backend or a service like Formspree
-
             try {
-                // Simulate form submission delay
+                // Simulate form submission
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
                 // Create mailto link as fallback
@@ -115,30 +104,24 @@
                 );
 
                 // Show success message
-                const formWrapper = this.parentElement;
-                formWrapper.innerHTML = `
-                    <div class="form-success">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                        <h3>Thank You!</h3>
-                        <p>Your message has been received. We'll get back to you shortly.</p>
-                        <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray-500);">
-                            Or email us directly at:<br>
-                            <a href="mailto:admin@coralseatraining.com.au?subject=${mailtoSubject}&body=${mailtoBody}" style="color: var(--primary);">
-                                admin@coralseatraining.com.au
-                            </a>
-                        </p>
-                    </div>
-                `;
-
-                // Track conversion (for analytics)
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'form_submission', {
-                        'event_category': 'Contact',
-                        'event_label': data.course || 'General'
-                    });
+                const formWrapper = document.getElementById('contactFormWrapper');
+                if (formWrapper) {
+                    formWrapper.innerHTML = `
+                        <div style="text-align: center; padding: var(--space-8);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 64px; height: 64px; color: var(--red); margin: 0 auto var(--space-6);">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <h3 style="font-size: 1.5rem; margin-bottom: var(--space-4);">Thank You!</h3>
+                            <p style="color: var(--gray-600); margin-bottom: var(--space-6);">Your message has been received. We'll get back to you shortly.</p>
+                            <p style="font-size: 0.875rem; color: var(--gray-500);">
+                                Or email us directly at:<br>
+                                <a href="mailto:admin@coralseatraining.com.au?subject=${mailtoSubject}&body=${mailtoBody}" style="color: var(--red); font-weight: 600;">
+                                    admin@coralseatraining.com.au
+                                </a>
+                            </p>
+                        </div>
+                    `;
                 }
 
             } catch (error) {
@@ -154,7 +137,7 @@
     }
 
     // =====================================================
-    // Intersection Observer for Animations
+    // Scroll Animations
     // =====================================================
 
     const observerOptions = {
@@ -162,125 +145,64 @@
         rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const animationObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                observer.unobserve(entry.target);
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                animationObserver.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    // Observe elements for animation
-    document.querySelectorAll('.course-card, .testimonial-card, .location-card, .stat-item').forEach(el => {
+    // Elements to animate
+    const animateElements = document.querySelectorAll('.course-card, .testimonial-card, .location-card, .value-card, .feature-item');
+
+    animateElements.forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(el);
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        animationObserver.observe(el);
     });
 
-    // Add CSS for animated elements
-    const style = document.createElement('style');
-    style.textContent = `
-        .animate-in {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
-
     // =====================================================
-    // Phone Number Click Tracking
+    // Phone Click Tracking
     // =====================================================
 
     document.querySelectorAll('a[href^="tel:"]').forEach(link => {
         link.addEventListener('click', function() {
             const phoneNumber = this.getAttribute('href').replace('tel:', '');
+            console.log('Phone click:', phoneNumber);
 
-            // Track phone clicks for analytics
+            // Google Analytics tracking (if available)
             if (typeof gtag !== 'undefined') {
                 gtag('event', 'phone_click', {
                     'event_category': 'Contact',
                     'event_label': phoneNumber
                 });
             }
-
-            console.log('Phone click tracked:', phoneNumber);
         });
     });
 
     // =====================================================
-    // Course Card CTA Tracking
+    // Course Button Tracking
     // =====================================================
 
     document.querySelectorAll('.course-card .btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const courseCard = this.closest('.course-card');
-            const courseTitle = courseCard.querySelector('.course-title').textContent;
+            if (courseCard) {
+                const courseTitle = courseCard.querySelector('.course-title')?.textContent;
+                console.log('Course interest:', courseTitle);
 
-            // Track course interest for analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'course_interest', {
-                    'event_category': 'Courses',
-                    'event_label': courseTitle
-                });
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'course_click', {
+                        'event_category': 'Courses',
+                        'event_label': courseTitle
+                    });
+                }
             }
-
-            console.log('Course interest tracked:', courseTitle);
         });
     });
-
-    // =====================================================
-    // Lazy Load Images (if any are added later)
-    // =====================================================
-
-    if ('loading' in HTMLImageElement.prototype) {
-        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-            img.src = img.dataset.src;
-        });
-    } else {
-        // Fallback for browsers that don't support lazy loading
-        const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-
-        if (lazyImages.length > 0) {
-            const imageObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-
-            lazyImages.forEach(img => imageObserver.observe(img));
-        }
-    }
-
-    // =====================================================
-    // Scroll Progress Indicator (optional enhancement)
-    // =====================================================
-
-    // Uncomment if you want a reading progress bar
-    /*
-    const progressBar = document.createElement('div');
-    progressBar.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        z-index: 9999;
-        transition: width 0.1s ease;
-    `;
-    document.body.appendChild(progressBar);
-
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercent = (scrollTop / docHeight) * 100;
-        progressBar.style.width = scrollPercent + '%';
-    }, { passive: true });
-    */
 
 })();
