@@ -4,16 +4,16 @@
 
 /* CSS Variables for consistent theming */
 :root {
-    /* Primary Colors - Ocean/Coral inspired */
-    --primary: #0066cc;
-    --primary-dark: #004d99;
-    --primary-light: #e6f2ff;
-    --secondary: #00a896;
-    --secondary-dark: #007f73;
+    /* Primary Colors - Brand Red */
+    --primary: #d90a0b;
+    --primary-dark: #b00909;
+    --primary-light: #fde8e8;
+    --secondary: #333333;
+    --secondary-dark: #1a1a1a;
 
     /* Accent Colors */
-    --accent: #ff6b35;
-    --accent-dark: #e55a2b;
+    --accent: #d90a0b;
+    --accent-dark: #b00909;
 
     /* Neutral Colors */
     --white: #ffffff;
@@ -240,7 +240,7 @@ ul {
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: var(--primary);
     color: var(--white);
     font-size: 1.5rem;
     font-weight: 700;
@@ -374,7 +374,7 @@ ul {
 
 .hero {
     padding: calc(72px + var(--space-4xl)) 0 var(--space-4xl);
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 50%, #e6fff9 100%);
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
     overflow: hidden;
 }
 
@@ -442,7 +442,7 @@ ul {
 .trust-item .icon {
     width: 1.25rem;
     height: 1.25rem;
-    color: var(--secondary);
+    color: var(--primary);
 }
 
 .hero-image {
@@ -451,53 +451,13 @@ ul {
     align-items: center;
 }
 
-.hero-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-lg) var(--space-xl);
-    background: var(--white);
+.hero-photo {
+    width: 100%;
+    max-width: 550px;
+    height: auto;
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.hero-card-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
-    border-radius: var(--radius-lg);
-}
-
-.hero-card-icon svg {
-    width: 32px;
-    height: 32px;
-    color: var(--white);
-}
-
-.hero-card-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.hero-card-label {
-    font-size: 0.875rem;
-    color: var(--gray-500);
-    font-weight: 500;
-}
-
-.hero-card-price {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--gray-900);
+    object-fit: cover;
 }
 
 @media (min-width: 768px) {
@@ -629,7 +589,7 @@ ul {
 }
 
 .course-card.featured .course-badge {
-    background: var(--accent);
+    background: var(--primary);
 }
 
 .course-header {
@@ -681,7 +641,7 @@ ul {
 }
 
 .course-features .icon {
-    color: var(--secondary);
+    color: var(--primary);
     margin-top: 2px;
     flex-shrink: 0;
 }
@@ -748,7 +708,7 @@ ul {
 }
 
 .about-feature .icon {
-    color: var(--secondary);
+    color: var(--primary);
     width: 1.5rem;
     height: 1.5rem;
 }
