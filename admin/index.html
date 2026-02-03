@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin - Coral Sea Training</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <span class="logo-icon">+</span>
+                    <span class="logo-text">Coral Sea Training</span>
+                </div>
+                <h1>Admin Login</h1>
+                <p>Enter your credentials to access the admin panel</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                <div id="loginError" class="error-message" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+            <div class="login-footer">
+                <a href="../">Back to Website</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">+</span>
+                    <span class="logo-text">CST Admin</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" data-section="courses">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    Courses
+                </a>
+                <a href="#" class="nav-item" data-section="testimonials">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Testimonials
+                </a>
+                <a href="#" class="nav-item" data-section="contact">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Contact Info
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-outline btn-block">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1 id="sectionTitle">Dashboard</h1>
+                <div class="header-actions">
+                    <a href="../" target="_blank" class="btn btn-outline">View Site</a>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboardSection" class="content-section active">
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon courses">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-number" id="coursesCount">4</span>
+                            <span class="card-label">Active Courses</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon testimonials">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-number" id="testimonialsCount">6</span>
+                            <span class="card-label">Testimonials</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon locations">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-number">2</span>
+                            <span class="card-label">Locations</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-info">
+                    <h2>Quick Guide</h2>
+                    <p>Welcome to the Coral Sea Training admin panel. Here you can manage your website content:</p>
+                    <ul>
+                        <li><strong>Courses:</strong> Update course prices, descriptions, and features</li>
+                        <li><strong>Testimonials:</strong> Add, edit, or remove customer testimonials</li>
+                        <li><strong>Contact Info:</strong> Update phone numbers, email, and addresses</li>
+                        <li><strong>Settings:</strong> Change admin password and export/import data</li>
+                    </ul>
+                    <div class="info-note">
+                        <strong>Note:</strong> Changes made here are stored locally. Use the Export feature in Settings to save your changes and apply them to the live site.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Courses Section -->
+            <section id="coursesSection" class="content-section">
+                <div class="section-actions">
+                    <button id="addCourseBtn" class="btn btn-primary">+ Add Course</button>
+                </div>
+                <div id="coursesList" class="items-list">
+                    <!-- Courses will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section id="testimonialsSection" class="content-section">
+                <div class="section-actions">
+                    <button id="addTestimonialBtn" class="btn btn-primary">+ Add Testimonial</button>
+                </div>
+                <div id="testimonialsList" class="items-list">
+                    <!-- Testimonials will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contactSection" class="content-section">
+                <form id="contactInfoForm" class="admin-form">
+                    <div class="form-section">
+                        <h3>Townsville Office</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tsv_phone">Phone</label>
+                                <input type="tel" id="tsv_phone" name="tsv_phone" value="0419 675 022">
+                            </div>
+                            <div class="form-group">
+                                <label for="tsv_address">Address</label>
+                                <input type="text" id="tsv_address" name="tsv_address" value="40 Charles Street, Aitkenvale QLD 4814">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h3>Wide Bay Office</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="wb_phone">Phone</label>
+                                <input type="tel" id="wb_phone" name="wb_phone" value="0488 488 467">
+                            </div>
+                            <div class="form-group">
+                                <label for="wb_address">Address</label>
+                                <input type="text" id="wb_address" name="wb_address" value="60 John Street, Maryborough QLD 4650">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h3>General Contact</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" value="admin@coralseatraining.com.au">
+                            </div>
+                            <div class="form-group">
+                                <label for="hours">Business Hours</label>
+                                <input type="text" id="hours" name="hours" value="Mon-Fri: 8:00 AM - 4:30 PM">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settingsSection" class="content-section">
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Change Password</h3>
+                        <form id="passwordForm" class="admin-form">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" required minlength="8">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Data Management</h3>
+                        <p>Export your content data as JSON for backup or to update the live website.</p>
+                        <div class="button-group">
+                            <button id="exportDataBtn" class="btn btn-outline">Export Data</button>
+                            <button id="importDataBtn" class="btn btn-outline">Import Data</button>
+                        </div>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                    <div class="settings-card">
+                        <h3>Security Information</h3>
+                        <div class="security-info">
+                            <p><strong>Password Requirements:</strong></p>
+                            <ul>
+                                <li>Minimum 8 characters</li>
+                                <li>Stored using secure hashing (SHA-256)</li>
+                                <li>Never transmitted in plain text</li>
+                            </ul>
+                            <p class="warning-text">For production use, consider implementing a server-side backend for enhanced security.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for editing -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Edit Item</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic form content -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelModal">Cancel</button>
+                <button class="btn btn-primary" id="saveModal">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
