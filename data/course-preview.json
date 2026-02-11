@@ -1,0 +1,36 @@
+{
+  "courses": [
+    {
+      "id": "cpr",
+      "code": "HLTAID009",
+      "priceFrom": 99,
+      "priceLabel": "From $99",
+      "nextTownsville": "2026-02-22",
+      "nextWideBay": "2026-03-01"
+    },
+    {
+      "id": "firstaid",
+      "code": "HLTAID011",
+      "priceFrom": 159,
+      "priceLabel": "From $159",
+      "nextTownsville": "2026-02-22",
+      "nextWideBay": "2026-03-01"
+    },
+    {
+      "id": "childcare",
+      "code": "HLTAID012",
+      "priceFrom": 199,
+      "priceLabel": "From $199",
+      "nextTownsville": "2026-02-22",
+      "nextWideBay": "2026-03-01"
+    },
+    {
+      "id": "advanced",
+      "code": "HLTAID015",
+      "priceFrom": 199,
+      "priceLabel": "From $199",
+      "nextTownsville": "2026-03-08",
+      "nextWideBay": "2026-03-15"
+    }
+  ]
+}

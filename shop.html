@@ -9,6 +9,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jgold43.github.io/coral-sea-training/shop.html">
     <meta property="og:image" content="https://images.pexels.com/photos/11655091/pexels-photo-11655091.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2">
+    <link rel="canonical" href="https://jgold43.github.io/coral-sea-training/shop.html">
     <title>First Aid Kits &amp; Supplies | Coral Sea Training | RTO #32221</title>
 
     <!-- Google Analytics 4 -->
@@ -77,6 +78,17 @@
             </div>
             <h1>First Aid Kits &amp; Supplies</h1>
             <p>Workplace-compliant first aid kits delivered to your door. Quality products from a name you trust.</p>
+        </div>
+    </section>
+
+    <!-- Bundle & Save Banner -->
+    <section style="padding:var(--space-6) 0;background:var(--green-light);border-bottom:1px solid var(--green);">
+        <div class="container" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-4);text-align:center;">
+            <div>
+                <strong style="font-size:1.125rem;color:var(--navy);">Booked a course? Add a first aid kit and save.</strong>
+                <p style="font-size:0.8125rem;color:var(--gray-600);margin-top:2px;">Mention <strong>&ldquo;BUNDLE&rdquo;</strong> when ordering to receive your discount.</p>
+            </div>
+            <a href="courses.html" class="btn btn-primary">Book a Course First</a>
         </div>
     </section>
 
@@ -257,6 +269,27 @@
         </div>
     </section>
 
+    <!-- Kit Social Proof -->
+    <section style="padding:var(--space-8) 0;background:var(--white);">
+        <div class="container" style="max-width:800px;">
+            <div style="text-align:center;margin-bottom:var(--space-6);">
+                <p style="font-size:0.9375rem;color:var(--gray-600);font-weight:600;">Used by workplaces across Queensland</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-4);">
+                <div style="background:var(--gray-50);border-radius:12px;padding:var(--space-4);border:1px solid var(--gray-200);">
+                    <div style="color:#f59e0b;font-size:0.875rem;margin-bottom:var(--space-1);">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p style="font-size:0.875rem;color:var(--gray-700);margin-bottom:var(--space-2);">&ldquo;Great quality kit. Everything clearly labelled and well-organised. Our team feels much more prepared.&rdquo;</p>
+                    <span style="font-size:0.75rem;color:var(--gray-500);">&mdash; Office Manager, Townsville</span>
+                </div>
+                <div style="background:var(--gray-50);border-radius:12px;padding:var(--space-4);border:1px solid var(--gray-200);">
+                    <div style="color:#f59e0b;font-size:0.875rem;margin-bottom:var(--space-1);">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p style="font-size:0.875rem;color:var(--gray-700);margin-bottom:var(--space-2);">&ldquo;Ordered 6 kits for our childcare centres. Fast delivery and excellent contents. Will reorder refills from here too.&rdquo;</p>
+                    <span style="font-size:0.75rem;color:var(--gray-500);">&mdash; Childcare Director, Wide Bay</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Custom Kit CTA -->
     <section class="section section-gray">
         <div class="container">
@@ -349,12 +382,119 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Coral Sea Training. All rights reserved. RTO #32221</p>
-                <p><a href="partner/">Partner Login</a> &middot; <a href="admin/">Admin</a></p>
+                <p>&copy; 2026 Coral Sea Training. All rights reserved. RTO #32221</p>
             </div>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+    // GA4: Track shop order clicks
+    document.querySelectorAll('.product-actions .btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (typeof gtag !== 'undefined') {
+                var productName = this.closest('.product-card').querySelector('.product-title').textContent;
+                gtag('event', 'shop_order_click', { event_label: productName, event_category: 'Shop' });
+            }
+        });
+    });
+    // GA4: Track bundle banner click
+    var bundleLink = document.querySelector('[href="courses.html"].btn-primary');
+    if (bundleLink) {
+        bundleLink.addEventListener('click', function() {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'bundle_click', { event_category: 'Shop' });
+            }
+        });
+    }
+    </script>
+    <script type="application/ld+json">
+    [
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Workplace First Aid Kit (Small)",
+            "description": "Ideal for small offices and low-risk workplaces with up to 25 employees. WHS compliant.",
+            "brand": { "@type": "Brand", "name": "Coral Sea Training" },
+            "offers": {
+                "@type": "Offer",
+                "price": "89.00",
+                "priceCurrency": "AUD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://jgold43.github.io/coral-sea-training/order-kits.html?product=workplace-small"
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Workplace First Aid Kit (Large)",
+            "description": "Comprehensive kit for larger workplaces, construction sites, and high-risk environments. WHS compliant for 25+ employees.",
+            "brand": { "@type": "Brand", "name": "Coral Sea Training" },
+            "offers": {
+                "@type": "Offer",
+                "price": "149.00",
+                "priceCurrency": "AUD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://jgold43.github.io/coral-sea-training/order-kits.html?product=workplace-large"
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Vehicle First Aid Kit",
+            "description": "Compact kit designed for cars, utes, and work vehicles.",
+            "brand": { "@type": "Brand", "name": "Coral Sea Training" },
+            "offers": {
+                "@type": "Offer",
+                "price": "59.00",
+                "priceCurrency": "AUD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://jgold43.github.io/coral-sea-training/order-kits.html?product=vehicle"
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Childcare Centre First Aid Kit",
+            "description": "Purpose-built for childcare centres and schools. Meets ACECQA requirements.",
+            "brand": { "@type": "Brand", "name": "Coral Sea Training" },
+            "offers": {
+                "@type": "Offer",
+                "price": "119.00",
+                "priceCurrency": "AUD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://jgold43.github.io/coral-sea-training/order-kits.html?product=childcare"
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Home & Family First Aid Kit",
+            "description": "Everything your household needs to handle common injuries and emergencies.",
+            "brand": { "@type": "Brand", "name": "Coral Sea Training" },
+            "offers": {
+                "@type": "Offer",
+                "price": "49.00",
+                "priceCurrency": "AUD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://jgold43.github.io/coral-sea-training/order-kits.html?product=home"
+            }
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "Refill & Restock Pack",
+            "description": "Restock your existing kit with fresh, in-date supplies. Matched to your kit type.",
+            "brand": { "@type": "Brand", "name": "Coral Sea Training" },
+            "offers": {
+                "@type": "Offer",
+                "price": "39.00",
+                "priceCurrency": "AUD",
+                "availability": "https://schema.org/InStock",
+                "url": "https://jgold43.github.io/coral-sea-training/order-kits.html?product=refill"
+            }
+        }
+    ]
+    </script>
 </body>
 </html>

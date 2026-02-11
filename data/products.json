@@ -1,0 +1,64 @@
+{
+  "products": [
+    {
+      "id": "workplace-small",
+      "name": "Workplace Kit (Small)",
+      "tag": "Workplace",
+      "price": 89,
+      "priceLabel": "$89",
+      "description": "Ideal for small offices and low-risk workplaces with up to 25 employees.",
+      "features": ["WHS compliant", "Wall-mountable hard case", "Contents list & quick guide included"],
+      "image": "https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    {
+      "id": "workplace-large",
+      "name": "Workplace Kit (Large)",
+      "tag": "Workplace",
+      "price": 149,
+      "priceLabel": "$149",
+      "description": "Comprehensive kit for larger workplaces, construction sites, and high-risk environments.",
+      "features": ["WHS compliant for 25+ employees", "Heavy-duty portable case", "Includes burn & eye wash supplies"],
+      "image": "https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    {
+      "id": "vehicle",
+      "name": "Vehicle First Aid Kit",
+      "tag": "Vehicle",
+      "price": 59,
+      "priceLabel": "$59",
+      "description": "Compact kit designed for cars, utes, and work vehicles.",
+      "features": ["Compact soft case", "Essential trauma supplies", "Fits under seat or in glove box"],
+      "image": "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    {
+      "id": "childcare",
+      "name": "Childcare Centre Kit",
+      "tag": "Childcare",
+      "price": 119,
+      "priceLabel": "$119",
+      "description": "Purpose-built for childcare centres and schools. Meets ACECQA requirements.",
+      "features": ["ACECQA compliant", "Child-specific sizes included", "Asthma spacer & EpiPen guide"],
+      "image": "https://images.pexels.com/photos/4386464/pexels-photo-4386464.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    {
+      "id": "home",
+      "name": "Home & Family Kit",
+      "tag": "Home",
+      "price": 49,
+      "priceLabel": "$49",
+      "description": "Everything your household needs to handle common injuries and emergencies.",
+      "features": ["Burns, cuts & wound care", "Bandages & dressings", "Compact zippered case"],
+      "image": "https://images.pexels.com/photos/4386470/pexels-photo-4386470.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    {
+      "id": "refill",
+      "name": "Refill & Restock Pack",
+      "tag": "Refill",
+      "price": 39,
+      "priceLabel": "$39",
+      "description": "Restock your existing kit with fresh, in-date supplies.",
+      "features": ["Matched to your kit type", "Replace expired items", "Stay audit-ready"],
+      "image": "https://images.pexels.com/photos/3683056/pexels-photo-3683056.jpeg?auto=compress&cs=tinysrgb&w=600"
+    }
+  ]
+}
