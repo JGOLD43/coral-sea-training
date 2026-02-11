@@ -72,122 +72,70 @@
                     <span>Join <strong>10,000+</strong> Queenslanders who trained with us</span>
                 </div>
 
-                <!-- ===== STEP 1: Situation ===== -->
-                <div class="funnel-step active" id="step1">
+                <!-- ===== STEP: Type (Individual or Team) ===== -->
+                <div class="funnel-step active" id="step-type">
                     <div class="funnel-step-header">
                         <h1 class="funnel-title">Let's Find Your Perfect Course</h1>
-                        <p class="funnel-subtitle">Answer a few quick questions and we'll recommend the right training for your situation.</p>
+                        <p class="funnel-subtitle">One quick question to get started &mdash; are you booking for yourself or a group?</p>
                     </div>
 
-                    <div class="funnel-options funnel-options-4">
-                        <button class="funnel-option" onclick="selectOption(1, 'situation', 'workplace', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Workplace Compliance</h3>
-                                <p>My employer requires first aid certification</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
-
-                        <button class="funnel-option" onclick="selectOption(1, 'situation', 'childcare', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Childcare / Education</h3>
-                                <p>I need ACECQA-approved training for my role</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
-
-                        <button class="funnel-option" onclick="selectOption(1, 'situation', 'personal', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Personal / Family Safety</h3>
-                                <p>I want the confidence to help in an emergency</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
-
-                        <button class="funnel-option" onclick="selectOption(1, 'situation', 'team', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Training For My Team</h3>
-                                <p>I need to get multiple staff members certified</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- ===== STEP 2: Group Size ===== -->
-                <div class="funnel-step" id="step2">
-                    <div class="funnel-step-header">
-                        <h2 class="funnel-title">How Many People Need Training?</h2>
-                        <p class="funnel-subtitle">This helps us recommend the best option and any available group savings.</p>
-                    </div>
-
-                    <div class="funnel-options funnel-options-4">
-                        <button class="funnel-option" onclick="selectOption(2, 'groupSize', '1', this)">
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectType('individual', this)">
                             <div class="funnel-option-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             </div>
                             <div class="funnel-option-text">
                                 <h3>Just Me</h3>
-                                <p>Individual enrolment</p>
+                                <p>I need my own certification</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                         </button>
 
-                        <button class="funnel-option" onclick="selectOption(2, 'groupSize', '2-5', this)">
+                        <button class="funnel-option" onclick="selectType('team', this)">
                             <div class="funnel-option-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Small Group (2&ndash;5)</h3>
-                                <p>A few colleagues or friends</p>
+                                <h3>My Team</h3>
+                                <p>Multiple people need training</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ===== STEP: Industry (Individual path) ===== -->
+                <div class="funnel-step" id="step-industry">
+                    <div class="funnel-step-header">
+                        <h2 class="funnel-title">Do You Work in Childcare or Education?</h2>
+                        <p class="funnel-subtitle">This determines which certification you need.</p>
+                    </div>
+
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectIndustry('childcare', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>Yes, Childcare / Education</h3>
+                                <p>I need ACECQA-approved training</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                         </button>
 
-                        <button class="funnel-option" onclick="selectOption(2, 'groupSize', '6-15', this)">
+                        <button class="funnel-option" onclick="selectIndustry('other', this)">
                             <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Medium Group (6&ndash;15)</h3>
-                                <p>Department or team training</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
-
-                        <button class="funnel-option" onclick="selectOption(2, 'groupSize', '16+', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Large Group (16+)</h3>
-                                <p>Full company or multi-site training</p>
+                                <h3>No, Another Industry</h3>
+                                <p>Workplace, personal, or general first aid</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -195,26 +143,67 @@
                         </button>
                     </div>
 
-                    <button class="funnel-back" onclick="goToStep(1)">
+                    <button class="funnel-back" onclick="goBack()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
                         Back
                     </button>
                 </div>
 
-                <!-- ===== STEP 3: Location ===== -->
-                <div class="funnel-step" id="step3">
+                <!-- ===== STEP: Delivery (Team path) ===== -->
+                <div class="funnel-step" id="step-delivery">
                     <div class="funnel-step-header">
-                        <h2 class="funnel-title">Where Would You Prefer to Train?</h2>
-                        <p class="funnel-subtitle">We have two venues plus mobile training &mdash; we can come to you.</p>
+                        <h2 class="funnel-title">Would You Like Us to Come to You?</h2>
+                        <p class="funnel-subtitle">We bring all equipment &mdash; all you need is a room and your team.</p>
                     </div>
 
-                    <div class="funnel-options funnel-options-3">
-                        <button class="funnel-option" onclick="selectOption(3, 'location', 'townsville', this)">
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectDelivery('onsite', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>Yes, Train at Our Workplace</h3>
+                                <p>On-site training &mdash; you come to us</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+
+                        <button class="funnel-option" onclick="selectDelivery('venue', this)">
                             <div class="funnel-option-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Townsville Venue</h3>
+                                <h3>No, We'll Come to Your Venue</h3>
+                                <p>We'll attend one of your training centres</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button class="funnel-back" onclick="goBack()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
+                        Back
+                    </button>
+                </div>
+
+                <!-- ===== STEP: Location ===== -->
+                <div class="funnel-step" id="step-location">
+                    <div class="funnel-step-header">
+                        <h2 class="funnel-title">Which Location Works Best?</h2>
+                        <p class="funnel-subtitle">Pick the venue closest to you.</p>
+                    </div>
+
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectLocation('townsville', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>Townsville</h3>
                                 <p>40 Charles St, Aitkenvale QLD 4814</p>
                             </div>
                             <div class="funnel-option-check">
@@ -222,48 +211,35 @@
                             </div>
                         </button>
 
-                        <button class="funnel-option" onclick="selectOption(3, 'location', 'widebay', this)">
+                        <button class="funnel-option" onclick="selectLocation('widebay', this)">
                             <div class="funnel-option-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Wide Bay Venue</h3>
+                                <h3>Wide Bay</h3>
                                 <p>60 John St, Maryborough QLD 4650</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                         </button>
-
-                        <button class="funnel-option" onclick="selectOption(3, 'location', 'onsite', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Come To Our Workplace</h3>
-                                <p>Mobile training &mdash; we bring everything to you</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
                     </div>
 
-                    <button class="funnel-back" onclick="goToStep(2)">
+                    <button class="funnel-back" onclick="goBack()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
                         Back
                     </button>
                 </div>
 
-                <!-- ===== STEP 4: Urgency ===== -->
-                <div class="funnel-step" id="step4">
+                <!-- ===== STEP: Urgency ===== -->
+                <div class="funnel-step" id="step-urgency">
                     <div class="funnel-step-header">
-                        <h2 class="funnel-title">When Do You Need To Be Certified?</h2>
-                        <p class="funnel-subtitle">We'll check availability and prioritise urgent bookings.</p>
+                        <h2 class="funnel-title">How Soon Do You Need Training?</h2>
+                        <p class="funnel-subtitle">We'll prioritise urgent bookings and find you the earliest spot.</p>
                     </div>
 
-                    <div class="funnel-options funnel-options-3">
-                        <button class="funnel-option" onclick="selectOption(4, 'urgency', 'asap', this)">
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectUrgency('asap', this)">
                             <div class="funnel-option-icon" style="background: var(--red-light);">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--red);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                             </div>
@@ -276,26 +252,13 @@
                             </div>
                         </button>
 
-                        <button class="funnel-option" onclick="selectOption(4, 'urgency', 'month', this)">
+                        <button class="funnel-option" onclick="selectUrgency('flexible', this)">
                             <div class="funnel-option-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Within the Next Month</h3>
-                                <p>I have some flexibility on dates</p>
-                            </div>
-                            <div class="funnel-option-check">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </button>
-
-                        <button class="funnel-option" onclick="selectOption(4, 'urgency', 'flexible', this)">
-                            <div class="funnel-option-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            </div>
-                            <div class="funnel-option-text">
-                                <h3>Flexible / Planning Ahead</h3>
-                                <p>No rush &mdash; I'm exploring my options</p>
+                                <h3>I'm Flexible</h3>
+                                <p>No rush &mdash; send me the next available dates</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -303,17 +266,17 @@
                         </button>
                     </div>
 
-                    <button class="funnel-back" onclick="goToStep(3)">
+                    <button class="funnel-back" onclick="goBack()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
                         Back
                     </button>
                 </div>
 
-                <!-- ===== STEP 5: Contact Details ===== -->
-                <div class="funnel-step" id="step5">
+                <!-- ===== STEP: Contact Details ===== -->
+                <div class="funnel-step" id="step-contact">
                     <div class="funnel-step-header">
                         <h2 class="funnel-title">Your Personalised Course Plan is Ready</h2>
-                        <p class="funnel-subtitle">Where should we send your course recommendation and booking details? <strong>Having this in your inbox makes it easy to forward to your employer or manager for approval.</strong></p>
+                        <p class="funnel-subtitle">Where should we send your recommendation and booking details? <strong>Having this in your inbox makes it easy to forward to your employer for approval.</strong></p>
                     </div>
 
                     <div class="funnel-form">
@@ -356,14 +319,14 @@
                         <p class="funnel-form-disclaimer">By submitting, you agree to be contacted about your course enquiry. We respond within 24 hours.</p>
                     </div>
 
-                    <button class="funnel-back" onclick="goToStep(4)">
+                    <button class="funnel-back" onclick="goBack()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
                         Back
                     </button>
                 </div>
 
-                <!-- ===== STEP 6: Recommendation / Result ===== -->
-                <div class="funnel-step" id="step6">
+                <!-- ===== STEP: Result / Recommendation ===== -->
+                <div class="funnel-step" id="step-result">
                     <div class="funnel-result" id="funnelResult">
                         <!-- Populated by JavaScript -->
                     </div>
@@ -423,224 +386,238 @@
     <script src="js/main.js"></script>
     <script>
     // =====================================================
-    // Lead Qualification Funnel
+    // Lead Qualification Funnel — Binary Decision Tree
     // =====================================================
 
     var funnelData = {
-        situation: '',
-        groupSize: '',
-        location: '',
-        urgency: '',
+        type: '',       // individual | team
+        industry: '',   // childcare | other (individual path)
+        delivery: '',   // onsite | venue (team path)
+        location: '',   // townsville | widebay | onsite
+        urgency: '',    // asap | flexible
         name: '',
         email: '',
         phone: '',
         company: ''
     };
 
-    var currentStep = 1;
-    var totalSteps = 5;
+    var stepHistory = [];
+    var currentStepId = 'step-type';
 
-    function selectOption(step, key, value, btn) {
-        funnelData[key] = value;
+    // ---- Navigation ----
 
-        // Highlight selected option
-        var stepEl = document.getElementById('step' + step);
-        stepEl.querySelectorAll('.funnel-option').forEach(function(o) {
-            o.classList.remove('selected');
-        });
-        btn.classList.add('selected');
-
-        // If step 1 is "team", auto-set that they likely want group
-        // If step 2 groupSize > 1, show company field later
-        if (key === 'groupSize' && value !== '1') {
-            document.getElementById('companyField').style.display = 'block';
-        } else if (key === 'groupSize' && value === '1') {
-            document.getElementById('companyField').style.display = 'none';
-        }
-
-        // Auto-advance after short delay for visual feedback
-        setTimeout(function() {
-            goToStep(step + 1);
-        }, 300);
-    }
-
-    function goToStep(step) {
-        if (step < 1 || step > 6) return;
-        currentStep = step;
-
-        // Hide all steps
+    function navigateTo(stepId) {
         document.querySelectorAll('.funnel-step').forEach(function(s) {
             s.classList.remove('active');
         });
+        document.getElementById(stepId).classList.add('active');
+        stepHistory.push(currentStepId);
+        currentStepId = stepId;
+        updateProgress();
+        document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-        // Show target step
-        var target = document.getElementById('step' + step);
-        if (target) {
-            target.classList.add('active');
-        }
+    function goBack() {
+        if (stepHistory.length === 0) return;
+        var prevStep = stepHistory.pop();
+        document.querySelectorAll('.funnel-step').forEach(function(s) {
+            s.classList.remove('active');
+        });
+        document.getElementById(prevStep).classList.add('active');
+        currentStepId = prevStep;
+        updateProgress();
+        document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-        // Update progress
-        var progress = step <= totalSteps ? (step / totalSteps * 100) : 100;
-        document.getElementById('progressFill').style.width = progress + '%';
+    function updateProgress() {
+        var stepsCompleted = stepHistory.length;
+        // On-site team path skips location = 4 steps, others = 5
+        var totalSteps = (funnelData.type === 'team' && funnelData.delivery === 'onsite') ? 4 : 5;
 
-        if (step <= totalSteps) {
-            document.getElementById('stepLabel').textContent = 'Step ' + step + ' of ' + totalSteps;
-        } else {
+        if (currentStepId === 'step-result') {
+            document.getElementById('progressFill').style.width = '100%';
             document.getElementById('stepLabel').textContent = 'Your recommendation';
-        }
-
-        // Scroll to top of funnel
-        var funnel = document.querySelector('.funnel-wrapper');
-        if (funnel) {
-            funnel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            var progress = ((stepsCompleted + 1) / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
+            document.getElementById('stepLabel').textContent = 'Step ' + (stepsCompleted + 1) + ' of ' + totalSteps;
         }
     }
 
+    function highlightOption(btn) {
+        var step = btn.closest('.funnel-step');
+        step.querySelectorAll('.funnel-option').forEach(function(o) {
+            o.classList.remove('selected');
+        });
+        btn.classList.add('selected');
+    }
+
+    // ---- Step Handlers ----
+
+    function selectType(value, btn) {
+        funnelData.type = value;
+        highlightOption(btn);
+        setTimeout(function() {
+            if (value === 'individual') {
+                navigateTo('step-industry');
+            } else {
+                document.getElementById('companyField').style.display = 'block';
+                navigateTo('step-delivery');
+            }
+        }, 300);
+    }
+
+    function selectIndustry(value, btn) {
+        funnelData.industry = value;
+        highlightOption(btn);
+        setTimeout(function() {
+            navigateTo('step-location');
+        }, 300);
+    }
+
+    function selectDelivery(value, btn) {
+        funnelData.delivery = value;
+        highlightOption(btn);
+        setTimeout(function() {
+            if (value === 'onsite') {
+                funnelData.location = 'onsite';
+                navigateTo('step-urgency');
+            } else {
+                navigateTo('step-location');
+            }
+        }, 300);
+    }
+
+    function selectLocation(value, btn) {
+        funnelData.location = value;
+        highlightOption(btn);
+        setTimeout(function() {
+            navigateTo('step-urgency');
+        }, 300);
+    }
+
+    function selectUrgency(value, btn) {
+        funnelData.urgency = value;
+        highlightOption(btn);
+        setTimeout(function() {
+            navigateTo('step-contact');
+        }, 300);
+    }
+
+    // ---- Submit & Recommendation ----
+
     function submitFunnel() {
-        // Validate
         var name = document.getElementById('funnelName').value.trim();
         var email = document.getElementById('funnelEmail').value.trim();
         var phone = document.getElementById('funnelPhone').value.trim();
         var company = document.getElementById('funnelCompany').value.trim();
 
-        if (!name) {
-            document.getElementById('funnelName').focus();
-            shakeField('funnelName');
-            return;
-        }
-        if (!email || email.indexOf('@') === -1) {
-            document.getElementById('funnelEmail').focus();
-            shakeField('funnelEmail');
-            return;
-        }
-        if (!phone) {
-            document.getElementById('funnelPhone').focus();
-            shakeField('funnelPhone');
-            return;
-        }
+        if (!name) { shakeField('funnelName'); return; }
+        if (!email || email.indexOf('@') === -1) { shakeField('funnelEmail'); return; }
+        if (!phone) { shakeField('funnelPhone'); return; }
 
         funnelData.name = name;
         funnelData.email = email;
         funnelData.phone = phone;
         funnelData.company = company;
 
-        // Generate recommendation
         var rec = getRecommendation();
-
-        // Build result HTML
-        var resultHTML = buildResultHTML(rec);
-        document.getElementById('funnelResult').innerHTML = resultHTML;
-
-        // Send lead data via mailto (construct email to business)
+        document.getElementById('funnelResult').innerHTML = buildResultHTML(rec);
         sendLeadEmail(rec);
-
-        // Go to result step
-        goToStep(6);
+        navigateTo('step-result');
     }
 
     function shakeField(id) {
         var el = document.getElementById(id);
         el.style.borderColor = 'var(--red)';
+        el.focus();
         el.classList.add('shake');
-        setTimeout(function() {
-            el.classList.remove('shake');
-        }, 500);
+        setTimeout(function() { el.classList.remove('shake'); }, 500);
     }
 
     function getRecommendation() {
-        var sit = funnelData.situation;
-        var group = funnelData.groupSize;
-        var loc = funnelData.location;
-        var urg = funnelData.urgency;
-        var isGroup = group !== '1';
-
         var rec = {};
 
-        // Determine course based on situation
-        if (sit === 'childcare') {
-            rec.course = 'Childcare First Aid';
-            rec.code = 'HLTAID012';
-            rec.badge = 'Recommended For You';
-            rec.description = 'The complete childcare first aid package. This ACECQA-approved course covers CPR, First Aid, Anaphylaxis, and Asthma management &mdash; everything required for Cert III, Diploma, and educator roles.';
-            rec.duration = 'Approx. 8 hours (1 day)';
-            rec.validity = '3 years (CPR component renewed annually)';
-            rec.includes = [
-                'CPR & AED (HLTAID009)',
-                'Provide First Aid (HLTAID011)',
-                'Anaphylaxis management',
-                'Asthma emergency response',
-                'ACECQA approved for childcare',
-                'Statement of Attainment on completion'
-            ];
-        } else if (sit === 'personal') {
-            // Upsell from CPR to First Aid
-            rec.course = 'Provide First Aid';
-            rec.code = 'HLTAID011';
-            rec.badge = 'Best For You';
-            rec.description = 'Based on your answers, we recommend the full Provide First Aid course. It includes CPR and gives you comprehensive skills to handle real emergencies &mdash; not just resuscitation. You\'ll walk out confident you can genuinely help.';
-            rec.duration = 'Approx. 7 hours (1 day)';
-            rec.validity = '3 years (CPR component renewed annually)';
-            rec.includes = [
-                'CPR & AED (HLTAID009) included',
-                'Wound management & bandaging',
-                'Burns, bites & stings',
-                'Fractures & dislocations',
-                'Medical emergencies',
-                'Statement of Attainment on completion'
-            ];
-        } else if (sit === 'team') {
-            rec.course = 'On-Site Group Training';
-            rec.code = 'Custom Package';
-            rec.badge = 'Corporate Solution';
-            rec.description = 'We\'ll bring nationally accredited training directly to your workplace. Your dedicated training coordinator will design a package around your team\'s needs, schedule, and compliance requirements.';
-            rec.duration = 'Flexible &mdash; tailored to your team';
-            rec.validity = 'All certifications nationally recognised';
-            rec.includes = [
-                'All equipment provided &mdash; we set up everything',
-                'Choice of CPR, First Aid, or Childcare courses',
-                'Volume discounts for 8+ participants',
-                'Flexible scheduling around your operations',
-                'Compliance reporting for your records',
-                'Dedicated training coordinator'
-            ];
-        } else {
-            // workplace - recommend First Aid (HLTAID011)
-            rec.course = 'Provide First Aid';
-            rec.code = 'HLTAID011';
-            rec.badge = 'Most Popular';
-            rec.description = 'The go-to course for workplace compliance. Includes CPR certification bundled in, plus full first aid skills your employer requires. Nationally recognised and accepted everywhere in Australia.';
-            rec.duration = 'Approx. 7 hours (1 day)';
-            rec.validity = '3 years (CPR component renewed annually)';
-            rec.includes = [
-                'CPR & AED (HLTAID009) included',
-                'Basic Emergency Life Support',
-                'Workplace first aid skills',
-                'Meets WHS compliance requirements',
-                'Certificate valid for 3 years',
-                'Statement of Attainment on completion'
-            ];
-        }
-
-        // Add group-specific messaging
-        if (isGroup && sit !== 'team') {
+        if (funnelData.type === 'team') {
+            if (funnelData.delivery === 'onsite') {
+                rec.course = 'On-Site Group Training';
+                rec.code = 'Custom Package';
+                rec.badge = 'Corporate Solution';
+                rec.description = 'We\'ll bring nationally accredited training directly to your workplace. Your dedicated training coordinator will design a package around your team\'s needs, schedule, and compliance requirements.';
+                rec.duration = 'Flexible &mdash; tailored to your team';
+                rec.validity = 'All certifications nationally recognised';
+                rec.includes = [
+                    'All equipment provided &mdash; we set up everything',
+                    'Choice of CPR, First Aid, or Childcare courses',
+                    'Volume discounts for 8+ participants',
+                    'Flexible scheduling around your operations',
+                    'Compliance reporting for your records',
+                    'Dedicated training coordinator'
+                ];
+            } else {
+                rec.course = 'Group Venue Booking';
+                rec.code = 'HLTAID011 / HLTAID012';
+                rec.badge = 'Group Booking';
+                rec.description = 'Book your team into one of our scheduled courses. We\'ll coordinate the details and ensure everyone gets certified together. Group discounts available.';
+                rec.duration = '1 day per course (times vary)';
+                rec.validity = 'All certifications nationally recognised';
+                rec.includes = [
+                    'Choice of CPR, First Aid, or Childcare courses',
+                    'Group rates for 4+ participants',
+                    'All training materials provided',
+                    'Scheduled at our fully-equipped venue',
+                    'Compliance certificates for your records',
+                    'Statement of Attainment on completion'
+                ];
+            }
             rec.groupNote = true;
-            rec.groupMessage = 'Since you\'re booking for ' + group + ' people, you may qualify for group rates. A member of our team will include group pricing in your personalised quote.';
+            rec.groupMessage = 'A member of our team will follow up with group pricing and availability tailored to your team size.';
+        } else {
+            if (funnelData.industry === 'childcare') {
+                rec.course = 'Childcare First Aid';
+                rec.code = 'HLTAID012';
+                rec.badge = 'Recommended For You';
+                rec.description = 'The complete childcare first aid package. This ACECQA-approved course covers CPR, First Aid, Anaphylaxis, and Asthma management &mdash; everything required for Cert III, Diploma, and educator roles.';
+                rec.duration = 'Approx. 8 hours (1 day)';
+                rec.validity = '3 years (CPR component renewed annually)';
+                rec.includes = [
+                    'CPR & AED (HLTAID009)',
+                    'Provide First Aid (HLTAID011)',
+                    'Anaphylaxis management',
+                    'Asthma emergency response',
+                    'ACECQA approved for childcare',
+                    'Statement of Attainment on completion'
+                ];
+            } else {
+                rec.course = 'Provide First Aid';
+                rec.code = 'HLTAID011';
+                rec.badge = 'Most Popular';
+                rec.description = 'Our most popular course &mdash; and for good reason. Includes CPR certification bundled in, plus comprehensive first aid skills. Nationally recognised and meets all workplace compliance requirements.';
+                rec.duration = 'Approx. 7 hours (1 day)';
+                rec.validity = '3 years (CPR component renewed annually)';
+                rec.includes = [
+                    'CPR & AED (HLTAID009) included',
+                    'Wound management & bandaging',
+                    'Burns, bites & stings',
+                    'Fractures & dislocations',
+                    'Medical emergencies',
+                    'Statement of Attainment on completion'
+                ];
+            }
         }
 
         // Location display
-        if (loc === 'townsville') {
+        if (funnelData.location === 'townsville') {
             rec.locationDisplay = 'Townsville &mdash; 40 Charles St, Aitkenvale';
-        } else if (loc === 'widebay') {
+        } else if (funnelData.location === 'widebay') {
             rec.locationDisplay = 'Wide Bay &mdash; 60 John St, Maryborough';
         } else {
             rec.locationDisplay = 'On-site at your workplace';
         }
 
         // Urgency messaging
-        if (urg === 'asap') {
+        if (funnelData.urgency === 'asap') {
             rec.urgencyMessage = 'We\'ve flagged your booking as urgent. Our team will prioritise finding you the next available spot.';
-        } else if (urg === 'month') {
-            rec.urgencyMessage = 'We have multiple course dates available in the coming weeks. We\'ll send you the best options.';
         } else {
             rec.urgencyMessage = 'No rush &mdash; we\'ll send you upcoming course dates so you can choose the one that works best.';
         }
@@ -670,7 +647,7 @@
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
                 '</div>' +
                 '<h2>Great News, ' + funnelData.name.split(' ')[0] + '!</h2>' +
-                '<p>Based on your answers, here\'s what we recommend for you:</p>' +
+                '<p>Based on your answers, here\'s what we recommend:</p>' +
             '</div>' +
 
             '<div class="funnel-result-card">' +
@@ -732,7 +709,10 @@
     }
 
     function sendLeadEmail(rec) {
-        // Build email body with all lead data
+        var situationLabel = funnelData.type === 'individual'
+            ? (funnelData.industry === 'childcare' ? 'Individual - Childcare/Education' : 'Individual - General/Workplace')
+            : (funnelData.delivery === 'onsite' ? 'Team - On-site Training' : 'Team - Venue Booking');
+
         var subject = encodeURIComponent('Course Enquiry: ' + rec.course + ' - ' + funnelData.name);
         var body = encodeURIComponent(
             'NEW LEAD FROM WEBSITE FUNNEL\n' +
@@ -744,8 +724,7 @@
             '\n' +
             'PREFERENCES\n' +
             '--------------------------------\n' +
-            'Situation: ' + funnelData.situation + '\n' +
-            'Group Size: ' + funnelData.groupSize + '\n' +
+            'Type: ' + situationLabel + '\n' +
             'Preferred Location: ' + funnelData.location + '\n' +
             'Urgency: ' + funnelData.urgency + '\n' +
             '\n' +
@@ -756,25 +735,19 @@
             'This lead was generated from the course finder funnel on the website.'
         );
 
-        // Open mailto in background (creates the email)
         var mailtoLink = 'mailto:admin@coralseatraining.com.au?subject=' + subject + '&body=' + body;
-
-        // Create a hidden iframe to trigger mailto without navigating away
         var iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.src = mailtoLink;
         document.body.appendChild(iframe);
-        setTimeout(function() {
-            document.body.removeChild(iframe);
-        }, 2000);
+        setTimeout(function() { document.body.removeChild(iframe); }, 2000);
 
-        // Also log for analytics
         console.log('Lead submitted:', funnelData);
         if (typeof gtag !== 'undefined') {
             gtag('event', 'funnel_lead', {
                 'event_category': 'Lead Generation',
                 'event_label': rec.course,
-                'value': funnelData.groupSize === '16+' ? 3 : (funnelData.groupSize === '6-15' ? 2 : 1)
+                'value': funnelData.type === 'team' ? 3 : 1
             });
         }
     }
