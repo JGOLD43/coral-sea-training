@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Coral Sea Training Partner Portal - Login to access partner discounts, employee compliance tracking, and booking management.">
+    <title>Partner Portal | Coral Sea Training</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+    <!-- Main site styles -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231B8A3D' stroke='%23D90A0A' stroke-width='6'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='50' font-weight='bold'%3E+%3C/text%3E%3C/svg%3E">
+
+    <style>
+        body {
+            background: var(--off-white);
+            min-height: 100vh;
+        }
+
+        .partner-login-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .partner-login-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(80px + var(--space-8)) var(--space-6) var(--space-8);
+        }
+
+        .partner-login-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .partner-login-header {
+            background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 100%);
+            padding: var(--space-8);
+            text-align: center;
+            color: var(--white);
+        }
+
+        .partner-login-header .logo-mark {
+            width: 56px;
+            height: 56px;
+            font-size: 1.75rem;
+            margin: 0 auto var(--space-4);
+            background: var(--white);
+            color: var(--green);
+            border: 3px solid var(--red);
+        }
+
+        .partner-login-header h1 {
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: var(--space-2);
+        }
+
+        .partner-login-header p {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .partner-login-body {
+            padding: var(--space-8);
+        }
+
+        .partner-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: var(--space-6);
+        }
+
+        .partner-tab {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .partner-tab.active {
+            color: var(--red);
+        }
+
+        .partner-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--red);
+        }
+
+        .partner-form-panel {
+            display: none;
+        }
+
+        .partner-form-panel.active {
+            display: block;
+        }
+
+        .partner-form .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .partner-form .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: var(--space-2);
+        }
+
+        .partner-form .form-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            color: var(--gray-900);
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .partner-form .form-input:focus {
+            outline: none;
+            border-color: var(--red);
+            background: var(--white);
+            box-shadow: 0 0 0 3px var(--red-light);
+        }
+
+        .partner-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+
+        .partner-form .btn {
+            width: 100%;
+            margin-top: var(--space-2);
+        }
+
+        .partner-form-error {
+            display: none;
+            padding: var(--space-3) var(--space-4);
+            background: var(--red-light);
+            color: var(--red);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: var(--space-4);
+        }
+
+        .partner-form-success {
+            display: none;
+            padding: var(--space-3) var(--space-4);
+            background: var(--green-light);
+            color: var(--green);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            margin-bottom: var(--space-4);
+        }
+
+        .partner-form-link {
+            text-align: center;
+            margin-top: var(--space-4);
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .partner-form-link a {
+            color: var(--red);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .partner-form-link a:hover {
+            text-decoration: underline;
+        }
+
+        .partner-back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            margin-top: var(--space-6);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .partner-back-link a {
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .partner-back-link a:hover {
+            color: var(--navy);
+        }
+
+        /* Reset panel */
+        .partner-reset-panel {
+            display: none;
+        }
+
+        .partner-reset-panel.active {
+            display: block;
+        }
+
+        /* Loading spinner */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            color: transparent !important;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--white);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 640px) {
+            .partner-form .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .partner-login-body {
+                padding: var(--space-6);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="partner-login-page">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <div class="header-inner">
+                    <a href="../index.html" class="logo">
+                        <div class="logo-mark">+</div>
+                        <div class="logo-text">
+                            <span class="logo-name">Coral Sea Training</span>
+                            <span class="logo-tagline">RTO #32221</span>
+                        </div>
+                    </a>
+
+                    <nav class="nav">
+                        <a href="../index.html" class="nav-link">Home</a>
+                        <a href="../about.html" class="nav-link">About</a>
+                        <a href="../courses.html" class="nav-link">Courses</a>
+                        <a href="../shop.html" class="nav-link">Shop</a>
+                        <a href="../contact.html" class="nav-link">Contact</a>
+                    </nav>
+
+                    <div class="header-actions">
+                        <a href="tel:0419675022" class="header-phone">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            0419 675 022
+                        </a>
+                        <a href="../courses.html" class="btn btn-primary">Book Course</a>
+                        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="../index.html" class="nav-link">Home</a>
+            <a href="../about.html" class="nav-link">About</a>
+            <a href="../courses.html" class="nav-link">Courses</a>
+            <a href="../shop.html" class="nav-link">Shop</a>
+            <a href="../contact.html" class="nav-link">Contact</a>
+        </div>
+
+        <!-- Login / Register -->
+        <div class="partner-login-main">
+            <div class="partner-login-card">
+                <div class="partner-login-header">
+                    <div class="logo-mark">+</div>
+                    <h1>Partner Portal</h1>
+                    <p>Manage your team's training, track compliance, and access partner pricing.</p>
+                </div>
+
+                <div class="partner-login-body">
+                    <!-- Tabs -->
+                    <div class="partner-tabs" id="partnerTabs">
+                        <button class="partner-tab active" data-tab="login">Sign In</button>
+                        <button class="partner-tab" data-tab="register">Register</button>
+                    </div>
+
+                    <!-- Login Panel -->
+                    <div class="partner-form-panel active" id="loginPanel">
+                        <div class="partner-form-error" id="loginError"></div>
+                        <form class="partner-form" id="loginForm">
+                            <div class="form-group">
+                                <label class="form-label" for="loginEmail">Email Address</label>
+                                <input class="form-input" type="email" id="loginEmail" required placeholder="you@company.com.au">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="loginPassword">Password</label>
+                                <input class="form-input" type="password" id="loginPassword" required placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg" id="loginBtn">Sign In</button>
+                        </form>
+                        <div class="partner-form-link">
+                            <a id="forgotPasswordLink">Forgot your password?</a>
+                        </div>
+                    </div>
+
+                    <!-- Register Panel -->
+                    <div class="partner-form-panel" id="registerPanel">
+                        <div class="partner-form-error" id="registerError"></div>
+                        <div class="partner-form-success" id="registerSuccess"></div>
+                        <form class="partner-form" id="registerForm">
+                            <div class="form-group">
+                                <label class="form-label" for="regBusiness">Business Name</label>
+                                <input class="form-input" type="text" id="regBusiness" required placeholder="Your Company Pty Ltd">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="regName">Contact Name</label>
+                                    <input class="form-input" type="text" id="regName" required placeholder="Full name">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="regABN">ABN</label>
+                                    <input class="form-input" type="text" id="regABN" placeholder="Optional">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="regEmail">Email Address</label>
+                                <input class="form-input" type="email" id="regEmail" required placeholder="you@company.com.au">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="regPhone">Phone</label>
+                                <input class="form-input" type="tel" id="regPhone" required placeholder="04XX XXX XXX">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="regPassword">Password</label>
+                                    <input class="form-input" type="password" id="regPassword" required minlength="8" placeholder="Min 8 characters">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="regConfirm">Confirm Password</label>
+                                    <input class="form-input" type="password" id="regConfirm" required minlength="8" placeholder="Confirm password">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg" id="registerBtn">Create Account</button>
+                        </form>
+                    </div>
+
+                    <!-- Reset Password Panel -->
+                    <div class="partner-reset-panel" id="resetPanel">
+                        <div class="partner-form-error" id="resetError"></div>
+                        <div class="partner-form-success" id="resetSuccess"></div>
+                        <form class="partner-form" id="resetForm">
+                            <p style="font-size: 0.9375rem; color: var(--gray-600); margin-bottom: var(--space-5);">Enter your email and we'll send you a link to reset your password.</p>
+                            <div class="form-group">
+                                <label class="form-label" for="resetEmail">Email Address</label>
+                                <input class="form-input" type="email" id="resetEmail" required placeholder="you@company.com.au">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg" id="resetBtn">Send Reset Link</button>
+                        </form>
+                        <div class="partner-form-link">
+                            <a id="backToLoginLink">Back to sign in</a>
+                        </div>
+                    </div>
+
+                    <div class="partner-back-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        <a href="../index.html">Back to Coral Sea Training</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer (minimal) -->
+        <footer style="background: var(--navy); padding: var(--space-6) 0; text-align: center;">
+            <p style="font-size: 0.875rem; color: var(--gray-500);">&copy; 2024 Coral Sea Training. RTO #32221</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // If already logged in, go to dashboard
+        auth.onAuthStateChanged(function(user) {
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // Tab switching
+        var tabs = document.querySelectorAll('.partner-tab');
+        var loginPanel = document.getElementById('loginPanel');
+        var registerPanel = document.getElementById('registerPanel');
+        var resetPanel = document.getElementById('resetPanel');
+        var tabContainer = document.getElementById('partnerTabs');
+
+        function showPanel(panel) {
+            loginPanel.classList.remove('active');
+            registerPanel.classList.remove('active');
+            resetPanel.classList.remove('active');
+            tabContainer.style.display = '';
+            panel.classList.add('active');
+        }
+
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                tab.classList.add('active');
+                if (tab.dataset.tab === 'login') showPanel(loginPanel);
+                else showPanel(registerPanel);
+            });
+        });
+
+        // Forgot password link
+        document.getElementById('forgotPasswordLink').addEventListener('click', function() {
+            tabContainer.style.display = 'none';
+            showPanel(resetPanel);
+        });
+
+        document.getElementById('backToLoginLink').addEventListener('click', function() {
+            tabs[0].classList.add('active');
+            tabs[1].classList.remove('active');
+            showPanel(loginPanel);
+        });
+
+        // Helper: show error
+        function showError(el, msg) {
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError(el) {
+            el.style.display = 'none';
+        }
+
+        function showSuccess(el, msg) {
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function setLoading(btn, loading) {
+            if (loading) btn.classList.add('btn-loading');
+            else btn.classList.remove('btn-loading');
+            btn.disabled = loading;
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var errorEl = document.getElementById('loginError');
+            hideError(errorEl);
+
+            var email = document.getElementById('loginEmail').value.trim();
+            var password = document.getElementById('loginPassword').value;
+            var btn = document.getElementById('loginBtn');
+
+            setLoading(btn, true);
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(function() {
+                    window.location.href = 'dashboard.html';
+                })
+                .catch(function(error) {
+                    setLoading(btn, false);
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                        showError(errorEl, 'Invalid email or password. Please try again.');
+                    } else if (error.code === 'auth/too-many-requests') {
+                        showError(errorEl, 'Too many attempts. Please try again later.');
+                    } else {
+                        showError(errorEl, 'Something went wrong. Please try again.');
+                    }
+                });
+        });
+
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var errorEl = document.getElementById('registerError');
+            var successEl = document.getElementById('registerSuccess');
+            hideError(errorEl);
+            hideError(successEl);
+
+            var business = document.getElementById('regBusiness').value.trim();
+            var name = document.getElementById('regName').value.trim();
+            var abn = document.getElementById('regABN').value.trim();
+            var email = document.getElementById('regEmail').value.trim();
+            var phone = document.getElementById('regPhone').value.trim();
+            var password = document.getElementById('regPassword').value;
+            var confirm = document.getElementById('regConfirm').value;
+            var btn = document.getElementById('registerBtn');
+
+            if (password !== confirm) {
+                showError(errorEl, 'Passwords do not match.');
+                return;
+            }
+
+            if (password.length < 8) {
+                showError(errorEl, 'Password must be at least 8 characters.');
+                return;
+            }
+
+            setLoading(btn, true);
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(function(cred) {
+                    // Create partner document in Firestore
+                    return db.collection('partners').doc(cred.user.uid).set({
+                        businessName: business,
+                        contactName: name,
+                        email: email,
+                        phone: phone,
+                        abn: abn,
+                        discountTier: 'silver',
+                        discountPercent: 10,
+                        status: 'pending',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(function() {
+                    window.location.href = 'dashboard.html';
+                })
+                .catch(function(error) {
+                    setLoading(btn, false);
+                    if (error.code === 'auth/email-already-in-use') {
+                        showError(errorEl, 'An account with this email already exists.');
+                    } else if (error.code === 'auth/weak-password') {
+                        showError(errorEl, 'Password is too weak. Use at least 8 characters.');
+                    } else {
+                        showError(errorEl, 'Registration failed. Please try again.');
+                    }
+                });
+        });
+
+        // Reset Password
+        document.getElementById('resetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var errorEl = document.getElementById('resetError');
+            var successEl = document.getElementById('resetSuccess');
+            hideError(errorEl);
+            hideError(successEl);
+
+            var email = document.getElementById('resetEmail').value.trim();
+            var btn = document.getElementById('resetBtn');
+
+            setLoading(btn, true);
+
+            auth.sendPasswordResetEmail(email)
+                .then(function() {
+                    setLoading(btn, false);
+                    showSuccess(successEl, 'Reset link sent! Check your inbox.');
+                })
+                .catch(function(error) {
+                    setLoading(btn, false);
+                    if (error.code === 'auth/user-not-found') {
+                        showError(errorEl, 'No account found with this email.');
+                    } else {
+                        showError(errorEl, 'Failed to send reset email. Please try again.');
+                    }
+                });
+        });
+
+        // Mobile menu toggle
+        var mobileToggle = document.getElementById('mobileToggle');
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileToggle && mobileMenu) {
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('open');
+                mobileToggle.classList.toggle('active');
+            });
+        }
+    })();
+    </script>
+</body>
+</html>

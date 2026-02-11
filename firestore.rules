@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Course pricing - read-only for everyone
+    match /coursePricing/{courseId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Admin only via Firebase Console
+    }
+
+    // Partner documents
+    match /partners/{partnerId} {
+      // Partners can read their own document
+      allow read: if request.auth != null && request.auth.uid == partnerId;
+
+      // Partners can create their own document on registration
+      allow create: if request.auth != null && request.auth.uid == partnerId;
+
+      // Partners can update their own document, EXCEPT protected fields
+      allow update: if request.auth != null && request.auth.uid == partnerId
+        && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['discountTier', 'discountPercent', 'status']);
+
+      // Employees subcollection
+      match /employees/{employeeId} {
+        allow read, write: if request.auth != null && request.auth.uid == partnerId;
+      }
+
+      // Bookings subcollection
+      match /bookings/{bookingId} {
+        allow read: if request.auth != null && request.auth.uid == partnerId;
+        allow create: if request.auth != null && request.auth.uid == partnerId;
+        // Partners cannot update booking status (admin only)
+        allow update: if request.auth != null && request.auth.uid == partnerId
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']);
+      }
+    }
+  }
+}
