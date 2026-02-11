@@ -31,7 +31,7 @@
     --black: #0a0a0a;
 
     /* Typography */
-    --font-display: 'Playfair Display', Georgia, serif;
+    --font-display: 'DM Serif Display', Georgia, serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     /* Spacing Scale */
@@ -1637,6 +1637,414 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-fade-in-up {
     animation: fadeInUp var(--duration-slow) var(--ease-out) forwards;
+}
+
+/* =====================================================
+   Urgency Banner
+   ===================================================== */
+
+.urgency-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    background: var(--navy);
+    padding: var(--space-2) 0;
+}
+
+.urgency-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-size: 0.8125rem;
+    color: var(--white);
+    text-align: center;
+}
+
+.urgency-text a {
+    color: #fbbf24;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.urgency-text a:hover {
+    color: var(--white);
+}
+
+/* Shift header down when urgency banner is present */
+body:has(.urgency-banner) .header {
+    top: 36px;
+}
+
+body:has(.urgency-banner) .hero {
+    padding-top: calc(80px + 36px + var(--space-16));
+}
+
+body:has(.urgency-banner) .mobile-menu {
+    top: calc(80px + 36px);
+}
+
+body:has(.urgency-banner) .page-header {
+    padding-top: calc(80px + 36px + var(--space-16));
+}
+
+/* =====================================================
+   Course Finder
+   ===================================================== */
+
+.finder-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+}
+
+.finder-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+    text-align: center;
+    font-family: var(--font-body);
+}
+
+.finder-card:hover {
+    border-color: var(--red);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.finder-card.active {
+    border-color: var(--red);
+    background: var(--red-light);
+}
+
+.finder-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--red-light);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.finder-icon svg {
+    width: 28px;
+    height: 28px;
+    color: var(--red);
+}
+
+.finder-card h3 {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+}
+
+.finder-card p {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.finder-result {
+    margin-top: var(--space-8);
+}
+
+.finder-result-inner {
+    background: var(--white);
+    border: 2px solid var(--red);
+    border-radius: 16px;
+    padding: var(--space-8);
+    text-align: center;
+    animation: fadeInUp 0.4s var(--ease-out);
+}
+
+.finder-result-inner h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-3);
+}
+
+.finder-result-inner p {
+    color: var(--gray-600);
+    margin-bottom: var(--space-6);
+    font-size: 1.0625rem;
+}
+
+@media (min-width: 640px) {
+    .finder-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .finder-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* =====================================================
+   Course Savings Tag
+   ===================================================== */
+
+.course-savings {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: 8px;
+    margin-bottom: var(--space-6);
+    display: inline-block;
+}
+
+.course-card.featured .course-savings {
+    color: #86efac;
+    background: rgba(134, 239, 172, 0.15);
+}
+
+/* =====================================================
+   Corporate / Group Section
+   ===================================================== */
+
+.corporate-section {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 100%);
+    padding: var(--space-24) 0;
+}
+
+.corporate-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: center;
+}
+
+.corporate-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.corporate-benefit {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+}
+
+.corporate-benefit svg {
+    width: 20px;
+    height: 20px;
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+.corporate-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: var(--space-6);
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: var(--space-2);
+}
+
+.stat-label {
+    font-size: 0.8125rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+}
+
+@media (min-width: 1024px) {
+    .corporate-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+    }
+}
+
+/* =====================================================
+   First Aid Kits Banner
+   ===================================================== */
+
+.kits-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: center;
+    background: var(--white);
+    border-radius: 24px;
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--gray-200);
+}
+
+.kits-content h2 {
+    margin-bottom: var(--space-3);
+}
+
+.kits-content p {
+    color: var(--gray-600);
+    font-size: 1.0625rem;
+}
+
+.kits-image img {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+}
+
+@media (min-width: 768px) {
+    .kits-banner {
+        grid-template-columns: 1fr 1fr;
+        padding: var(--space-12);
+    }
+}
+
+/* =====================================================
+   FAQ Section
+   ===================================================== */
+
+.faq-grid {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-5) 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: left;
+    gap: var(--space-4);
+}
+
+.faq-question svg {
+    width: 20px;
+    height: 20px;
+    color: var(--gray-400);
+    flex-shrink: 0;
+    transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.faq-question.open svg {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s var(--ease-out), padding 0.3s var(--ease-out);
+}
+
+.faq-answer.open {
+    max-height: 300px;
+    padding-bottom: var(--space-5);
+}
+
+.faq-answer p {
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+    line-height: 1.7;
+}
+
+/* =====================================================
+   Sticky CTA Bar
+   ===================================================== */
+
+.sticky-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    background: var(--white);
+    border-top: 1px solid var(--gray-200);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    padding: var(--space-3) var(--space-6);
+    transform: translateY(100%);
+    transition: transform 0.3s var(--ease-out);
+}
+
+.sticky-cta.visible {
+    transform: translateY(0);
+}
+
+.sticky-cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1280px;
+    margin: 0 auto;
+    gap: var(--space-4);
+}
+
+.sticky-cta-text {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--navy);
+    display: none;
+}
+
+.sticky-cta-actions {
+    display: flex;
+    gap: var(--space-3);
+    width: 100%;
+}
+
+.sticky-cta-actions .btn {
+    flex: 1;
+    font-size: 0.875rem;
+    padding: var(--space-3) var(--space-5);
+}
+
+@media (min-width: 768px) {
+    .sticky-cta-text {
+        display: block;
+    }
+
+    .sticky-cta-actions {
+        width: auto;
+        flex: none;
+    }
+
+    .sticky-cta-actions .btn {
+        flex: none;
+    }
 }
 
 /* Reduced motion */
