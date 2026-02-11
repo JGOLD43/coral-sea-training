@@ -2837,6 +2837,13 @@ body:has(.urgency-banner) .funnel-section {
     order: 2;
 }
 
+@media (min-width: 768px) {
+    .funnel-offer-sidebar {
+        position: sticky;
+        top: 100px;
+    }
+}
+
 @media (max-width: 767px) {
     .funnel-offer-main .funnel-result-card {
         padding: var(--space-5);

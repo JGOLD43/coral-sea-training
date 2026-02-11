@@ -615,68 +615,70 @@
 
         if (funnelData.type === 'team') {
             rec.isTeam = true;
-            if (funnelData.delivery === 'onsite') {
-                rec.course = 'On-Site Group Training';
-                rec.code = 'Custom Package';
-                rec.badge = 'Corporate Solution';
-                rec.price = null;
-                rec.priceLabel = 'Custom Quote';
-                rec.description = 'We bring nationally accredited training directly to your workplace. All equipment included &mdash; your team gets certified without leaving the office.';
-                rec.duration = 'Flexible &mdash; tailored to your team';
-                rec.validity = 'All certifications nationally recognised';
-                rec.includes = [
-                    'All equipment provided &mdash; we set up everything',
-                    'Choice of CPR, First Aid, or Childcare courses',
-                    'Volume discounts for 8+ participants',
-                    'Flexible scheduling around your operations',
-                    'Compliance reporting for your records',
-                    'Dedicated training coordinator'
-                ];
-                rec.bonuses = [
-                    'Compliance certificates for every participant (worth $50/head)',
-                    '"Save a Life" Learning Vault for every team member ($179/head value) FREE',
-                    'Expiry tracking &amp; renewal reminders for your whole team',
-                    '100% Compliance Guarantee &mdash; we manage everything until your team passes',
-                    'Priority rescheduling if dates change'
-                ];
-                rec.btnText = 'Get My Team Quote';
-                rec.upsellCourse = null;
-            } else {
-                rec.course = 'Group Venue Booking';
-                rec.code = 'HLTAID011 / HLTAID012';
-                rec.badge = 'Group Booking';
-                rec.price = null;
-                rec.priceLabel = 'Group Rates Available';
-                rec.description = 'Book your team into a scheduled course at our venue. Group discounts available &mdash; we\'ll coordinate everything.';
-                rec.duration = '1 day per course';
-                rec.validity = 'All certifications nationally recognised';
-                rec.includes = [
-                    'Choice of CPR, First Aid, or Childcare courses',
-                    'Group rates for 4+ participants',
-                    'All training materials provided',
-                    'Scheduled at our fully-equipped venue',
-                    'Compliance certificates for your records',
-                    'Statement of Attainment on completion'
-                ];
-                rec.bonuses = [
-                    'Compliance certificates for every participant (worth $50/head)',
-                    '"Save a Life" Learning Vault for every team member ($179/head value) FREE',
-                    'Expiry tracking &amp; renewal reminders for your whole team',
-                    '100% Compliance Guarantee &mdash; we manage everything until your team passes',
-                    'Priority rescheduling if dates change'
-                ];
-                rec.btnText = 'Get My Team Quote';
-                rec.upsellCourse = null;
-            }
+            rec.code = 'Participant Credits';
+            rec.badge = 'Team Packages';
+            rec.description = 'Buy participant credits and use them on any course &mdash; CPR, First Aid, or Childcare. ' + (funnelData.delivery === 'onsite' ? 'We bring everything to your workplace.' : 'Book your team into scheduled courses at our venue.');
+            rec.duration = funnelData.delivery === 'onsite' ? 'Flexible &mdash; tailored to your team' : '1 day per course';
+            rec.validity = 'Credits valid 12 months';
+            rec.upsellCourse = null;
+            rec.packages = [
+                {
+                    name: 'Small Team Package',
+                    badge: 'Most Popular',
+                    credits: 8,
+                    price: 1497,
+                    priceLabel: '$1,497',
+                    perHead: '$187',
+                    savings: 'Save $275 vs individual bookings',
+                    includes: [
+                        '8 participant credits (use on any course)',
+                        funnelData.delivery === 'onsite' ? 'On-site training &mdash; we bring everything' : 'Venue-based training at our facility',
+                        'Compliance certificates for every participant',
+                        '"Save a Life" Learning Vault for every team member ($179/head value)',
+                        '100% Compliance Guarantee',
+                        'Expiry tracking &amp; renewal reminders'
+                    ]
+                },
+                {
+                    name: 'Platinum Enterprise',
+                    badge: 'Best Value',
+                    credits: 25,
+                    price: 2997,
+                    priceLabel: '$2,997',
+                    perHead: '$120',
+                    savings: 'Save $978 vs individual bookings',
+                    includes: [
+                        '25 participant credits (use on any course)',
+                        funnelData.delivery === 'onsite' ? 'On-site training &mdash; we bring everything' : 'Venue-based training at our facility',
+                        'Dedicated training coordinator',
+                        '12-month compliance management',
+                        'Annual renewal auto-scheduling',
+                        '"Save a Life" Learning Vault for every team member ($179/head value)',
+                        '100% Compliance Guarantee',
+                        '30% discount on additional credits'
+                    ]
+                }
+            ];
+            rec.course = 'Team Training Credits';
+            rec.price = null;
+            rec.priceLabel = 'From $120/person';
+            rec.includes = rec.packages[0].includes;
+            rec.bonuses = [
+                '100% Compliance Guarantee &mdash; we manage everything until your team passes',
+                '"Save a Life" Learning Vault for every team member ($179/head value) FREE',
+                'Expiry tracking &amp; renewal reminders for your whole team',
+                'Priority rescheduling if dates change'
+            ];
+            rec.btnText = 'Get My Team Quote';
         } else {
             rec.isTeam = false;
             if (funnelData.industry === 'childcare') {
                 rec.course = 'The Educator Shield';
                 rec.code = 'HLTAID012';
                 rec.badge = 'Recommended For You';
-                rec.price = 140;
-                rec.priceLabel = '$140';
-                rec.anchorPrice = '$320';
+                rec.price = 199;
+                rec.priceLabel = '$199';
+                rec.anchorPrice = '$400+';
                 rec.description = 'The complete ACECQA-approved package &mdash; CPR, First Aid, Anaphylaxis and Asthma all in one day. Everything required for Cert III, Diploma, and educator roles.';
                 rec.duration = 'Approx. 8 hours (1 day)';
                 rec.validity = '3 years (CPR renewed annually)';
@@ -689,20 +691,29 @@
                     'Statement of Attainment on completion'
                 ];
                 rec.bonuses = [
-                    'Three qualifications in a single day (worth $320 separately)',
+                    'Three qualifications in a single day (worth $400+ separately)',
                     'Meets all ACECQA &amp; centre licensing requirements',
                     '"Save a Life" Learning Vault &mdash; video refreshers &amp; quick-reference guides ($179 value) FREE',
                     '100% Skills Mastery Guarantee &mdash; retrain free if you don\'t feel confident'
                 ];
-                rec.btnText = 'Book Now &mdash; $140';
+                rec.btnText = 'Book Now &mdash; $199';
+                rec.totalValue = '$697';
+                rec.valueStackItems = [
+                    { item: 'Childcare First Aid Course', value: '$199' },
+                    { item: '"Save a Life" Learning Vault', value: '$179' },
+                    { item: 'ACECQA Compliance Verification', value: '$120' },
+                    { item: 'Free Refresher Session (within 3 months)', value: '$79' },
+                    { item: 'Skills Mastery Guarantee (retrain free)', value: '$79' },
+                    { item: 'Renewal Reminders &amp; Expiry Tracking', value: '$41' }
+                ];
                 rec.upsellCourse = null;
             } else if (funnelData.level === 'cpr') {
                 rec.course = 'The 2-Hour Lifesaver';
                 rec.code = 'HLTAID009';
                 rec.badge = 'Quick &amp; Easy';
-                rec.price = 60;
-                rec.priceLabel = '$60';
-                rec.anchorPrice = '$80+';
+                rec.price = 99;
+                rec.priceLabel = '$99';
+                rec.anchorPrice = '$140+';
                 rec.description = 'Quick 3-hour refresh &mdash; perfect for your annual CPR renewal. You\'ll practise on mannequins and AED defibrillators with hands-on guidance.';
                 rec.duration = 'Approx. 3 hours';
                 rec.validity = '12 months';
@@ -719,19 +730,26 @@
                     'Renewal reminder before your cert expires &mdash; never lapse',
                     '100% Skills Mastery Guarantee &mdash; retrain free if you don\'t feel confident'
                 ];
-                rec.btnText = 'Book Now &mdash; $60';
+                rec.btnText = 'Book Now &mdash; $99';
+                rec.totalValue = '$396';
+                rec.valueStackItems = [
+                    { item: 'CPR &amp; AED Training Course', value: '$99' },
+                    { item: '"Save a Life" Learning Vault', value: '$179' },
+                    { item: 'Free Refresher Session (within 3 months)', value: '$79' },
+                    { item: 'Renewal Reminder Service', value: '$39' }
+                ];
                 rec.upsellCourse = {
-                    name: 'Provide First Aid (HLTAID011)',
-                    price: '$120',
+                    name: 'The Complete First Aider (HLTAID011)',
+                    price: '$159',
                     pitch: 'Upgrade to full First Aid for just $60 more &mdash; includes CPR plus comprehensive workplace skills. Valid 3 years instead of 1.'
                 };
             } else {
                 rec.course = 'The Complete First Aider';
                 rec.code = 'HLTAID011';
                 rec.badge = 'Most Popular';
-                rec.price = 120;
-                rec.priceLabel = '$120';
-                rec.anchorPrice = '$180';
+                rec.price = 159;
+                rec.priceLabel = '$159';
+                rec.anchorPrice = '$260';
                 rec.description = 'Our most popular course. Includes CPR certification bundled in, plus comprehensive first aid skills. Nationally recognised and meets all workplace compliance requirements.';
                 rec.duration = 'Approx. 7 hours (1 day)';
                 rec.validity = '3 years (CPR renewed annually)';
@@ -744,13 +762,22 @@
                     'Statement of Attainment on completion'
                 ];
                 rec.bonuses = [
-                    'Two qualifications in one day (CPR + First Aid &mdash; worth $180 separately)',
+                    'Two qualifications in one day (CPR + First Aid &mdash; worth $260 separately)',
                     '"Save a Life" Learning Vault &mdash; video refreshers &amp; quick-reference guides ($179 value) FREE',
                     'Free refresher session within 3 months if you want extra practice',
                     'Renewal reminder before your cert expires &mdash; never lapse',
                     '100% Skills Mastery Guarantee &mdash; retrain free if you don\'t feel confident'
                 ];
-                rec.btnText = 'Book Now &mdash; $120';
+                rec.btnText = 'Book Now &mdash; $159';
+                rec.totalValue = '$557';
+                rec.valueStackItems = [
+                    { item: 'First Aid + CPR Course (2-in-1)', value: '$159' },
+                    { item: '"Save a Life" Learning Vault', value: '$179' },
+                    { item: 'Free Refresher Session (within 3 months)', value: '$79' },
+                    { item: 'Skills Mastery Guarantee (retrain free)', value: '$79' },
+                    { item: 'Renewal Reminders &amp; Expiry Tracking', value: '$41' },
+                    { item: 'Forward-to-Employer Certificate', value: '$20' }
+                ];
                 rec.upsellCourse = null;
             }
         }
@@ -795,7 +822,7 @@
                     '<div class="funnel-offer-upsell-badge">Upgrade Available</div>' +
                     '<h4>' + rec.upsellCourse.name + ' &mdash; ' + rec.upsellCourse.price + '</h4>' +
                     '<p>' + rec.upsellCourse.pitch + '</p>' +
-                    '<button class="btn btn-outline" onclick="upgradeToFirstAid()" style="margin-top:var(--space-3);width:100%;">Upgrade to Full First Aid &mdash; $120</button>' +
+                    '<button class="btn btn-outline" onclick="upgradeToFirstAid()" style="margin-top:var(--space-3);width:100%;">Upgrade to The Complete First Aider &mdash; $159</button>' +
                 '</div>';
         }
 
@@ -803,11 +830,65 @@
             ? '<div class="funnel-form-group"><input type="text" id="funnelCompany" class="form-input" placeholder="Company / Organisation *"></div>'
             : '';
 
+        // Team package cards
+        var teamPackagesHTML = '';
+        if (rec.packages) {
+            teamPackagesHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-6);">';
+            for (var p = 0; p < rec.packages.length; p++) {
+                var pkg = rec.packages[p];
+                var isFeatured = p === 1;
+                var pkgCheckSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>';
+                var pkgIncludes = '';
+                for (var pi = 0; pi < pkg.includes.length; pi++) {
+                    pkgIncludes += '<div style="display:flex;align-items:start;gap:6px;font-size:0.8125rem;color:var(--gray-700);margin-bottom:4px;">' + pkgCheckSvg + '<span>' + pkg.includes[pi] + '</span></div>';
+                }
+                teamPackagesHTML += '' +
+                    '<div style="border:2px solid ' + (isFeatured ? 'var(--red)' : 'var(--gray-200)') + ';border-radius:12px;padding:var(--space-4);position:relative;' + (isFeatured ? 'background:var(--red-light);' : '') + '">' +
+                        '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:' + (isFeatured ? 'var(--red)' : 'var(--navy)') + ';color:white;font-size:0.6875rem;font-weight:700;padding:2px 10px;border-radius:20px;text-transform:uppercase;white-space:nowrap;">' + pkg.badge + '</div>' +
+                        '<h4 style="font-family:var(--font-heading);font-size:1.125rem;color:var(--navy);margin-top:var(--space-2);margin-bottom:var(--space-1);">' + pkg.name + '</h4>' +
+                        '<div style="font-size:0.8125rem;color:var(--green);font-weight:700;margin-bottom:var(--space-2);">' + pkg.credits + ' participant credits</div>' +
+                        '<div style="display:flex;align-items:baseline;gap:6px;margin-bottom:2px;">' +
+                            '<span style="font-size:1.75rem;font-weight:800;color:var(--navy);">' + pkg.priceLabel + '</span>' +
+                        '</div>' +
+                        '<div style="font-size:0.75rem;color:var(--gray-500);margin-bottom:var(--space-1);">' + pkg.perHead + '/person &bull; ' + pkg.savings + '</div>' +
+                        '<hr style="border:none;border-top:1px solid var(--gray-200);margin:var(--space-3) 0;">' +
+                        pkgIncludes +
+                    '</div>';
+            }
+            teamPackagesHTML += '</div>';
+        }
+
+        // Itemized value stack for individual offers (Hormozi $100M Offers — break down every component)
+        var valueStackHTML = '';
+        if (rec.valueStackItems && !rec.isTeam) {
+            var stackRows = '';
+            for (var v = 0; v < rec.valueStackItems.length; v++) {
+                stackRows += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;' + (v < rec.valueStackItems.length - 1 ? 'border-bottom:1px solid var(--gray-200);' : '') + '">' +
+                    '<span style="font-size:0.8125rem;color:var(--gray-700);">' + rec.valueStackItems[v].item + '</span>' +
+                    '<span style="font-size:0.8125rem;font-weight:600;color:var(--gray-600);">' + rec.valueStackItems[v].value + '</span>' +
+                '</div>';
+            }
+            valueStackHTML = '<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:var(--space-3) var(--space-4);margin-top:var(--space-4);">' +
+                '<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--navy);margin-bottom:var(--space-2);">Everything You\'re Getting:</div>' +
+                stackRows +
+                '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:var(--space-3);margin-top:var(--space-2);border-top:2px solid var(--navy);">' +
+                    '<span style="font-size:0.875rem;font-weight:700;color:var(--gray-500);">Total Value</span>' +
+                    '<span style="font-size:1.125rem;font-weight:800;color:var(--gray-400);text-decoration:line-through;">' + rec.totalValue + '</span>' +
+                '</div>' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:var(--space-1);">' +
+                    '<span style="font-size:1rem;font-weight:800;color:var(--green);">Today\'s Price</span>' +
+                    '<span style="font-size:1.5rem;font-weight:800;color:var(--green);">' + rec.priceLabel + '</span>' +
+                '</div>' +
+            '</div>';
+        }
+
         var html = '' +
             '<div class="funnel-step-header">' +
                 '<h2 class="funnel-title">Here\'s Your Perfect Match</h2>' +
                 '<p class="funnel-subtitle">Based on your answers, this is the exact course you need.</p>' +
             '</div>' +
+
+            (teamPackagesHTML ? teamPackagesHTML : '') +
 
             '<div class="funnel-offer-layout">' +
 
@@ -815,11 +896,13 @@
                     '<div class="funnel-result-card" style="margin-bottom:0;">' +
                         '<div class="funnel-result-badge">' + rec.badge + '</div>' +
                         '<h3 class="funnel-result-course">' + rec.course + '</h3>' +
+                        (rec.code ? '<p style="font-size:0.8125rem;color:var(--gray-500);margin-top:2px;">' + rec.code + '</p>' : '') +
                         '<div class="funnel-offer-price">' +
                             (rec.anchorPrice ? '<span class="funnel-offer-price-anchor"><s>' + rec.anchorPrice + '</s> if bought separately</span>' : '') +
                             '<span class="funnel-offer-price-amount">' + rec.priceLabel + '</span>' +
                             '<span class="funnel-offer-price-sub">per person &bull; pay on the day</span>' +
                         '</div>' +
+                        valueStackHTML +
                         '<div class="funnel-offer-meta-strip">' +
                             '<div class="funnel-offer-meta-item">' +
                                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
@@ -950,7 +1033,7 @@
             postBookUpsell = '' +
                 '<div class="funnel-confirmed-upsell">' +
                     '<h4>Want the Full Certification?</h4>' +
-                    '<p>Upgrade to <strong>Provide First Aid (HLTAID011)</strong> for just $60 more. You\'ll get CPR <em>plus</em> comprehensive workplace skills &mdash; and it\'s valid for 3 years instead of 1. Call us to upgrade your booking.</p>' +
+                    '<p>Upgrade to <strong>The Complete First Aider (HLTAID011)</strong> for just $60 more. You\'ll get CPR <em>plus</em> comprehensive workplace skills &mdash; and it\'s valid for 3 years instead of 1. Call us to upgrade your booking.</p>' +
                     '<a href="tel:0419675022" class="btn btn-primary" style="margin-top:var(--space-3);">Call to Upgrade &mdash; 0419 675 022</a>' +
                 '</div>';
         } else if (!rec.isTeam) {
