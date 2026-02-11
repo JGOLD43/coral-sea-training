@@ -159,6 +159,47 @@
                     </button>
                 </div>
 
+                <!-- ===== STEP: Partner Business (Team path) ===== -->
+                <div class="funnel-step" id="step-partner">
+                    <div class="funnel-step-header">
+                        <h2 class="funnel-title">Are You a Partner Business?</h2>
+                        <p class="funnel-subtitle">Partner businesses get priority scheduling and exclusive rates.</p>
+                    </div>
+
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectPartner('yes', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>Yes</h3>
+                                <p>We're already a Coral Sea partner</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+
+                        <button class="funnel-option" onclick="selectPartner('interested', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>No, but I'd Like to Be</h3>
+                                <p>Tell me about partner benefits</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button class="funnel-back" onclick="goBack()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
+                        Back
+                    </button>
+                </div>
+
                 <!-- ===== STEP: Delivery (Team path) ===== -->
                 <div class="funnel-step" id="step-delivery">
                     <div class="funnel-step-header">
@@ -361,6 +402,7 @@
     var funnelData = {
         type: '',       // individual | team
         industry: '',   // childcare | other (individual path)
+        partner: '',    // yes | interested (team path)
         delivery: '',   // onsite | venue (team path)
         location: '',   // townsville | widebay | onsite
         urgency: '',    // asap | flexible
@@ -412,7 +454,10 @@
 
     function updateProgress() {
         var stepsCompleted = stepHistory.length;
-        var totalSteps = (funnelData.type === 'team' && funnelData.delivery === 'onsite') ? 4 : 5;
+        var totalSteps = 5;
+        if (funnelData.type === 'team') {
+            totalSteps = (funnelData.delivery === 'onsite') ? 5 : 6;
+        }
 
         if (currentStepId === 'step-confirmed') {
             document.getElementById('progressFill').style.width = '100%';
@@ -446,8 +491,16 @@
             if (value === 'individual') {
                 navigateTo('step-industry');
             } else {
-                navigateTo('step-delivery');
+                navigateTo('step-partner');
             }
+        }, 300);
+    }
+
+    function selectPartner(value, btn) {
+        funnelData.partner = value;
+        highlightOption(btn);
+        setTimeout(function() {
+            navigateTo('step-delivery');
         }, 300);
     }
 
@@ -785,6 +838,13 @@
             ? (funnelData.industry === 'childcare' ? 'Individual - Childcare/Education' : 'Individual - General/Workplace')
             : (funnelData.delivery === 'onsite' ? 'Team - On-site Training' : 'Team - Venue Booking');
 
+        var partnerLabel = '';
+        if (funnelData.partner === 'yes') {
+            partnerLabel = 'Existing Partner';
+        } else if (funnelData.partner === 'interested') {
+            partnerLabel = 'Interested in Partnership';
+        }
+
         var subject = encodeURIComponent('NEW BOOKING: ' + rec.course + ' - ' + funnelData.name);
         var body = encodeURIComponent(
             'NEW BOOKING FROM WEBSITE\n' +
@@ -799,6 +859,7 @@
             'Course: ' + rec.course + ' (' + rec.code + ')\n' +
             (rec.price ? 'Price: ' + rec.priceLabel + '\n' : '') +
             'Type: ' + situationLabel + '\n' +
+            (partnerLabel ? 'Partner Status: ' + partnerLabel + '\n' : '') +
             'Preferred Location: ' + funnelData.location + '\n' +
             'Urgency: ' + funnelData.urgency + '\n' +
             '\n' +
