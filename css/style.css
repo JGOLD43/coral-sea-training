@@ -3162,6 +3162,263 @@ body:has(.urgency-banner) .funnel-section {
     }
 }
 
+/* =====================================================
+   Hero Stats Row
+   ===================================================== */
+
+.hero-stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+}
+
+.hero-stat {
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+}
+
+.hero-stat strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--navy);
+    line-height: 1.2;
+}
+
+/* =====================================================
+   Course Outcome Line
+   ===================================================== */
+
+.course-outcome {
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+}
+
+/* =====================================================
+   What If Section (Before/After)
+   ===================================================== */
+
+.what-if-section {
+    background: var(--off-white);
+}
+
+.what-if-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.what-if-card {
+    border-radius: 16px;
+    padding: var(--space-8);
+    position: relative;
+}
+
+.what-if-without {
+    background: var(--white);
+    border: 2px solid var(--gray-200);
+}
+
+.what-if-with {
+    background: var(--green-light);
+    border: 2px solid var(--green);
+}
+
+.what-if-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-4);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.what-if-without .what-if-label {
+    background: var(--red-light);
+    color: var(--red);
+}
+
+.what-if-with .what-if-label {
+    background: rgba(27, 138, 61, 0.15);
+    color: var(--green-dark);
+}
+
+.what-if-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.what-if-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: 1rem;
+    color: var(--gray-700);
+    line-height: 1.5;
+}
+
+.what-if-without li::before {
+    content: '\2717';
+    color: var(--red);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+.what-if-with li::before {
+    content: '\2713';
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+@media (min-width: 640px) {
+    .what-if-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* =====================================================
+   Lead Magnet Section
+   ===================================================== */
+
+.lead-magnet-section {
+    background: var(--off-white);
+}
+
+.lead-magnet-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    align-items: center;
+    background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 100%);
+    border-radius: 24px;
+    padding: var(--space-8);
+    overflow: hidden;
+}
+
+.lead-magnet-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.lead-magnet-benefit {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: rgba(255,255,255,0.9);
+    font-size: 0.9375rem;
+}
+
+.lead-magnet-form-wrapper {
+    width: 100%;
+}
+
+.lead-magnet-form {
+    background: var(--white);
+    border-radius: 16px;
+    padding: var(--space-6);
+}
+
+.lead-magnet-form .form-input {
+    margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+    .lead-magnet-card {
+        grid-template-columns: 1.2fr 1fr;
+        padding: var(--space-12);
+    }
+}
+
+/* =====================================================
+   Risk Stack / Guarantee Section
+   ===================================================== */
+
+.risk-stack-section {
+    background: var(--gray-50);
+}
+
+.risk-stack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.risk-stack-item {
+    background: var(--white);
+    border-radius: 16px;
+    padding: var(--space-6);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.risk-stack-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.risk-stack-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--green-light);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-4);
+}
+
+.risk-stack-icon svg {
+    width: 28px;
+    height: 28px;
+    color: var(--green);
+}
+
+.risk-stack-item h4 {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: var(--space-2);
+}
+
+.risk-stack-item p {
+    font-size: 0.9375rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+    .risk-stack-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .risk-stack-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
