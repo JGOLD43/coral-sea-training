@@ -579,14 +579,25 @@
             includesHTML += '<div class="funnel-result-feature">' + checkSvg + '<span>' + rec.includes[i] + '</span></div>';
         }
 
+        var bonusItems = [
+            'All equipment provided &mdash; just show up',
+            'Renewal reminder service &mdash; never lapse',
+            'Pass guarantee &mdash; retrain free if you don\'t pass'
+        ];
+        var bonusHTML = '';
+        var bonusSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>';
+        for (var j = 0; j < bonusItems.length; j++) {
+            bonusHTML += '<div class="funnel-result-feature">' + bonusSvg + '<span><strong>' + bonusItems[j] + '</strong></span></div>';
+        }
+
         var companyFieldHTML = rec.isTeam
             ? '<div class="funnel-form-group"><label class="form-label" for="funnelCompany">Company / Organisation *</label><input type="text" id="funnelCompany" class="form-input" placeholder="Your company name"></div>'
             : '';
 
         var html = '' +
             '<div class="funnel-step-header">' +
-                '<h2 class="funnel-title">Here\'s Your Course</h2>' +
-                '<p class="funnel-subtitle">Based on your answers, this is the perfect fit.</p>' +
+                '<h2 class="funnel-title">Your Course Is Ready</h2>' +
+                '<p class="funnel-subtitle">Certified in one day. Pass guarantee included. Just show up.</p>' +
             '</div>' +
 
             '<div class="funnel-result-card">' +
@@ -618,12 +629,25 @@
                     includesHTML +
                 '</div>' +
 
+                '<div class="funnel-result-features" style="margin-top:var(--space-2);">' +
+                    '<h4>Bonuses &mdash; Included Free:</h4>' +
+                    bonusHTML +
+                '</div>' +
+
+                '<div class="funnel-offer-guarantee">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;color:var(--green);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
+                    '<div>' +
+                        '<strong>Pass Guarantee</strong>' +
+                        '<p style="margin:var(--space-1) 0 0;font-size:0.875rem;color:var(--gray-600);">98% of our students pass first time. If you don\'t, retrain for free &mdash; no questions asked.</p>' +
+                    '</div>' +
+                '</div>' +
+
                 '<div class="funnel-result-urgency"><p>' + rec.urgencyNote + '</p></div>' +
             '</div>' +
 
             '<div class="funnel-form" style="margin-top:var(--space-6);">' +
                 '<h3 style="font-size:1.25rem;color:var(--navy);margin-bottom:var(--space-2);text-align:center;">Book Your Spot</h3>' +
-                '<p style="font-size:0.9375rem;color:var(--gray-600);text-align:center;margin-bottom:var(--space-6);">Enter your details and we\'ll email your booking confirmation &mdash; easy to forward to your employer for approval.</p>' +
+                '<p style="font-size:0.9375rem;color:var(--gray-600);text-align:center;margin-bottom:var(--space-6);">No study required. No upfront payment. Enter your details and we\'ll confirm your spot instantly.</p>' +
                 '<div class="funnel-form-row">' +
                     '<div class="funnel-form-group">' +
                         '<label class="form-label" for="funnelName">Full Name *</label>' +
@@ -647,7 +671,11 @@
                     '</div>' +
                     '<div class="funnel-form-trust-item">' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><polyline points="20 6 9 17 4 12"/></svg>' +
-                        '<span>Forward to your employer for approval</span>' +
+                        '<span>Easy to forward to your employer for approval</span>' +
+                    '</div>' +
+                    '<div class="funnel-form-trust-item">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><polyline points="20 6 9 17 4 12"/></svg>' +
+                        '<span>Pay on the day &mdash; no upfront cost</span>' +
                     '</div>' +
                 '</div>' +
 
@@ -656,7 +684,7 @@
                     ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
                 '</button>' +
 
-                '<p class="funnel-form-disclaimer">Pay on the day of your course. This secures your spot and sends booking details to our team.</p>' +
+                '<p class="funnel-form-disclaimer">Pay on the day of your course. This secures your spot and sends booking details to our team. Pass guarantee included.</p>' +
             '</div>';
 
         return html;

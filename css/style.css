@@ -478,6 +478,19 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: var(--space-12);
 }
 
+.hero-guarantee {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--green-light);
+    border-radius: 12px;
+    font-size: 0.9375rem;
+    color: var(--gray-700);
+    margin-bottom: var(--space-8);
+    line-height: 1.5;
+}
+
 .hero-trust {
     display: flex;
     flex-wrap: wrap;
@@ -2050,6 +2063,27 @@ body:has(.urgency-banner) .page-header {
     background: rgba(134, 239, 172, 0.15);
 }
 
+.course-bonuses {
+    border-top: 1px dashed var(--gray-200);
+    padding-top: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.course-bonus {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--green);
+    padding: var(--space-1) 0;
+}
+
+.course-card.featured .course-bonuses {
+    border-color: rgba(255,255,255,0.2);
+}
+
+.course-card.featured .course-bonus {
+    color: #86efac;
+}
+
 /* =====================================================
    Corporate / Group Section
    ===================================================== */
@@ -2686,6 +2720,19 @@ body:has(.urgency-banner) .page-header {
     font-size: 0.9375rem;
     color: var(--gray-700);
     margin: 0;
+}
+
+.funnel-offer-guarantee {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    background: var(--green-light);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    margin-bottom: var(--space-6);
+    font-size: 0.9375rem;
+    color: var(--navy);
 }
 
 .funnel-result-urgency {
