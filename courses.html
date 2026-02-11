@@ -496,9 +496,28 @@
         if (next) {
             var bannerLink = document.querySelector('#urgencyBanner .urgency-text');
             if (bannerLink) {
-                bannerLink.innerHTML =
-                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                    '<strong>Only 4 Spots Left:</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Book now before it fills</a>';
+                // Try to get real seat count from session data
+                function updateBannerWithSeats() {
+                    var seatsText = 'Limited Seats';
+                    if (sessionData && sessionData.meta && sessionData.meta.showSeatCounts) {
+                        var sessions = getSessionsForCourse('hltaid011', 'townsville');
+                        if (sessions.length > 0 && sessions[0].seatsLeft) {
+                            seatsText = 'Only ' + sessions[0].seatsLeft + ' Seats Left';
+                        }
+                    }
+                    bannerLink.innerHTML =
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                        '<strong>' + seatsText + ':</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Book now before it fills</a>';
+                }
+                // Try immediately if data loaded, retry after short delay
+                if (sessionData) {
+                    updateBannerWithSeats();
+                } else {
+                    bannerLink.innerHTML =
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                        '<strong>Limited Seats:</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Book now before it fills</a>';
+                    setTimeout(updateBannerWithSeats, 1500);
+                }
             }
         }
     })();
@@ -524,6 +543,74 @@
     var currentRec = null;
     var stepHistory = [];
     var currentStepId = 'step-type';
+    var sessionData = null;
+    var selectedSession = null;
+    var bookingMode = 'none'; // 'session_selected' | 'request_next_available' | 'none'
+    var formStartTracked = false;
+
+    // Fetch session data
+    fetch('data/sessions.json')
+        .then(function(r) { return r.json(); })
+        .then(function(d) { sessionData = d; })
+        .catch(function() { sessionData = null; });
+
+    // Get future sessions for a course + location from sessionData
+    function getSessionsForCourse(courseCode, locationId) {
+        if (!sessionData || !sessionData.courses) return [];
+        var today = new Date().toISOString().slice(0, 10);
+        for (var i = 0; i < sessionData.courses.length; i++) {
+            var c = sessionData.courses[i];
+            if (c.code.toLowerCase() === courseCode.toLowerCase() || c.id === courseCode.toLowerCase()) {
+                var loc = c.locations[locationId];
+                if (!loc || !loc.sessions) return [];
+                return loc.sessions.filter(function(s) { return s.dateISO >= today; });
+            }
+        }
+        return [];
+    }
+
+    // Get location details from sessionData
+    function getSessionLocation(courseCode, locationId) {
+        if (!sessionData || !sessionData.courses) return null;
+        for (var i = 0; i < sessionData.courses.length; i++) {
+            var c = sessionData.courses[i];
+            if (c.code.toLowerCase() === courseCode.toLowerCase() || c.id === courseCode.toLowerCase()) {
+                return c.locations[locationId] || null;
+            }
+        }
+        return null;
+    }
+
+    // Build choice summary text from funnelData
+    function buildChoiceSummary() {
+        var parts = [];
+        if (funnelData.type === 'team') {
+            parts.push('Team training');
+            if (funnelData.delivery === 'onsite') parts.push('On-site');
+            else if (funnelData.delivery === 'venue') parts.push('At venue');
+        } else {
+            if (funnelData.industry === 'childcare') {
+                parts.push('Childcare / Education');
+            } else if (funnelData.level === 'cpr') {
+                parts.push('CPR only');
+            } else {
+                parts.push('Full First Aid');
+            }
+        }
+        if (funnelData.location === 'townsville') parts.push('Townsville');
+        else if (funnelData.location === 'widebay') parts.push('Wide Bay');
+        else if (funnelData.location === 'onsite') parts.push('Your workplace');
+        if (funnelData.urgency === 'asap') parts.push('ASAP');
+        else if (funnelData.urgency === 'flexible') parts.push('Flexible timing');
+        return parts;
+    }
+
+    // GA4 helper
+    function fireEvent(name, params) {
+        if (typeof gtag !== 'undefined') {
+            gtag('event', name, params || {});
+        }
+    }
 
     // HTML escape to prevent XSS in user-supplied data
     function esc(str) {
@@ -603,6 +690,8 @@
     function selectType(value, btn) {
         funnelData.type = value;
         highlightOption(btn);
+        fireEvent('quiz_start');
+        fireEvent('quiz_step_complete', { step_name: 'type', step_value: value });
         setTimeout(function() {
             if (value === 'individual') {
                 navigateTo('step-industry');
@@ -615,6 +704,7 @@
     function selectPartner(value, btn) {
         funnelData.partner = value;
         highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'partner', step_value: value });
         setTimeout(function() {
             navigateTo('step-delivery');
         }, 300);
@@ -623,6 +713,7 @@
     function selectIndustry(value, btn) {
         funnelData.industry = value;
         highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'industry', step_value: value });
         setTimeout(function() {
             if (value === 'childcare') {
                 navigateTo('step-location');
@@ -635,6 +726,7 @@
     function selectLevel(value, btn) {
         funnelData.level = value;
         highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'level', step_value: value });
         setTimeout(function() {
             navigateTo('step-location');
         }, 300);
@@ -643,6 +735,7 @@
     function selectDelivery(value, btn) {
         funnelData.delivery = value;
         highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'delivery', step_value: value });
         setTimeout(function() {
             if (value === 'onsite') {
                 funnelData.location = 'onsite';
@@ -656,6 +749,7 @@
     function selectLocation(value, btn) {
         funnelData.location = value;
         highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'location', step_value: value });
         setTimeout(function() {
             navigateTo('step-urgency');
         }, 300);
@@ -664,6 +758,7 @@
     function selectUrgency(value, btn) {
         funnelData.urgency = value;
         highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'urgency', step_value: value });
         setTimeout(function() {
             showOffer();
         }, 300);
@@ -672,9 +767,27 @@
     // ---- Offer Page ----
 
     function showOffer() {
+        selectedSession = null;
+        bookingMode = 'none';
+        formStartTracked = false;
         currentRec = getRecommendation();
         document.getElementById('offerContent').innerHTML = buildOfferHTML(currentRec);
         navigateTo('step-offer');
+        fireEvent('quiz_complete', { course_recommended: currentRec.code, location: funnelData.location, urgency: funnelData.urgency });
+        fireEvent('results_view', { course_recommended: currentRec.code, location: funnelData.location });
+
+        // Track form focus
+        setTimeout(function() {
+            var fields = document.querySelectorAll('#funnelName, #funnelEmail, #funnelPhone');
+            fields.forEach(function(f) {
+                f.addEventListener('focus', function() {
+                    if (!formStartTracked) {
+                        formStartTracked = true;
+                        fireEvent('booking_form_start');
+                    }
+                });
+            });
+        }, 100);
     }
 
     function getRecommendation() {
@@ -925,7 +1038,7 @@
             teamPackagesHTML += '</div>';
         }
 
-        // Itemized value stack for individual offers (Hormozi $100M Offers — break down every component)
+        // Itemized value stack for individual offers
         var valueStackHTML = '';
         if (rec.valueStackItems && !rec.isTeam) {
             var stackRows = '';
@@ -949,11 +1062,121 @@
             '</div>';
         }
 
+        // ---- Choice Summary ----
+        var summaryParts = buildChoiceSummary();
+        var summaryPills = '';
+        for (var sp = 0; sp < summaryParts.length; sp++) {
+            summaryPills += '<span style="display:inline-block;background:var(--gray-100);color:var(--navy);font-size:0.75rem;font-weight:600;padding:4px 12px;border-radius:20px;border:1px solid var(--gray-200);">' + summaryParts[sp] + '</span> ';
+        }
+        var choiceSummaryHTML = '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:var(--space-6);">' +
+            '<span style="font-size:0.8125rem;color:var(--gray-500);align-self:center;">You selected:</span> ' +
+            summaryPills +
+        '</div>';
+
+        // ---- Schedule Selection (individual path only) ----
+        var scheduleHTML = '';
+        if (!rec.isTeam && funnelData.location !== 'onsite') {
+            var sessions = getSessionsForCourse(rec.code, funnelData.location);
+            var showSeats = sessionData && sessionData.meta && sessionData.meta.showSeatCounts;
+            var slaHours = (sessionData && sessionData.meta && sessionData.meta.confirmationSLAHours) || 2;
+
+            fireEvent('session_list_view', { count_sessions: sessions.length });
+
+            scheduleHTML += '<div style="margin-bottom:var(--space-4);">' +
+                '<h4 style="font-family:var(--font-heading);font-size:1rem;color:var(--navy);margin-bottom:var(--space-3);">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;vertical-align:text-bottom;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                    'Choose Your Date' +
+                '</h4>';
+
+            if (sessions.length > 0) {
+                var maxShow = funnelData.urgency === 'flexible' ? 6 : 3;
+                var initialShow = Math.min(sessions.length, funnelData.urgency === 'flexible' ? maxShow : 3);
+
+                for (var si = 0; si < sessions.length; si++) {
+                    var sess = sessions[si];
+                    var hiddenClass = si >= initialShow ? ' style="display:none;" data-extra-session="true"' : '';
+                    var seatLabel = showSeats
+                        ? '<span style="font-size:0.75rem;font-weight:600;color:' + (sess.seatsLeft <= 4 ? 'var(--red)' : 'var(--green)') + ';">' + sess.seatsLeft + ' seats left</span>'
+                        : '<span style="font-size:0.75rem;font-weight:600;color:var(--gray-500);">Limited seats</span>';
+
+                    scheduleHTML += '<div class="session-card" data-session-id="' + sess.id + '" data-session-date="' + sess.dateISO + '" data-session-label="' + sess.label + ' ' + sess.start + '&ndash;' + sess.end + '" onclick="selectSessionCard(this)"' + hiddenClass + ' ' + (hiddenClass ? '' : 'style="') + 'cursor:pointer;border:2px solid var(--gray-200);border-radius:10px;padding:var(--space-3);margin-bottom:var(--space-2);transition:all 0.15s ease;background:white;display:flex;justify-content:space-between;align-items:center;">' +
+                        '<div>' +
+                            '<div style="font-weight:700;color:var(--navy);font-size:0.9375rem;">' + sess.label + '</div>' +
+                            '<div style="font-size:0.8125rem;color:var(--gray-500);">' + sess.start + ' &ndash; ' + sess.end + '</div>' +
+                        '</div>' +
+                        seatLabel +
+                    '</div>';
+                }
+
+                if (sessions.length > initialShow) {
+                    scheduleHTML += '<button onclick="showMoreSessions(this)" style="background:none;border:none;color:var(--red);font-size:0.8125rem;font-weight:600;cursor:pointer;padding:var(--space-2) 0;width:100%;text-align:center;">Show ' + (sessions.length - initialShow) + ' more dates &darr;</button>';
+                }
+            } else {
+                scheduleHTML += '<div style="text-align:center;padding:var(--space-4);background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);">' +
+                    '<p style="font-size:0.875rem;color:var(--gray-600);margin-bottom:var(--space-2);">No dates currently posted for this location.</p>' +
+                '</div>';
+            }
+
+            // "Request next available" option
+            scheduleHTML += '<div class="session-card" data-session-id="request_next" data-session-date="" data-session-label="Next available date" onclick="selectSessionCard(this)" style="cursor:pointer;border:2px dashed var(--gray-300);border-radius:10px;padding:var(--space-3);margin-top:var(--space-2);transition:all 0.15s ease;background:white;display:flex;justify-content:space-between;align-items:center;">' +
+                '<div>' +
+                    '<div style="font-weight:700;color:var(--navy);font-size:0.9375rem;">Request next available</div>' +
+                    '<div style="font-size:0.8125rem;color:var(--gray-500);">We\'ll contact you with the next open date</div>' +
+                '</div>' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--gray-400);flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+            '</div>';
+
+            scheduleHTML += '</div>';
+        }
+
+        // ---- Confirmation SLA ----
+        var slaHours = (sessionData && sessionData.meta && sessionData.meta.confirmationSLAHours) || 2;
+        var confirmText = 'Fast confirmation (within ' + slaHours + ' hours)';
+
+        // ---- Phone number for secondary CTA ----
+        var phoneNumber = funnelData.location === 'widebay' ? '0488 488 467' : '0419 675 022';
+        var phoneTel = funnelData.location === 'widebay' ? '0488488467' : '0419675022';
+
+        // ---- Dynamic urgency strip ----
+        var urgencyStripHTML = '';
+        if (!rec.isTeam && funnelData.location !== 'onsite') {
+            var urgSessions = getSessionsForCourse(rec.code, funnelData.location);
+            if (urgSessions.length > 0) {
+                var nextSess = urgSessions[0];
+                var showSeatsUrg = sessionData && sessionData.meta && sessionData.meta.showSeatCounts;
+                if (showSeatsUrg && nextSess.seatsLeft <= 6) {
+                    urgencyStripHTML = '<div class="funnel-offer-urgency-strip"><p>Only <strong>' + nextSess.seatsLeft + ' seats left</strong> for ' + nextSess.label + '. Reserve now.</p></div>';
+                } else {
+                    urgencyStripHTML = '<div class="funnel-offer-urgency-strip"><p>Limited seats. Sessions fill fast &mdash; reserve now.</p></div>';
+                }
+            } else {
+                urgencyStripHTML = '<div class="funnel-offer-urgency-strip"><p>Request your preferred date and we\'ll get back to you within ' + slaHours + ' hours.</p></div>';
+            }
+        } else if (rec.isTeam) {
+            urgencyStripHTML = '<div class="funnel-offer-urgency-strip"><p>' + rec.urgencyNote + '</p></div>';
+        }
+
+        // ---- Secondary CTAs ----
+        var secondaryCTAHTML = '' +
+            '<div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);justify-content:center;flex-wrap:wrap;">' +
+                '<a href="tel:' + phoneTel + '" onclick="fireEvent(\'secondary_call_click\',{location:funnelData.location})" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+                    'Prefer to call? ' + phoneNumber +
+                '</a>' +
+                '<a href="contact.html?show=form" onclick="fireEvent(\'secondary_question_click\')" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+                    'Have a question?' +
+                '</a>' +
+            '</div>';
+
+        // ---- Build final HTML ----
         var html = '' +
             '<div class="funnel-step-header">' +
                 '<h2 class="funnel-title">Here\'s Your Perfect Match</h2>' +
                 '<p class="funnel-subtitle">Based on your answers, this is the exact course you need.</p>' +
             '</div>' +
+
+            choiceSummaryHTML +
 
             (teamPackagesHTML ? teamPackagesHTML : '') +
 
@@ -1010,31 +1233,38 @@
                 '<div class="funnel-offer-sidebar">' +
                     '<div class="funnel-offer-form-card">' +
                         '<h3 class="funnel-offer-form-title">Reserve Your Spot</h3>' +
-                        '<p class="funnel-offer-form-sub">No study required. Instant confirmation. Pay on the day.</p>' +
+                        '<p class="funnel-offer-form-sub">No study required. ' + confirmText + '. Pay on the day.</p>' +
+
+                        // Schedule selection (individual only)
+                        scheduleHTML +
+
                         '<div class="funnel-form-group">' +
                             '<input type="text" id="funnelName" class="form-input" placeholder="Full name *" required>' +
                         '</div>' +
                         '<div class="funnel-form-row">' +
                             '<div class="funnel-form-group">' +
-                                '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone *" required>' +
+                                '<input type="email" id="funnelEmail" class="form-input" placeholder="Email *" required>' +
                             '</div>' +
                             '<div class="funnel-form-group">' +
-                                '<input type="email" id="funnelEmail" class="form-input" placeholder="Email *" required>' +
+                                '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone (optional)">' +
                             '</div>' +
                         '</div>' +
                         companyFieldHTML +
-                        '<button class="btn btn-primary btn-lg funnel-submit" onclick="submitBooking()" style="width:100%;font-size:1.125rem;">' +
-                            rec.btnText +
+                        '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" ' + (!rec.isTeam && funnelData.location !== 'onsite' ? 'disabled' : '') + '>' +
+                            (rec.isTeam ? rec.btnText : 'Select a date above') +
                             ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
                         '</button>' +
                         '<div class="funnel-offer-form-trust">' +
-                            '<span>&#10003; Instant confirmation</span>' +
+                            '<span>&#10003; ' + confirmText + '</span>' +
                             '<span>&#10003; Pay on the day</span>' +
                             '<span>&#10003; Forward to employer</span>' +
                         '</div>' +
-                        (!rec.isTeam ? '<p class="funnel-offer-mate-deal" style="text-align:center;font-size:0.8125rem;color:var(--gray-600);margin-top:var(--space-3);"><strong style="color:var(--navy);">Bring a mate?</strong> Book together and train side by side &mdash; call <a href="tel:0419675022" style="color:var(--red);font-weight:600;">0419 675 022</a> for group pricing.</p>' : '') +
+                        (!rec.isTeam ? '<p class="funnel-offer-mate-deal" style="text-align:center;font-size:0.8125rem;color:var(--gray-600);margin-top:var(--space-3);"><strong style="color:var(--navy);">Bring a mate?</strong> Book together and train side by side &mdash; call <a href="tel:' + phoneTel + '" style="color:var(--red);font-weight:600;">' + phoneNumber + '</a> for group pricing.</p>' : '') +
                     '</div>' +
-                    '<div class="funnel-offer-urgency-strip"><p>' + rec.urgencyNote + '</p></div>' +
+                    urgencyStripHTML +
+
+                    // Secondary CTAs
+                    secondaryCTAHTML +
                 '</div>' +
 
             '</div>' +
@@ -1053,6 +1283,47 @@
         return html;
     }
 
+    // ---- Session Card Selection ----
+
+    function selectSessionCard(card) {
+        // Deselect all
+        document.querySelectorAll('.session-card').forEach(function(c) {
+            c.style.borderColor = c.dataset.sessionId === 'request_next' ? 'var(--gray-300)' : 'var(--gray-200)';
+            c.style.background = 'white';
+        });
+        // Select this one
+        card.style.borderColor = 'var(--red)';
+        card.style.background = 'var(--red-light)';
+
+        var sessionId = card.dataset.sessionId;
+        var btn = document.getElementById('funnelSubmitBtn');
+
+        if (sessionId === 'request_next') {
+            selectedSession = null;
+            bookingMode = 'request_next_available';
+            btn.disabled = false;
+            btn.innerHTML = 'Request Next Available <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+        } else {
+            selectedSession = {
+                id: sessionId,
+                dateISO: card.dataset.sessionDate,
+                label: card.dataset.sessionLabel
+            };
+            bookingMode = 'session_selected';
+            btn.disabled = false;
+            btn.innerHTML = 'Reserve This Spot <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+            fireEvent('session_selected', { session_id: sessionId, dateISO: card.dataset.sessionDate });
+        }
+    }
+
+    function showMoreSessions(btn) {
+        document.querySelectorAll('[data-extra-session]').forEach(function(el) {
+            el.style.display = 'flex';
+            el.removeAttribute('data-extra-session');
+        });
+        btn.style.display = 'none';
+    }
+
     // Upgrade from CPR to First Aid (upsell)
     function upgradeToFirstAid() {
         funnelData.level = 'firstaid';
@@ -1064,13 +1335,25 @@
     function submitBooking() {
         var name = document.getElementById('funnelName').value.trim();
         var email = document.getElementById('funnelEmail').value.trim();
-        var phone = document.getElementById('funnelPhone').value.trim();
+        var phoneEl = document.getElementById('funnelPhone');
+        var phone = phoneEl ? phoneEl.value.trim() : '';
         var companyEl = document.getElementById('funnelCompany');
         var company = companyEl ? companyEl.value.trim() : '';
 
         if (!name) { shakeField('funnelName'); return; }
         if (!email || email.indexOf('@') === -1) { shakeField('funnelEmail'); return; }
-        if (!phone) { shakeField('funnelPhone'); return; }
+        // Phone is optional — no validation
+
+        // For individual bookings, require a session selection (unless team)
+        if (!currentRec.isTeam && funnelData.location !== 'onsite' && bookingMode === 'none') {
+            // Highlight the schedule section
+            var scheduleCards = document.querySelectorAll('.session-card');
+            if (scheduleCards.length > 0) {
+                scheduleCards[0].style.borderColor = 'var(--red)';
+                scheduleCards[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        }
 
         funnelData.name = name;
         funnelData.email = email;
@@ -1078,19 +1361,30 @@
         funnelData.company = company;
 
         var btn = document.querySelector('.funnel-submit');
-        if (btn) { btn.textContent = 'Booking...'; btn.disabled = true; }
+        if (btn) { btn.textContent = 'Reserving...'; btn.disabled = true; }
 
         var formData = new FormData();
         formData.append('name', funnelData.name);
         formData.append('email', funnelData.email);
-        formData.append('phone', funnelData.phone);
+        if (funnelData.phone) formData.append('phone', funnelData.phone);
         if (funnelData.company) formData.append('company', funnelData.company);
         formData.append('course', currentRec.course + ' (' + currentRec.code + ')');
         formData.append('price', currentRec.priceLabel || 'Quote requested');
         formData.append('type', funnelData.type);
         formData.append('location', funnelData.location);
         formData.append('urgency', funnelData.urgency);
-        formData.append('_subject', 'NEW BOOKING: ' + currentRec.course + ' - ' + funnelData.name);
+        formData.append('booking_mode', bookingMode || 'direct');
+
+        if (selectedSession) {
+            formData.append('session_id', selectedSession.id);
+            formData.append('session_date', selectedSession.dateISO);
+            formData.append('session_label', selectedSession.label);
+        } else if (bookingMode === 'request_next_available') {
+            formData.append('session_id', 'request_next_available');
+            formData.append('session_date', 'Next available');
+        }
+
+        formData.append('_subject', 'NEW BOOKING: ' + currentRec.course + ' - ' + funnelData.name + (selectedSession ? ' (' + selectedSession.label + ')' : ''));
 
         fetch('https://formspree.io/f/PLACEHOLDER_BOOKING', {
             method: 'POST',
@@ -1098,18 +1392,22 @@
             headers: { 'Accept': 'application/json' }
         }).then(function(response) {
             if (response.ok) {
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'book_submit', { event_label: currentRec.course, value: currentRec.price || 0 });
-                }
+                fireEvent('booking_submit_success', {
+                    course: currentRec.code,
+                    session_id: selectedSession ? selectedSession.id : 'request_next',
+                    price: currentRec.price || 0
+                });
+                fireEvent('book_submit', { event_label: currentRec.course, value: currentRec.price || 0 });
                 document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
                 navigateTo('step-confirmed');
             } else {
-                // Fallback to mailto on failure
+                fireEvent('booking_submit_error', { error_type: 'response_not_ok' });
                 sendBookingEmailFallback(currentRec);
                 document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
                 navigateTo('step-confirmed');
             }
         }).catch(function() {
+            fireEvent('booking_submit_error', { error_type: 'network_error' });
             sendBookingEmailFallback(currentRec);
             document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
             navigateTo('step-confirmed');
@@ -1126,19 +1424,39 @@
 
     function buildConfirmedHTML(rec) {
         var firstName = funnelData.name.split(' ')[0];
+        var slaHours = (sessionData && sessionData.meta && sessionData.meta.confirmationSLAHours) || 2;
+        var phoneNumber = funnelData.location === 'widebay' ? '0488 488 467' : '0419 675 022';
+        var phoneTel = funnelData.location === 'widebay' ? '0488488467' : '0419675022';
+
+        // Session date display
+        var sessionDateDisplay = '';
+        if (selectedSession) {
+            sessionDateDisplay = '<div class="funnel-result-meta-item">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                '<div><strong>Date:</strong> ' + esc(selectedSession.label) + '</div>' +
+            '</div>';
+        } else if (bookingMode === 'request_next_available') {
+            sessionDateDisplay = '<div class="funnel-result-meta-item">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                '<div><strong>Date:</strong> We\'ll confirm the next available date</div>' +
+            '</div>';
+        }
+
+        // Next steps — adjust wording based on session selection
+        var step1Text = selectedSession
+            ? '<strong>We\'ll confirm your spot within ' + slaHours + ' hours</strong> for ' + esc(selectedSession.label) + ' and send you all the details'
+            : '<strong>We\'ll contact you within ' + slaHours + ' hours</strong> to confirm your course date and answer any questions';
 
         // Build upsell section based on what they booked
         var postBookUpsell = '';
         if (rec.code === 'HLTAID009') {
-            // CPR only — upsell to full first aid
             postBookUpsell = '' +
                 '<div class="funnel-confirmed-upsell">' +
                     '<h4>Want the Full Certification?</h4>' +
                     '<p>Upgrade to <strong>The Complete First Aider (HLTAID011)</strong> for just $60 more. You\'ll get CPR <em>plus</em> comprehensive workplace skills &mdash; and it\'s valid for 3 years instead of 1. Call us to upgrade your booking.</p>' +
-                    '<a href="tel:0419675022" class="btn btn-primary" style="margin-top:var(--space-3);">Call to Upgrade &mdash; 0419 675 022</a>' +
+                    '<a href="tel:' + phoneTel + '" class="btn btn-primary" style="margin-top:var(--space-3);">Call to Upgrade &mdash; ' + phoneNumber + '</a>' +
                 '</div>';
         } else if (!rec.isTeam) {
-            // Individual booking — cross-sell first aid kit
             postBookUpsell = '' +
                 '<div class="funnel-confirmed-upsell">' +
                     '<h4>Complete Your Preparation</h4>' +
@@ -1167,6 +1485,7 @@
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
                         '<div><strong>Course:</strong> ' + esc(rec.course) + ' (' + esc(rec.code) + ')</div>' +
                     '</div>' +
+                    sessionDateDisplay +
                     '<div class="funnel-result-meta-item">' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
                         '<div><strong>Location:</strong> ' + esc(rec.locationDisplay) + '</div>' +
@@ -1176,7 +1495,7 @@
 
                 '<div class="funnel-result-next-steps" style="margin-top:var(--space-6);">' +
                     '<h4>What Happens Next?</h4>' +
-                    '<div class="funnel-result-step"><span class="funnel-result-step-num">1</span><p><strong>We\'ll call you within 2 hours</strong> to confirm your course date and answer any questions</p></div>' +
+                    '<div class="funnel-result-step"><span class="funnel-result-step-num">1</span><p>' + step1Text + '</p></div>' +
                     '<div class="funnel-result-step"><span class="funnel-result-step-num">2</span><p>You\'ll get a reminder before the day with everything you need to know</p></div>' +
                     '<div class="funnel-result-step"><span class="funnel-result-step-num">3</span><p>Show up, get trained, leave certified &mdash; pay on the day</p></div>' +
                 '</div>' +
@@ -1184,12 +1503,12 @@
 
             postBookUpsell +
 
-            // Renewal lock-in (Hormozi Money Model — continuity / purchase frequency)
+            // Renewal lock-in
             (rec.isTeam
                 ? '<div style="background:linear-gradient(135deg,var(--navy) 0%,#243447 100%);border-radius:12px;padding:var(--space-6);margin-top:var(--space-6);color:white;text-align:center;">' +
                     '<h4 style="font-family:var(--font-heading);font-size:1.25rem;margin-bottom:var(--space-2);">Set Up an Annual Training Agreement</h4>' +
                     '<p style="font-size:0.9375rem;color:rgba(255,255,255,0.85);margin-bottom:var(--space-3);">Your team\'s CPR expires in 12 months. Instead of scrambling each year, let us handle it. We\'ll auto-schedule renewals, track every cert, and keep your business compliant year-round &mdash; one annual partnership, zero admin for you.</p>' +
-                    '<a href="tel:0419675022" class="btn btn-white" style="font-size:0.9375rem;">Call to Set Up Annual Agreement</a>' +
+                    '<a href="tel:' + phoneTel + '" class="btn btn-white" style="font-size:0.9375rem;">Call to Set Up Annual Agreement</a>' +
                   '</div>'
                 : '<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:var(--space-5);margin-top:var(--space-6);text-align:center;">' +
                     '<h4 style="font-family:var(--font-heading);font-size:1.125rem;color:var(--navy);margin-bottom:var(--space-2);">Your Renewal is Already Sorted</h4>' +
@@ -1197,20 +1516,20 @@
                   '</div>'
             ) +
 
-            // Referral prompt (Hormozi $100M Leads — cheapest leads come from buyers)
+            // Referral prompt
             '<div class="funnel-confirmed-referral" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:var(--space-5);margin-top:var(--space-6);text-align:center;">' +
                 '<h4 style="font-family:var(--font-heading);font-size:1.125rem;color:var(--navy);margin-bottom:var(--space-2);">Know Someone Who Needs Their First Aid?</h4>' +
                 '<p style="font-size:0.9375rem;color:var(--gray-600);margin-bottom:var(--space-3);">Send them this page &mdash; they\'ll thank you when they\'re the one who knows what to do in an emergency.</p>' +
                 '<button class="btn btn-outline" onclick="copyFunnelLink()" id="copyLinkBtn" style="font-size:0.875rem;">Copy Link to Share</button>' +
             '</div>' +
 
-            // Fallback contact (for unreliable mailto delivery)
+            // Fallback contact
             '<div style="background:var(--red-light);border:1px solid #fca5a5;border-radius:12px;padding:var(--space-4);margin-top:var(--space-4);text-align:center;">' +
-                '<p style="font-size:0.875rem;color:var(--gray-700);"><strong>Didn\'t receive a confirmation email?</strong> No worries &mdash; your booking is logged. Call <a href="tel:0419675022" style="color:var(--red);font-weight:600;">0419 675 022</a> or email <a href="mailto:admin@coralseatraining.com.au" style="color:var(--red);font-weight:600;">admin@coralseatraining.com.au</a> to verify.</p>' +
+                '<p style="font-size:0.875rem;color:var(--gray-700);"><strong>Didn\'t receive a confirmation email?</strong> No worries &mdash; your booking is logged. Call <a href="tel:' + phoneTel + '" style="color:var(--red);font-weight:600;">' + phoneNumber + '</a> or email <a href="mailto:admin@coralseatraining.com.au" style="color:var(--red);font-weight:600;">admin@coralseatraining.com.au</a> to verify.</p>' +
             '</div>' +
 
             '<div class="funnel-result-cta-row">' +
-                '<a href="tel:0419675022" class="btn btn-primary btn-lg">' +
+                '<a href="tel:' + phoneTel + '" class="btn btn-primary btn-lg">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
                     'Questions? Call Us' +
                 '</a>' +
@@ -1258,6 +1577,7 @@
             (partnerLabel ? 'Partner Status: ' + partnerLabel + '\n' : '') +
             'Preferred Location: ' + funnelData.location + '\n' +
             'Urgency: ' + funnelData.urgency + '\n' +
+            (selectedSession ? 'Selected Session: ' + selectedSession.label + ' (' + selectedSession.id + ')\n' : (bookingMode === 'request_next_available' ? 'Session: Requested next available\n' : '')) +
             '\n' +
             'ACTION REQUIRED: Please confirm course date and send booking details to the student.'
         );
