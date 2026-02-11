@@ -416,6 +416,13 @@
     var stepHistory = [];
     var currentStepId = 'step-type';
 
+    // HTML escape to prevent XSS in user-supplied data
+    function esc(str) {
+        var div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
     // ---- Navigation ----
 
     function navigateTo(stepId) {
@@ -794,26 +801,26 @@
                 '<div class="funnel-result-check">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
                 '</div>' +
-                '<h2>You\'re Booked, ' + firstName + '!</h2>' +
-                '<p>Your spot for <strong>' + rec.course + '</strong> has been secured.</p>' +
+                '<h2>You\'re Booked, ' + esc(firstName) + '!</h2>' +
+                '<p>Your spot for <strong>' + esc(rec.course) + '</strong> has been secured.</p>' +
             '</div>' +
 
             '<div class="funnel-result-card">' +
                 '<div class="funnel-result-confirmation" style="margin-bottom:var(--space-4);border:none;background:var(--green-light);">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--green);flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
-                    '<p><strong>Booking confirmation has been sent.</strong> Check your email at <strong>' + funnelData.email + '</strong> &mdash; forward it to your employer for approval if needed.</p>' +
+                    '<p><strong>Booking confirmation has been sent.</strong> Check your email at <strong>' + esc(funnelData.email) + '</strong> &mdash; forward it to your employer for approval if needed.</p>' +
                 '</div>' +
 
                 '<div class="funnel-result-meta">' +
                     '<div class="funnel-result-meta-item">' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
-                        '<div><strong>Course:</strong> ' + rec.course + ' (' + rec.code + ')</div>' +
+                        '<div><strong>Course:</strong> ' + esc(rec.course) + ' (' + esc(rec.code) + ')</div>' +
                     '</div>' +
                     '<div class="funnel-result-meta-item">' +
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
-                        '<div><strong>Location:</strong> ' + rec.locationDisplay + '</div>' +
+                        '<div><strong>Location:</strong> ' + esc(rec.locationDisplay) + '</div>' +
                     '</div>' +
-                    (rec.price ? '<div class="funnel-result-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>Price:</strong> ' + rec.priceLabel + ' (pay on the day)</div></div>' : '') +
+                    (rec.price ? '<div class="funnel-result-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>Price:</strong> ' + esc(rec.priceLabel) + ' (pay on the day)</div></div>' : '') +
                 '</div>' +
 
                 '<div class="funnel-result-next-steps" style="margin-top:var(--space-6);">' +
@@ -873,7 +880,7 @@
         document.body.appendChild(iframe);
         setTimeout(function() { document.body.removeChild(iframe); }, 2000);
 
-        console.log('Booking submitted:', funnelData);
+        // Analytics event only — no PII logged to console
         if (typeof gtag !== 'undefined') {
             gtag('event', 'purchase', {
                 'event_category': 'Booking',

@@ -18,45 +18,71 @@ service cloud.firestore {
       // Partners can read their own document
       allow read: if request.auth != null && request.auth.uid == partnerId;
 
-      // Partners can create their own document on registration with required fields
+      // Partners can create their own document on registration — strict field whitelist
       allow create: if request.auth != null && request.auth.uid == partnerId
         && request.resource.data.keys().hasAll(['businessName', 'contactName', 'email'])
+        && request.resource.data.keys().hasOnly(['businessName', 'contactName', 'email', 'phone', 'abn'])
         && request.resource.data.businessName is string
         && request.resource.data.contactName is string
         && request.resource.data.email is string
         && request.resource.data.businessName.size() > 0
         && request.resource.data.businessName.size() <= 200
+        && request.resource.data.contactName.size() > 0
         && request.resource.data.contactName.size() <= 200
+        && request.resource.data.email.size() > 0
         && request.resource.data.email.size() <= 200;
 
-      // Partners can update their own document, EXCEPT protected fields
+      // Partners can update their own document — whitelist of allowed fields only
       allow update: if request.auth != null && request.auth.uid == partnerId
-        && !request.resource.data.diff(resource.data).affectedKeys()
-            .hasAny(['discountTier', 'discountPercent', 'status', 'createdAt']);
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['businessName', 'contactName', 'email', 'phone', 'abn'])
+        && request.resource.data.businessName is string
+        && request.resource.data.businessName.size() > 0
+        && request.resource.data.businessName.size() <= 200
+        && request.resource.data.contactName is string
+        && request.resource.data.contactName.size() <= 200
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 200;
 
-      // Employees subcollection
+      // Partners cannot delete their own document
+      allow delete: if false;
+
+      // Employees subcollection — field whitelist on create and update
       match /employees/{employeeId} {
         allow read: if request.auth != null && request.auth.uid == partnerId;
         allow create: if request.auth != null && request.auth.uid == partnerId
+          && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'certifications'])
           && request.resource.data.name is string
           && request.resource.data.name.size() > 0
           && request.resource.data.name.size() <= 200;
-        allow update: if request.auth != null && request.auth.uid == partnerId;
+        allow update: if request.auth != null && request.auth.uid == partnerId
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['name', 'email', 'phone', 'certifications'])
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.name.size() <= 200;
         allow delete: if request.auth != null && request.auth.uid == partnerId;
       }
 
-      // Bookings subcollection
+      // Bookings subcollection — strict validation, limited update
       match /bookings/{bookingId} {
         allow read: if request.auth != null && request.auth.uid == partnerId;
         allow create: if request.auth != null && request.auth.uid == partnerId
           && request.resource.data.keys().hasAll(['courseName', 'courseDate', 'employees'])
+          && request.resource.data.keys().hasOnly([
+               'courseName', 'courseDate', 'employees', 'courseCode', 'notes', 'createdAt'
+             ])
           && request.resource.data.courseName is string
+          && request.resource.data.courseName.size() > 0
+          && request.resource.data.courseName.size() <= 500
           && request.resource.data.courseDate is string
-          && request.resource.data.employees is list;
-        // Partners cannot update protected booking fields (admin/Cloud Functions only)
+          && request.resource.data.courseDate.size() <= 20
+          && request.resource.data.employees is list
+          && request.resource.data.employees.size() <= 100;
+        // Partners can only update notes — all sync/status fields are Cloud Functions only
         allow update: if request.auth != null && request.auth.uid == partnerId
-          && !request.resource.data.diff(resource.data).affectedKeys()
-              .hasAny(['status', 'acuityAppointmentIds', 'acuitySyncStatus', 'acuitySyncedAt', 'acuitySyncError']);
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['notes']);
       }
     }
   }

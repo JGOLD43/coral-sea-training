@@ -172,7 +172,6 @@
     document.querySelectorAll('a[href^="tel:"]').forEach(link => {
         link.addEventListener('click', function() {
             const phoneNumber = this.getAttribute('href').replace('tel:', '');
-            console.log('Phone click:', phoneNumber);
 
             // Google Analytics tracking (if available)
             if (typeof gtag !== 'undefined') {
@@ -193,7 +192,6 @@
             const courseCard = this.closest('.course-card');
             if (courseCard) {
                 const courseTitle = courseCard.querySelector('.course-title')?.textContent;
-                console.log('Course interest:', courseTitle);
 
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'course_click', {

@@ -38,11 +38,31 @@ async function acuityRequest(method, path, { params, body } = {}) {
         options.body = JSON.stringify(body);
     }
 
-    const response = await fetch(url.toString(), options);
+    // 15-second timeout to prevent Cloud Function from hanging on slow responses
+    const AbortController = globalThis.AbortController || require('abort-controller');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    options.signal = controller.signal;
+
+    let response;
+    try {
+        response = await fetch(url.toString(), options);
+    } catch (fetchErr) {
+        clearTimeout(timeoutId);
+        if (fetchErr.name === 'AbortError') {
+            const err = new Error('Scheduling service timed out');
+            err.status = 504;
+            throw err;
+        }
+        throw fetchErr;
+    }
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
+        // Log full error server-side, but don't leak Acuity details to callers
         const errorBody = await response.text();
-        const err = new Error(`Acuity API error ${response.status}: ${errorBody}`);
+        functions.logger.error('Acuity API error:', { status: response.status, body: errorBody });
+        const err = new Error('Scheduling service error');
         err.status = response.status;
         throw err;
     }

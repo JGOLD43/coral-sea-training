@@ -10,14 +10,11 @@ const { acuityGet, acuityPost, acuityPut } = require('./acuityClient');
 
 admin.initializeApp();
 
-// CORS — restrict to admin panel origins
+// CORS — restrict to production origins only
+// For local development, use Firebase emulator or add localhost origins temporarily
 const corsHandler = cors({
     origin: [
-        'https://jgold43.github.io',
-        'http://localhost:5500',
-        'http://127.0.0.1:5500',
-        'http://localhost:8080',
-        'http://127.0.0.1:8080'
+        'https://jgold43.github.io'
     ],
     methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -41,8 +38,15 @@ async function verifyAdmin(req) {
     const adminUids = (functions.config().admin && functions.config().admin.uids) || '';
     const uidList = adminUids.split(',').map(u => u.trim()).filter(Boolean);
 
-    if (uidList.length > 0 && !uidList.includes(decoded.uid)) {
-        const err = new Error('Forbidden — not an admin user');
+    // Default-deny: if no admin UIDs configured, reject all requests
+    if (uidList.length === 0) {
+        const err = new Error('Forbidden — admin UIDs not configured');
+        err.status = 403;
+        throw err;
+    }
+
+    if (!uidList.includes(decoded.uid)) {
+        const err = new Error('Forbidden');
         err.status = 403;
         throw err;
     }
@@ -50,12 +54,44 @@ async function verifyAdmin(req) {
     return decoded;
 }
 
-// Helper to handle errors consistently
+// Validate that an ID is a safe numeric string (prevents path traversal)
+function validateId(id) {
+    if (!id || !/^\d+$/.test(String(id))) {
+        const err = new Error('Invalid ID');
+        err.status = 400;
+        throw err;
+    }
+    return String(id);
+}
+
+// Whitelist allowed query params for Acuity proxy endpoints
+function filterParams(query, allowed) {
+    const filtered = {};
+    for (const key of allowed) {
+        if (query[key] !== undefined && query[key] !== '') {
+            filtered[key] = String(query[key]);
+        }
+    }
+    return filtered;
+}
+
+// Helper to handle errors consistently — sanitize messages to prevent info leakage
 function handleError(res, err) {
     const status = err.status || 500;
-    const message = err.message || 'Internal server error';
-    functions.logger.error('API Error:', { status, message });
-    res.status(status).json({ error: message });
+    functions.logger.error('API Error:', { status, message: err.message });
+
+    // Only return our own error messages, never raw Acuity/internal errors
+    const safeMessages = {
+        400: 'Bad request',
+        401: 'Unauthorized',
+        403: 'Forbidden',
+        404: 'Not found',
+        405: 'Method not allowed'
+    };
+    const message = safeMessages[status] || err.message || 'Internal server error';
+    // Strip any Acuity API details from error messages
+    const sanitized = message.startsWith('Acuity API error') ? 'Scheduling service error' : message;
+    res.status(status).json({ error: sanitized });
 }
 
 // =====================================================
@@ -67,7 +103,11 @@ exports.getAppointments = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const data = await acuityGet('/appointments', req.query);
+            const params = filterParams(req.query, [
+                'minDate', 'maxDate', 'appointmentTypeID', 'calendarID',
+                'canceled', 'max', 'direction'
+            ]);
+            const data = await acuityGet('/appointments', params);
             res.json(data);
         } catch (err) {
             handleError(res, err);
@@ -80,11 +120,7 @@ exports.getAppointment = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const id = req.query.id;
-            if (!id) {
-                res.status(400).json({ error: 'Missing appointment id' });
-                return;
-            }
+            const id = validateId(req.query.id);
             const data = await acuityGet('/appointments/' + id);
             res.json(data);
         } catch (err) {
@@ -111,11 +147,7 @@ exports.cancelAppointment = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const id = req.query.id || (req.body && req.body.id);
-            if (!id) {
-                res.status(400).json({ error: 'Missing appointment id' });
-                return;
-            }
+            const id = validateId(req.query.id || (req.body && req.body.id));
             const data = await acuityPut('/appointments/' + id + '/cancel');
             res.json(data);
         } catch (err) {
@@ -129,10 +161,10 @@ exports.rescheduleAppointment = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const id = req.query.id || (req.body && req.body.id);
+            const id = validateId(req.query.id || (req.body && req.body.id));
             const datetime = req.body && req.body.datetime;
-            if (!id || !datetime) {
-                res.status(400).json({ error: 'Missing appointment id or datetime' });
+            if (!datetime || typeof datetime !== 'string') {
+                res.status(400).json({ error: 'Missing or invalid datetime' });
                 return;
             }
             const data = await acuityPut('/appointments/' + id + '/reschedule', {
@@ -163,7 +195,8 @@ exports.getAvailableDates = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const data = await acuityGet('/availability/dates', req.query);
+            const params = filterParams(req.query, ['appointmentTypeID', 'month', 'calendarID']);
+            const data = await acuityGet('/availability/dates', params);
             res.json(data);
         } catch (err) {
             handleError(res, err);
@@ -176,7 +209,8 @@ exports.getAvailableTimes = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const data = await acuityGet('/availability/times', req.query);
+            const params = filterParams(req.query, ['appointmentTypeID', 'date', 'calendarID']);
+            const data = await acuityGet('/availability/times', params);
             res.json(data);
         } catch (err) {
             handleError(res, err);
@@ -189,7 +223,8 @@ exports.getClients = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
         try {
             await verifyAdmin(req);
-            const data = await acuityGet('/clients', req.query);
+            const params = filterParams(req.query, ['search', 'max', 'direction']);
+            const data = await acuityGet('/clients', params);
             res.json(data);
         } catch (err) {
             handleError(res, err);
@@ -220,14 +255,40 @@ exports.acuityWebhook = functions.https.onRequest(async (req, res) => {
         return;
     }
 
+    // Verify webhook secret (set via: firebase functions:config:set acuity.webhook_secret="...")
+    const webhookSecret = (functions.config().acuity && functions.config().acuity.webhook_secret) || '';
+    if (webhookSecret) {
+        const providedSecret = req.headers['x-acuity-secret'] || req.query.secret || '';
+        if (providedSecret !== webhookSecret) {
+            res.status(403).send('Forbidden');
+            return;
+        }
+    }
+
     const { action, id } = req.body;
     if (!action || !id) {
         res.status(400).send('Missing action or id');
         return;
     }
 
+    // Validate action is a known Acuity event
+    const validActions = [
+        'appointment.scheduled', 'appointment.rescheduled',
+        'appointment.canceled', 'appointment.changed'
+    ];
+    if (!validActions.includes(action)) {
+        res.status(400).send('Unknown action');
+        return;
+    }
+
+    // Validate appointment ID is numeric (prevents path traversal)
+    if (!/^\d+$/.test(String(id))) {
+        res.status(400).send('Invalid id');
+        return;
+    }
+
     try {
-        // Fetch full appointment from Acuity to confirm authenticity
+        // Fetch full appointment from Acuity to confirm it exists
         const appointment = await acuityGet('/appointments/' + id);
 
         const statusMap = {
@@ -323,9 +384,25 @@ exports.onBookingCreated = functions.firestore
                 return null;
             }
 
-            // Create Acuity appointment for each employee
+            // Create Acuity appointment for each employee (limit to prevent abuse)
+            const MAX_EMPLOYEES_PER_BOOKING = 100;
             const appointmentIds = [];
-            const employees = booking.employees || [];
+            const employees = (booking.employees || []).slice(0, MAX_EMPLOYEES_PER_BOOKING);
+
+            if (booking.employees && booking.employees.length > MAX_EMPLOYEES_PER_BOOKING) {
+                functions.logger.warn('Booking exceeds employee limit:', {
+                    bookingId, partnerId, count: booking.employees.length
+                });
+            }
+
+            // Validate courseDate format before using in API calls
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(booking.courseDate || '')) {
+                await snap.ref.update({
+                    acuitySyncStatus: 'failed',
+                    acuitySyncError: 'Invalid courseDate format'
+                });
+                return null;
+            }
 
             for (const emp of employees) {
                 const nameParts = (emp.name || '').split(' ');
