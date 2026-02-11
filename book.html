@@ -295,7 +295,13 @@
             }
         }
 
-        // Populate date dropdown from course data
+        // Populate date dropdown — try sessions.json for richer display, fallback to course-data.js
+        var bookSessionData = null;
+        fetch('data/sessions.json')
+            .then(function(r) { return r.json(); })
+            .then(function(d) { bookSessionData = d; updateDateOptions(); })
+            .catch(function() { bookSessionData = null; });
+
         function updateDateOptions() {
             var dateSelect = document.getElementById('bookDate');
             var selCourse = courseSelect.value;
@@ -304,9 +310,10 @@
 
             // Determine courseId and locationId from current selections
             var courseId = null;
+            var courseCode = null;
             for (var k = 0; k < COURSE_DATA.length; k++) {
                 var checkVal = COURSE_DATA[k].title + ' (' + COURSE_DATA[k].code + ') - ' + COURSE_DATA[k].priceLabel;
-                if (checkVal === selCourse) { courseId = COURSE_DATA[k].id; break; }
+                if (checkVal === selCourse) { courseId = COURSE_DATA[k].id; courseCode = COURSE_DATA[k].code; break; }
             }
             var locationId = null;
             if (selLoc.indexOf('Townsville') === 0) locationId = 'townsville';
@@ -316,17 +323,50 @@
             dateSelect.innerHTML = '<option value="">Select a date...</option>';
 
             if (courseId && locationId) {
-                var dates = getUpcomingDates(courseId, locationId);
-                for (var d = 0; d < dates.length; d++) {
-                    var opt = document.createElement('option');
-                    opt.value = dates[d].dateStr;
-                    opt.textContent = dates[d].formattedLong;
-                    dateSelect.appendChild(opt);
+                // Try sessions.json for richer data (times + seats)
+                var usedSessionData = false;
+                if (bookSessionData && bookSessionData.courses) {
+                    var today = new Date().toISOString().slice(0, 10);
+                    for (var si = 0; si < bookSessionData.courses.length; si++) {
+                        var sc = bookSessionData.courses[si];
+                        if (sc.code === courseCode || sc.id === courseId) {
+                            var loc = sc.locations[locationId];
+                            if (loc && loc.sessions) {
+                                var showSeats = bookSessionData.meta && bookSessionData.meta.showSeatCounts;
+                                var futureSessions = loc.sessions.filter(function(s) { return s.dateISO >= today; });
+                                for (var fs = 0; fs < futureSessions.length; fs++) {
+                                    var sess = futureSessions[fs];
+                                    var opt = document.createElement('option');
+                                    opt.value = sess.dateISO;
+                                    var label = sess.label + ' \u2022 ' + sess.start + '\u2013' + sess.end;
+                                    if (showSeats && sess.seatsLeft) {
+                                        label += ' (' + sess.seatsLeft + ' seats left)';
+                                    }
+                                    opt.textContent = label;
+                                    dateSelect.appendChild(opt);
+                                }
+                                usedSessionData = futureSessions.length > 0;
+                            }
+                            break;
+                        }
+                    }
                 }
-                if (dates.length === 0) {
+
+                // Fallback to course-data.js basic dates
+                if (!usedSessionData) {
+                    var dates = getUpcomingDates(courseId, locationId);
+                    for (var d = 0; d < dates.length; d++) {
+                        var opt2 = document.createElement('option');
+                        opt2.value = dates[d].dateStr;
+                        opt2.textContent = dates[d].formattedLong;
+                        dateSelect.appendChild(opt2);
+                    }
+                }
+
+                if (dateSelect.options.length <= 1) {
                     var noOpt = document.createElement('option');
                     noOpt.value = '';
-                    noOpt.textContent = 'No upcoming dates — call us to arrange';
+                    noOpt.textContent = 'No upcoming dates \u2014 call us to arrange';
                     dateSelect.appendChild(noOpt);
                 }
             }
