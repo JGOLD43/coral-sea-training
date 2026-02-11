@@ -222,14 +222,13 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background: var(--green);
     border-bottom: 1px solid transparent;
     transition: all var(--duration-fast) var(--ease-out);
 }
 
 .header.scrolled {
-    border-bottom-color: var(--gray-200);
+    border-bottom-color: var(--green-dark);
     box-shadow: var(--shadow-sm);
 }
 
@@ -249,12 +248,12 @@ h1, h2, h3, h4, h5, h6 {
 .logo-mark {
     width: 48px;
     height: 48px;
-    background: var(--green);
+    background: var(--white);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--white);
+    color: var(--green);
     font-size: 1.5rem;
     font-weight: 700;
     font-family: var(--font-display);
@@ -270,13 +269,13 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--navy);
+    color: var(--white);
     line-height: 1.2;
 }
 
 .logo-tagline {
     font-size: 0.75rem;
-    color: var(--gray-500);
+    color: rgba(255, 255, 255, 0.75);
     font-weight: 500;
     letter-spacing: 0.02em;
 }
@@ -290,7 +289,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-link {
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--gray-700);
+    color: var(--white);
     transition: color var(--duration-fast);
     position: relative;
 }
@@ -302,13 +301,13 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--red);
+    background: var(--white);
     transition: width var(--duration-fast) var(--ease-out);
 }
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--navy);
+    color: var(--white);
 }
 
 .nav-link:hover::after,
@@ -327,13 +326,13 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     gap: var(--space-2);
     font-weight: 600;
-    color: var(--navy);
+    color: var(--white);
 }
 
 .header-phone svg {
     width: 18px;
     height: 18px;
-    color: var(--red);
+    color: var(--white);
 }
 
 .mobile-toggle {
@@ -349,7 +348,7 @@ h1, h2, h3, h4, h5, h6 {
 .mobile-toggle span {
     width: 24px;
     height: 2px;
-    background: var(--navy);
+    background: var(--white);
     border-radius: 2px;
     transition: all var(--duration-fast);
 }
@@ -460,7 +459,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title span {
-    color: var(--red);
+    color: var(--green);
 }
 
 .hero-description {
