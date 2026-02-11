@@ -79,14 +79,14 @@
                 <!-- Social Proof Banner -->
                 <div class="funnel-social-proof">
                     <span class="funnel-social-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-                    <span>Rated <strong>4.9/5</strong> by <strong>10,000+</strong> Queenslanders</span>
+                    <span>Rated <strong>4.4/5</strong> by <strong>10,000+</strong> Queenslanders</span>
                 </div>
 
                 <!-- ===== STEP: Type (Individual or Team) ===== -->
                 <div class="funnel-step active" id="step-type">
                     <div class="funnel-step-header">
-                        <h1 class="funnel-title">Get Certified in 30 Seconds</h1>
-                        <p class="funnel-subtitle">Answer a few quick taps and we'll match you with the perfect course.</p>
+                        <h1 class="funnel-title">Find Your Perfect Course in 30 Seconds</h1>
+                        <p class="funnel-subtitle">Two quick taps and we'll recommend the exact certification you need.</p>
                     </div>
 
                     <div class="funnel-options funnel-options-2">
@@ -213,8 +213,8 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Yes, Train at Our Workplace</h3>
-                                <p>On-site training &mdash; you come to us</p>
+                                <h3>Yes, Come to Our Workplace</h3>
+                                <p>We bring everything to you &mdash; zero travel for your team</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -226,8 +226,49 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>No, We'll Come to Your Venue</h3>
-                                <p>We'll attend one of your training centres</p>
+                                <h3>No, We'll Go to Your Venue</h3>
+                                <p>Our team attends a scheduled course at your location</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button class="funnel-back" onclick="goBack()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
+                        Back
+                    </button>
+                </div>
+
+                <!-- ===== STEP: Course Level (Individual non-childcare) ===== -->
+                <div class="funnel-step" id="step-level">
+                    <div class="funnel-step-header">
+                        <h2 class="funnel-title">What Level of Training Do You Need?</h2>
+                        <p class="funnel-subtitle">Not sure? Most employers require Provide First Aid (HLTAID011).</p>
+                    </div>
+
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectLevel('cpr', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>Just CPR</h3>
+                                <p>Annual refresh &mdash; 3 hours, in and out</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+
+                        <button class="funnel-option" onclick="selectLevel('firstaid', this)">
+                            <div class="funnel-option-icon" style="background: var(--red-light);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--red);"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>Full First Aid</h3>
+                                <p>CPR included &mdash; the complete workplace certification</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -387,7 +428,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Coral Sea Training. All rights reserved. RTO #32221</p>
+                <p>&copy; 2025 Coral Sea Training. All rights reserved. RTO #32221</p>
                 <p><a href="partner/">Partner Login</a> &middot; <a href="admin/">Admin</a></p>
             </div>
         </div>
@@ -402,6 +443,7 @@
     var funnelData = {
         type: '',       // individual | team
         industry: '',   // childcare | other (individual path)
+        level: '',      // cpr | firstaid (individual non-childcare path)
         partner: '',    // yes | interested (team path)
         delivery: '',   // onsite | venue (team path)
         location: '',   // townsville | widebay | onsite
@@ -515,6 +557,18 @@
         funnelData.industry = value;
         highlightOption(btn);
         setTimeout(function() {
+            if (value === 'childcare') {
+                navigateTo('step-location');
+            } else {
+                navigateTo('step-level');
+            }
+        }, 300);
+    }
+
+    function selectLevel(value, btn) {
+        funnelData.level = value;
+        highlightOption(btn);
+        setTimeout(function() {
             navigateTo('step-location');
         }, 300);
     }
@@ -578,7 +632,13 @@
                     'Compliance reporting for your records',
                     'Dedicated training coordinator'
                 ];
+                rec.bonuses = [
+                    'Compliance certificates for every participant (worth $50/head)',
+                    'Expiry tracking &amp; renewal reminders for your whole team',
+                    'Priority rescheduling if dates change'
+                ];
                 rec.btnText = 'Get My Team Quote';
+                rec.upsellCourse = null;
             } else {
                 rec.course = 'Group Venue Booking';
                 rec.code = 'HLTAID011 / HLTAID012';
@@ -596,7 +656,13 @@
                     'Compliance certificates for your records',
                     'Statement of Attainment on completion'
                 ];
+                rec.bonuses = [
+                    'Compliance certificates for every participant (worth $50/head)',
+                    'Expiry tracking &amp; renewal reminders for your whole team',
+                    'Priority rescheduling if dates change'
+                ];
                 rec.btnText = 'Get My Team Quote';
+                rec.upsellCourse = null;
             }
         } else {
             rec.isTeam = false;
@@ -617,7 +683,40 @@
                     'ACECQA approved for childcare',
                     'Statement of Attainment on completion'
                 ];
+                rec.bonuses = [
+                    'Three qualifications in a single day (worth $320 separately)',
+                    'Meets all ACECQA &amp; centre licensing requirements',
+                    'Pass guarantee &mdash; retrain free if you don\'t pass'
+                ];
                 rec.btnText = 'Book Now &mdash; $140';
+                rec.upsellCourse = null;
+            } else if (funnelData.level === 'cpr') {
+                rec.course = 'CPR Course';
+                rec.code = 'HLTAID009';
+                rec.badge = 'Quick &amp; Easy';
+                rec.price = 60;
+                rec.priceLabel = '$60';
+                rec.description = 'Quick 3-hour refresh &mdash; perfect for your annual CPR renewal. You\'ll practise on mannequins and AED defibrillators with hands-on guidance.';
+                rec.duration = 'Approx. 3 hours';
+                rec.validity = '12 months';
+                rec.includes = [
+                    'Cardiopulmonary Resuscitation (CPR)',
+                    'AED Defibrillator Training',
+                    'Infant, child &amp; adult techniques',
+                    'Practical assessment with feedback',
+                    'Statement of Attainment on completion'
+                ];
+                rec.bonuses = [
+                    'Renewal reminder before your cert expires (worth $0 &mdash; we do this free)',
+                    'All equipment provided &mdash; just show up',
+                    'Pass guarantee &mdash; retrain free if you don\'t pass'
+                ];
+                rec.btnText = 'Book Now &mdash; $60';
+                rec.upsellCourse = {
+                    name: 'Provide First Aid (HLTAID011)',
+                    price: '$120',
+                    pitch: 'Upgrade to full First Aid for just $60 more &mdash; includes CPR plus comprehensive workplace skills. Valid 3 years instead of 1.'
+                };
             } else {
                 rec.course = 'Provide First Aid';
                 rec.code = 'HLTAID011';
@@ -635,7 +734,13 @@
                     'Medical emergencies',
                     'Statement of Attainment on completion'
                 ];
+                rec.bonuses = [
+                    'Two qualifications in one day (CPR + First Aid &mdash; worth $180 separately)',
+                    'Renewal reminder before your cert expires',
+                    'Pass guarantee &mdash; retrain free if you don\'t pass'
+                ];
                 rec.btnText = 'Book Now &mdash; $120';
+                rec.upsellCourse = null;
             }
         }
 
@@ -649,7 +754,7 @@
         }
 
         if (funnelData.urgency === 'asap') {
-            rec.urgencyNote = 'Flagged as urgent &mdash; we\'ll prioritise finding you the next available spot.';
+            rec.urgencyNote = 'Only <strong>4 spots left</strong> on the next available course. We\'ll lock in yours now.';
         } else {
             rec.urgencyNote = 'We\'ll send you upcoming dates so you can pick the one that works best.';
         }
@@ -665,25 +770,32 @@
             includesHTML += '<div class="funnel-result-feature">' + checkSvg + '<span>' + rec.includes[i] + '</span></div>';
         }
 
-        var bonusItems = [
-            'All equipment provided &mdash; just show up',
-            'Renewal reminder service &mdash; never lapse',
-            'Pass guarantee &mdash; retrain free if you don\'t pass'
-        ];
         var bonusHTML = '';
         var bonusSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>';
-        for (var j = 0; j < bonusItems.length; j++) {
-            bonusHTML += '<div class="funnel-result-feature">' + bonusSvg + '<span><strong>' + bonusItems[j] + '</strong></span></div>';
+        for (var j = 0; j < rec.bonuses.length; j++) {
+            bonusHTML += '<div class="funnel-result-feature">' + bonusSvg + '<span><strong>' + rec.bonuses[j] + '</strong></span></div>';
+        }
+
+        // Upsell banner for CPR-only bookings
+        var upsellHTML = '';
+        if (rec.upsellCourse) {
+            upsellHTML = '' +
+                '<div class="funnel-offer-upsell">' +
+                    '<div class="funnel-offer-upsell-badge">Upgrade Available</div>' +
+                    '<h4>' + rec.upsellCourse.name + ' &mdash; ' + rec.upsellCourse.price + '</h4>' +
+                    '<p>' + rec.upsellCourse.pitch + '</p>' +
+                    '<button class="btn btn-outline" onclick="upgradeToFirstAid()" style="margin-top:var(--space-3);width:100%;">Upgrade to Full First Aid &mdash; $120</button>' +
+                '</div>';
         }
 
         var companyFieldHTML = rec.isTeam
-            ? '<div class="funnel-form-group"><label class="form-label" for="funnelCompany">Company / Organisation *</label><input type="text" id="funnelCompany" class="form-input" placeholder="Your company name"></div>'
+            ? '<div class="funnel-form-group"><input type="text" id="funnelCompany" class="form-input" placeholder="Company / Organisation *"></div>'
             : '';
 
         var html = '' +
             '<div class="funnel-step-header">' +
-                '<h2 class="funnel-title">The Best Course for Your Needs</h2>' +
-                '<p class="funnel-subtitle">Based on your answers, here\'s what we recommend.</p>' +
+                '<h2 class="funnel-title">Here\'s Your Perfect Match</h2>' +
+                '<p class="funnel-subtitle">Based on your answers, this is the exact course you need.</p>' +
             '</div>' +
 
             '<div class="funnel-offer-layout">' +
@@ -715,12 +827,28 @@
                             '<span><strong>Pass Guarantee</strong> &mdash; 98% pass first time. Retrain free if you don\'t.</span>' +
                         '</div>' +
                     '</div>' +
+
+                    upsellHTML +
+
+                    // Social proof at decision point
+                    '<div class="funnel-offer-social-proof">' +
+                        '<div class="funnel-offer-review">' +
+                            '<div class="funnel-offer-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
+                            '<p>&ldquo;First time feeling confident and not overwhelmed. The instructor gave confidence in the most important parts.&rdquo;</p>' +
+                            '<span>&mdash; Jamie Lee, Google Review</span>' +
+                        '</div>' +
+                        '<div class="funnel-offer-review">' +
+                            '<div class="funnel-offer-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
+                            '<p>&ldquo;Professional and thorough. I would recommend these guys in a heartbeat!&rdquo;</p>' +
+                            '<span>&mdash; Caitlin Murrell, Google Review</span>' +
+                        '</div>' +
+                    '</div>' +
                 '</div>' +
 
                 '<div class="funnel-offer-sidebar">' +
                     '<div class="funnel-offer-form-card">' +
-                        '<h3 class="funnel-offer-form-title">Book Your Spot</h3>' +
-                        '<p class="funnel-offer-form-sub">No study. No upfront payment. We\'ll confirm instantly.</p>' +
+                        '<h3 class="funnel-offer-form-title">Secure Your Spot</h3>' +
+                        '<p class="funnel-offer-form-sub">No study. No upfront payment. Instant confirmation.</p>' +
                         '<div class="funnel-form-group">' +
                             '<input type="text" id="funnelName" class="form-input" placeholder="Full name *" required>' +
                         '</div>' +
@@ -743,7 +871,7 @@
                             '<span>&#10003; Forward to employer</span>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="funnel-offer-urgency-strip"><p>🔥 ' + rec.urgencyNote + '</p></div>' +
+                    '<div class="funnel-offer-urgency-strip"><p>' + rec.urgencyNote + '</p></div>' +
                 '</div>' +
 
             '</div>' +
@@ -754,12 +882,18 @@
                     includesHTML +
                 '</div>' +
                 '<div class="funnel-offer-details-col">' +
-                    '<h4>Bonuses &mdash; Free</h4>' +
+                    '<h4>Bonuses &mdash; Included Free</h4>' +
                     bonusHTML +
                 '</div>' +
             '</div>';
 
         return html;
+    }
+
+    // Upgrade from CPR to First Aid (upsell)
+    function upgradeToFirstAid() {
+        funnelData.level = 'firstaid';
+        showOffer();
     }
 
     // ---- Submit Booking ----
@@ -796,6 +930,26 @@
     function buildConfirmedHTML(rec) {
         var firstName = funnelData.name.split(' ')[0];
 
+        // Build upsell section based on what they booked
+        var postBookUpsell = '';
+        if (rec.code === 'HLTAID009') {
+            // CPR only — upsell to full first aid
+            postBookUpsell = '' +
+                '<div class="funnel-confirmed-upsell">' +
+                    '<h4>Want the Full Certification?</h4>' +
+                    '<p>Upgrade to <strong>Provide First Aid (HLTAID011)</strong> for just $60 more. You\'ll get CPR <em>plus</em> comprehensive workplace skills &mdash; and it\'s valid for 3 years instead of 1. Call us to upgrade your booking.</p>' +
+                    '<a href="tel:0419675022" class="btn btn-primary" style="margin-top:var(--space-3);">Call to Upgrade &mdash; 0419 675 022</a>' +
+                '</div>';
+        } else if (!rec.isTeam) {
+            // Individual booking — cross-sell first aid kit
+            postBookUpsell = '' +
+                '<div class="funnel-confirmed-upsell">' +
+                    '<h4>Complete Your Preparation</h4>' +
+                    '<p>You\'re getting the training &mdash; make sure you have the gear too. Our workplace-compliant first aid kits are built for real emergencies, not just ticking a box.</p>' +
+                    '<a href="shop.html" class="btn btn-primary" style="margin-top:var(--space-3);">Browse First Aid Kits</a>' +
+                '</div>';
+        }
+
         return '' +
             '<div class="funnel-result-success">' +
                 '<div class="funnel-result-check">' +
@@ -830,6 +984,8 @@
                     '<div class="funnel-result-step"><span class="funnel-result-step-num">3</span><p>Show up, get trained, leave certified &mdash; pay on the day</p></div>' +
                 '</div>' +
             '</div>' +
+
+            postBookUpsell +
 
             '<div class="funnel-result-cta-row">' +
                 '<a href="tel:0419675022" class="btn btn-primary btn-lg">' +
