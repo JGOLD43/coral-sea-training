@@ -53,6 +53,16 @@
         <a href="contact.html" class="nav-link">Contact</a>
     </div>
 
+    <!-- Urgency Banner -->
+    <div class="urgency-banner" id="urgencyBanner">
+        <div class="container">
+            <p class="urgency-text">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <strong>Only 4 Spots Left:</strong> Next Townsville course Feb 22 &mdash; <a href="#" onclick="selectType('individual', document.querySelector('#step-type .funnel-option'));return false;">Book now before it fills</a>
+            </p>
+        </div>
+    </div>
+
     <!-- Funnel Section -->
     <section class="funnel-section">
         <div class="container">
@@ -63,20 +73,20 @@
                     <div class="funnel-progress-bar">
                         <div class="funnel-progress-fill" id="progressFill" style="width: 20%"></div>
                     </div>
-                    <span class="funnel-step-label" id="stepLabel">Step 1 of 5</span>
+                    <span class="funnel-step-label" id="stepLabel">Takes 30 seconds</span>
                 </div>
 
                 <!-- Social Proof Banner -->
                 <div class="funnel-social-proof">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span>Join <strong>10,000+</strong> Queenslanders who trained with us</span>
+                    <span class="funnel-social-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                    <span>Rated <strong>4.9/5</strong> by <strong>10,000+</strong> Queenslanders</span>
                 </div>
 
                 <!-- ===== STEP: Type (Individual or Team) ===== -->
                 <div class="funnel-step active" id="step-type">
                     <div class="funnel-step-header">
-                        <h1 class="funnel-title">Let's Find Your Perfect Course</h1>
-                        <p class="funnel-subtitle">One quick question to get started &mdash; are you booking for yourself or a group?</p>
+                        <h1 class="funnel-title">Get Certified in 30 Seconds</h1>
+                        <p class="funnel-subtitle">Answer a few quick taps and we'll match you with the perfect course.</p>
                     </div>
 
                     <div class="funnel-options funnel-options-2">
@@ -86,7 +96,7 @@
                             </div>
                             <div class="funnel-option-text">
                                 <h3>Just Me</h3>
-                                <p>I need my own certification</p>
+                                <p>Get my own certification fast</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -99,7 +109,7 @@
                             </div>
                             <div class="funnel-option-text">
                                 <h3>My Team</h3>
-                                <p>Multiple people need training</p>
+                                <p>Get volume discounts for 4+ people</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -374,6 +384,7 @@
         stepHistory.push(currentStepId);
         currentStepId = stepId;
         updateProgress();
+        updateWrapperWidth();
         document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -386,20 +397,35 @@
         document.getElementById(prevStep).classList.add('active');
         currentStepId = prevStep;
         updateProgress();
+        updateWrapperWidth();
         document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function updateWrapperWidth() {
+        var wrapper = document.querySelector('.funnel-wrapper');
+        if (currentStepId === 'step-offer' || currentStepId === 'step-confirmed') {
+            wrapper.classList.add('funnel-wrapper--wide');
+        } else {
+            wrapper.classList.remove('funnel-wrapper--wide');
+        }
     }
 
     function updateProgress() {
         var stepsCompleted = stepHistory.length;
         var totalSteps = (funnelData.type === 'team' && funnelData.delivery === 'onsite') ? 4 : 5;
 
-        if (currentStepId === 'step-offer' || currentStepId === 'step-confirmed') {
+        if (currentStepId === 'step-confirmed') {
             document.getElementById('progressFill').style.width = '100%';
-            document.getElementById('stepLabel').textContent = currentStepId === 'step-confirmed' ? 'Booked!' : 'Your offer';
+            document.getElementById('stepLabel').textContent = 'Booked!';
+        } else if (currentStepId === 'step-offer') {
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('stepLabel').textContent = 'Your course';
         } else {
             var progress = ((stepsCompleted + 1) / totalSteps) * 100;
             document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
-            document.getElementById('stepLabel').textContent = 'Step ' + (stepsCompleted + 1) + ' of ' + totalSteps;
+            var labels = ['', 'Almost there', 'Nearly done', 'Last step'];
+            var label = labels[stepsCompleted] || ('Step ' + (stepsCompleted + 1));
+            document.getElementById('stepLabel').textContent = label;
         }
     }
 

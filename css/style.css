@@ -2405,9 +2405,18 @@ body:has(.urgency-banner) .page-header {
     background: var(--off-white);
 }
 
+body:has(.urgency-banner) .funnel-section {
+    padding-top: calc(80px + 36px + var(--space-12));
+}
+
 .funnel-wrapper {
     max-width: 720px;
     margin: 0 auto;
+    transition: max-width 0.4s var(--ease-out);
+}
+
+.funnel-wrapper.funnel-wrapper--wide {
+    max-width: 960px;
 }
 
 /* Progress Bar */
@@ -2456,6 +2465,13 @@ body:has(.urgency-banner) .page-header {
 
 .funnel-social-proof strong {
     color: var(--navy);
+}
+
+.funnel-social-stars {
+    color: #f59e0b;
+    font-size: 0.875rem;
+    letter-spacing: 1px;
+    line-height: 1;
 }
 
 /* Steps */
