@@ -581,8 +581,9 @@ h1, h2, h3, h4, h5, h6 {
    ===================================================== */
 
 .reviews-section {
-    padding: var(--space-20) 0;
-    background: var(--gray-50);
+    padding: var(--space-8) 0 var(--space-20);
+    background: var(--off-white);
+    margin-top: -1px;
 }
 
 .reviews-header {
