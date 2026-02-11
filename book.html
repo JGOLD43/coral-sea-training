@@ -143,7 +143,9 @@
 
                         <div class="form-group">
                             <label class="form-label" for="bookDate">Preferred Date</label>
-                            <input type="date" class="form-input" id="bookDate" name="preferred_date">
+                            <select class="form-select" id="bookDate" name="preferred_date">
+                                <option value="">Select course &amp; location first...</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -240,24 +242,13 @@
         </div>
     </footer>
 
+    <script src="js/course-data.js"></script>
     <script src="js/main.js"></script>
     <script>
     (function() {
         var params = new URLSearchParams(window.location.search);
-        var course = params.get('course') || '';
-        var location = params.get('location') || '';
-
-        // Map funnel course IDs to display values
-        var courseMap = {
-            'cpr': 'CPR Course (HLTAID009) - $99',
-            'HLTAID009': 'CPR Course (HLTAID009) - $99',
-            'firstaid': 'Provide First Aid (HLTAID011) - $159',
-            'HLTAID011': 'Provide First Aid (HLTAID011) - $159',
-            'childcare': 'Childcare First Aid (HLTAID012) - $199',
-            'HLTAID012': 'Childcare First Aid (HLTAID012) - $199',
-            'advanced': 'Advanced Resuscitation (HLTAID015) - $199',
-            'HLTAID015': 'Advanced Resuscitation (HLTAID015) - $199'
-        };
+        var courseParam = params.get('course') || '';
+        var locationParam = params.get('location') || '';
 
         var locationMap = {
             'townsville': 'Townsville - 40 Charles St, Aitkenvale',
@@ -265,57 +256,101 @@
         };
 
         // Pre-fill hidden fields
-        document.getElementById('hiddenCourse').value = course;
-        document.getElementById('hiddenLocation').value = location;
+        document.getElementById('hiddenCourse').value = courseParam;
+        document.getElementById('hiddenLocation').value = locationParam;
 
-        // Pre-select dropdowns
-        if (courseMap[course]) {
-            var courseSelect = document.getElementById('bookCourse');
+        // Build course select options from centralized data
+        var courseSelect = document.getElementById('bookCourse');
+        var courseDisplayMap = {};
+        for (var c = 0; c < COURSE_DATA.length; c++) {
+            var cd = COURSE_DATA[c];
+            var displayVal = cd.title + ' (' + cd.code + ') - ' + cd.priceLabel;
+            courseDisplayMap[cd.id] = displayVal;
+            courseDisplayMap[cd.code.toLowerCase()] = displayVal;
+        }
+
+        // Pre-select course dropdown
+        if (courseDisplayMap[courseParam.toLowerCase()]) {
             for (var i = 0; i < courseSelect.options.length; i++) {
-                if (courseSelect.options[i].value === courseMap[course]) {
+                if (courseSelect.options[i].value === courseDisplayMap[courseParam.toLowerCase()]) {
                     courseSelect.selectedIndex = i;
                     break;
                 }
             }
         }
 
-        if (locationMap[location]) {
+        // Pre-select location dropdown
+        if (locationMap[locationParam]) {
             var locSelect = document.getElementById('bookLocation');
             for (var j = 0; j < locSelect.options.length; j++) {
-                if (locSelect.options[j].value === locationMap[location]) {
+                if (locSelect.options[j].value === locationMap[locationParam]) {
                     locSelect.selectedIndex = j;
                     break;
                 }
             }
         }
 
-        // Update summary card if course is known
-        if (courseMap[course]) {
-            var titles = {
-                'cpr': 'CPR Course', 'HLTAID009': 'CPR Course',
-                'firstaid': 'Provide First Aid', 'HLTAID011': 'Provide First Aid',
-                'childcare': 'Childcare First Aid', 'HLTAID012': 'Childcare First Aid',
-                'advanced': 'Advanced Resuscitation', 'HLTAID015': 'Advanced Resuscitation'
-            };
-            var prices = {
-                'cpr': '$99', 'HLTAID009': '$99',
-                'firstaid': '$159', 'HLTAID011': '$159',
-                'childcare': '$199', 'HLTAID012': '$199',
-                'advanced': '$199', 'HLTAID015': '$199'
-            };
+        // Populate date dropdown from course data
+        function updateDateOptions() {
+            var dateSelect = document.getElementById('bookDate');
+            var selCourse = courseSelect.value;
+            var locSelect = document.getElementById('bookLocation');
+            var selLoc = locSelect.value;
+
+            // Determine courseId and locationId from current selections
+            var courseId = null;
+            for (var k = 0; k < COURSE_DATA.length; k++) {
+                var checkVal = COURSE_DATA[k].title + ' (' + COURSE_DATA[k].code + ') - ' + COURSE_DATA[k].priceLabel;
+                if (checkVal === selCourse) { courseId = COURSE_DATA[k].id; break; }
+            }
+            var locationId = null;
+            if (selLoc.indexOf('Townsville') === 0) locationId = 'townsville';
+            else if (selLoc.indexOf('Wide Bay') === 0) locationId = 'widebay';
+
+            // Clear existing options
+            dateSelect.innerHTML = '<option value="">Select a date...</option>';
+
+            if (courseId && locationId) {
+                var dates = getUpcomingDates(courseId, locationId);
+                for (var d = 0; d < dates.length; d++) {
+                    var opt = document.createElement('option');
+                    opt.value = dates[d].dateStr;
+                    opt.textContent = dates[d].formattedLong;
+                    dateSelect.appendChild(opt);
+                }
+                if (dates.length === 0) {
+                    var noOpt = document.createElement('option');
+                    noOpt.value = '';
+                    noOpt.textContent = 'No upcoming dates — call us to arrange';
+                    dateSelect.appendChild(noOpt);
+                }
+            }
+        }
+
+        courseSelect.addEventListener('change', updateDateOptions);
+        document.getElementById('bookLocation').addEventListener('change', updateDateOptions);
+
+        // Initial populate if both are pre-selected
+        if (courseParam && locationParam) updateDateOptions();
+
+        // Update summary card from centralized data
+        var courseObj = getCourse(courseParam);
+        if (courseObj) {
+            var locLabel = locationMap[locationParam] || '';
             var el = document.getElementById('courseSummaryContent');
             el.innerHTML = '<span style="display:inline-block;background:var(--red);color:white;font-size:0.6875rem;font-weight:700;padding:2px 10px;border-radius:20px;text-transform:uppercase;margin-bottom:var(--space-2);">Selected Course</span>' +
-                '<h3 style="font-family:var(--font-display);font-size:1.5rem;color:var(--navy);margin-bottom:var(--space-2);">' + (titles[course] || course) + '</h3>' +
+                '<h3 style="font-family:var(--font-display);font-size:1.5rem;color:var(--navy);margin-bottom:var(--space-2);">' + courseObj.title + '</h3>' +
+                '<p style="font-size:0.8125rem;color:var(--gray-500);margin-bottom:var(--space-2);">' + courseObj.code + ' &bull; ' + courseObj.duration + ' &bull; Valid ' + courseObj.validity + '</p>' +
                 '<div style="display:flex;align-items:baseline;gap:var(--space-2);margin-bottom:var(--space-2);">' +
-                    '<span style="font-size:2rem;font-weight:800;color:var(--red);">' + (prices[course] || '') + '</span>' +
+                    '<span style="font-size:2rem;font-weight:800;color:var(--red);">' + courseObj.priceLabel + '</span>' +
                     '<span style="font-size:0.875rem;color:var(--gray-500);">per person &bull; pay on the day</span>' +
                 '</div>' +
-                (locationMap[location] ? '<p style="font-size:0.875rem;color:var(--gray-600);">Location: <strong>' + locationMap[location] + '</strong></p>' : '');
+                (locLabel ? '<p style="font-size:0.875rem;color:var(--gray-600);">Location: <strong>' + locLabel + '</strong></p>' : '');
         }
 
         // GA4 event
         if (typeof gtag !== 'undefined') {
-            gtag('event', 'book_start', { event_label: course || 'direct' });
+            gtag('event', 'book_start', { event_label: courseParam || 'direct' });
         }
 
         // Track form submission

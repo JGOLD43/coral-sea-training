@@ -443,8 +443,24 @@
         </div>
     </footer>
 
+    <script src="js/course-data.js"></script>
     <script src="js/main.js"></script>
     <script>
+    // =====================================================
+    // Dynamic urgency banner from course data
+    // =====================================================
+    (function() {
+        var next = getNextDate('townsville');
+        if (next) {
+            var bannerLink = document.querySelector('#urgencyBanner .urgency-text');
+            if (bannerLink) {
+                bannerLink.innerHTML =
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                    '<strong>Only 4 Spots Left:</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Book now before it fills</a>';
+            }
+        }
+    })();
+
     // =====================================================
     // Lead Qualification Funnel — Binary Decision Tree
     // =====================================================
