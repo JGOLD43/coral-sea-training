@@ -20,6 +20,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231B8A3D' stroke='%23D90A0A' stroke-width='6'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='50' font-weight='bold'%3E+%3C/text%3E%3C/svg%3E">
+    <style>
+        @media (max-width: 640px) {
+            .corp-stats-grid { grid-template-columns: 1fr !important; }
+            .corp-features-grid { grid-template-columns: 1fr !important; }
+            .corp-reviews-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -89,7 +96,7 @@
                 <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2rem);color:var(--navy);">First Aid Compliance is Non-Negotiable</h2>
                 <p style="color:var(--gray-600);margin-top:var(--space-3);">WHS regulations require trained first aiders at every workplace. Lapses cost money &mdash; and can cost lives.</p>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6);max-width:900px;margin:0 auto;">
+            <div class="corp-stats-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6);max-width:900px;margin:0 auto;">
                 <div style="text-align:center;">
                     <div style="font-size:2.5rem;font-weight:800;color:var(--red);font-family:var(--font-display);">$50K+</div>
                     <p style="font-size:0.875rem;color:var(--gray-600);margin-top:var(--space-1);">Max WHS penalty per offence for non-compliance</p>
@@ -114,7 +121,7 @@
                 <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2rem);color:var(--navy);">One Partnership. Zero Compliance Headaches.</h2>
                 <p style="color:var(--gray-600);margin-top:var(--space-3);">Everything your business needs to stay compliant, year after year.</p>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6);max-width:800px;margin:0 auto;">
+            <div class="corp-features-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6);max-width:800px;margin:0 auto;">
                 <div style="display:flex;gap:var(--space-4);align-items:start;">
                     <div style="width:48px;height:48px;background:var(--red-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;color:var(--red);"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -179,7 +186,7 @@
             <div style="text-align:center;max-width:640px;margin:0 auto var(--space-8);">
                 <h2 style="font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2rem);color:var(--navy);">Trusted by Businesses Across Queensland</h2>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6);max-width:800px;margin:0 auto;">
+            <div class="corp-reviews-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6);max-width:800px;margin:0 auto;">
                 <div style="background:var(--white);border-radius:12px;padding:var(--space-5);box-shadow:var(--shadow-sm);">
                     <div style="color:#f59e0b;font-size:1rem;margin-bottom:var(--space-2);">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
                     <p style="font-size:0.9375rem;color:var(--gray-700);margin-bottom:var(--space-3);">&ldquo;They've been training our team for 3 years now. Scheduling is seamless, the trainers are fantastic, and we've never had a compliance gap.&rdquo;</p>

@@ -32,6 +32,7 @@
 
     /* Typography */
     --font-display: 'DM Serif Display', Georgia, serif;
+    --font-heading: var(--font-display);
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
     /* Spacing Scale */
@@ -3549,6 +3550,13 @@ body:has(.urgency-banner) .funnel-section {
     line-height: 1.6;
     max-width: 540px;
     margin: 0 auto;
+}
+
+/* Mobile safety: stack inline grids on small screens */
+@media (max-width: 640px) {
+    .contact-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 /* Reduced motion */
