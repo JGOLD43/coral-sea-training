@@ -1019,9 +1019,43 @@
         funnelData.phone = phone;
         funnelData.company = company;
 
-        sendBookingEmail(currentRec);
-        document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
-        navigateTo('step-confirmed');
+        var btn = document.querySelector('.funnel-submit');
+        if (btn) { btn.textContent = 'Booking...'; btn.disabled = true; }
+
+        var formData = new FormData();
+        formData.append('name', funnelData.name);
+        formData.append('email', funnelData.email);
+        formData.append('phone', funnelData.phone);
+        if (funnelData.company) formData.append('company', funnelData.company);
+        formData.append('course', currentRec.course + ' (' + currentRec.code + ')');
+        formData.append('price', currentRec.priceLabel || 'Quote requested');
+        formData.append('type', funnelData.type);
+        formData.append('location', funnelData.location);
+        formData.append('urgency', funnelData.urgency);
+        formData.append('_subject', 'NEW BOOKING: ' + currentRec.course + ' - ' + funnelData.name);
+
+        fetch('https://formspree.io/f/PLACEHOLDER_BOOKING', {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(function(response) {
+            if (response.ok) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'book_submit', { event_label: currentRec.course, value: currentRec.price || 0 });
+                }
+                document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
+                navigateTo('step-confirmed');
+            } else {
+                // Fallback to mailto on failure
+                sendBookingEmailFallback(currentRec);
+                document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
+                navigateTo('step-confirmed');
+            }
+        }).catch(function() {
+            sendBookingEmailFallback(currentRec);
+            document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
+            navigateTo('step-confirmed');
+        });
     }
 
     function shakeField(id) {
@@ -1137,7 +1171,7 @@
         }
     }
 
-    function sendBookingEmail(rec) {
+    function sendBookingEmailFallback(rec) {
         var situationLabel = funnelData.type === 'individual'
             ? (funnelData.industry === 'childcare' ? 'Individual - Childcare/Education' : 'Individual - General/Workplace')
             : (funnelData.delivery === 'onsite' ? 'Team - On-site Training' : 'Team - Venue Booking');

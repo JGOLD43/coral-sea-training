@@ -753,7 +753,9 @@
                     </div>
                 </div>
                 <div class="lead-magnet-form-wrapper">
-                    <form class="lead-magnet-form" id="leadMagnetForm" onsubmit="handleLeadMagnet(event)">
+                    <form class="lead-magnet-form" id="leadMagnetForm" action="https://formspree.io/f/PLACEHOLDER_LEAD" method="POST">
+                        <input type="hidden" name="_next" value="https://jgold43.github.io/coral-sea-training/thanks.html?type=general">
+                        <input type="hidden" name="_subject" value="Lead Magnet Download Request">
                         <h3 style="font-size: 1.125rem; color: var(--navy); margin-bottom: var(--space-4); text-align: center;">Get Your Free Guide</h3>
                         <div class="form-group">
                             <input type="text" name="firstName" placeholder="First name" class="form-input" required>
@@ -961,18 +963,14 @@
         }
     }
 
-    // Lead Magnet Form
-    function handleLeadMagnet(e) {
-        e.preventDefault();
-        var form = document.getElementById('leadMagnetForm');
-        var btn = form.querySelector('button[type="submit"]');
-        btn.textContent = 'Sending...';
-        btn.disabled = true;
-
-        // Simulate submission (replace with real endpoint when ready)
-        setTimeout(function() {
-            form.innerHTML = '<div style="text-align:center;padding:var(--space-6);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px;color:var(--green);margin:0 auto var(--space-4);display:block;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3 style="font-size:1.25rem;margin-bottom:var(--space-2);color:var(--navy);">Check Your Inbox!</h3><p style="color:var(--gray-600);font-size:0.9375rem;margin-bottom:var(--space-4);">Your free First Aid Quick-Reference Card is on its way.</p><a href="courses.html" class="btn btn-primary" style="font-size:0.9375rem;">Ready to Get Certified? Find My Course <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div>';
-        }, 800);
+    // Lead magnet form GA4 tracking (form now submits natively to Formspree)
+    var leadForm = document.getElementById('leadMagnetForm');
+    if (leadForm) {
+        leadForm.addEventListener('submit', function() {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'lead_magnet_submit', { event_category: 'Lead' });
+            }
+        });
     }
 
     // Sticky CTA Bar
