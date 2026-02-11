@@ -697,6 +697,7 @@
                 rec.badge = 'Quick &amp; Easy';
                 rec.price = 60;
                 rec.priceLabel = '$60';
+                rec.anchorPrice = '$80+';
                 rec.description = 'Quick 3-hour refresh &mdash; perfect for your annual CPR renewal. You\'ll practise on mannequins and AED defibrillators with hands-on guidance.';
                 rec.duration = 'Approx. 3 hours';
                 rec.validity = '12 months';
@@ -983,13 +984,26 @@
 
                 '<div class="funnel-result-next-steps" style="margin-top:var(--space-6);">' +
                     '<h4>What Happens Next?</h4>' +
-                    '<div class="funnel-result-step"><span class="funnel-result-step-num">1</span><p>Check your email for booking confirmation details</p></div>' +
-                    '<div class="funnel-result-step"><span class="funnel-result-step-num">2</span><p>We\'ll confirm your course date and send a reminder before the day</p></div>' +
+                    '<div class="funnel-result-step"><span class="funnel-result-step-num">1</span><p><strong>We\'ll call you within 2 hours</strong> to confirm your course date and answer any questions</p></div>' +
+                    '<div class="funnel-result-step"><span class="funnel-result-step-num">2</span><p>You\'ll get a reminder before the day with everything you need to know</p></div>' +
                     '<div class="funnel-result-step"><span class="funnel-result-step-num">3</span><p>Show up, get trained, leave certified &mdash; pay on the day</p></div>' +
                 '</div>' +
             '</div>' +
 
             postBookUpsell +
+
+            // Renewal lock-in (Hormozi Money Model — continuity / purchase frequency)
+            (rec.isTeam
+                ? '<div style="background:linear-gradient(135deg,var(--navy) 0%,#243447 100%);border-radius:12px;padding:var(--space-6);margin-top:var(--space-6);color:white;text-align:center;">' +
+                    '<h4 style="font-family:var(--font-heading);font-size:1.25rem;margin-bottom:var(--space-2);">Set Up an Annual Training Agreement</h4>' +
+                    '<p style="font-size:0.9375rem;color:rgba(255,255,255,0.85);margin-bottom:var(--space-3);">Your team\'s CPR expires in 12 months. Instead of scrambling each year, let us handle it. We\'ll auto-schedule renewals, track every cert, and keep your business compliant year-round &mdash; one annual partnership, zero admin for you.</p>' +
+                    '<a href="tel:0419675022" class="btn btn-white" style="font-size:0.9375rem;">Call to Set Up Annual Agreement</a>' +
+                  '</div>'
+                : '<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:var(--space-5);margin-top:var(--space-6);text-align:center;">' +
+                    '<h4 style="font-family:var(--font-heading);font-size:1.125rem;color:var(--navy);margin-bottom:var(--space-2);">Your Renewal is Already Sorted</h4>' +
+                    '<p style="font-size:0.9375rem;color:var(--gray-600);">Your ' + (rec.code === 'HLTAID009' ? 'CPR cert expires in <strong>12 months</strong>' : 'CPR component expires in <strong>12 months</strong> (full cert valid 3 years)') + '. We\'ll send you a reminder 4 weeks before it\'s due so you never lapse. Same trainer, same easy process &mdash; just show up again.</p>' +
+                  '</div>'
+            ) +
 
             // Referral prompt (Hormozi $100M Leads — cheapest leads come from buyers)
             '<div class="funnel-confirmed-referral" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;padding:var(--space-5);margin-top:var(--space-6);text-align:center;">' +
