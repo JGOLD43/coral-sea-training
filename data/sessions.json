@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "currency": "AUD",
+    "payOnDay": true,
+    "confirmationSLAHours": 2,
+    "showSeatCounts": true
+  },
+  "courses": [
+    {
+      "id": "hltaid009",
+      "code": "HLTAID009",
+      "offerName": "The 2-Hour Lifesaver",
+      "price": 99,
+      "duration": "Approx. 3 hours",
+      "validity": "12 months",
+      "includes": [
+        "CPR & AED Training Course",
+        "\"Save a Life\" Learning Vault",
+        "Free Refresher Session (within 3 months)",
+        "Skills Mastery Guarantee (retrain free)",
+        "Renewal Reminders & Expiry Tracking"
+      ],
+      "rules": {
+        "industry": ["other"],
+        "level": ["cpr"]
+      },
+      "locations": {
+        "townsville": {
+          "label": "Townsville",
+          "address": "40 Charles St, Aitkenvale QLD 4814",
+          "sessions": [
+            { "id": "tsv-009-2026-02-22", "dateISO": "2026-02-22", "label": "Sun 22 Feb", "start": "08:30", "end": "11:30", "seatsLeft": 6 },
+            { "id": "tsv-009-2026-03-08", "dateISO": "2026-03-08", "label": "Sun 8 Mar", "start": "08:30", "end": "11:30", "seatsLeft": 9 },
+            { "id": "tsv-009-2026-03-22", "dateISO": "2026-03-22", "label": "Sun 22 Mar", "start": "08:30", "end": "11:30", "seatsLeft": 10 },
+            { "id": "tsv-009-2026-04-05", "dateISO": "2026-04-05", "label": "Sun 5 Apr", "start": "08:30", "end": "11:30", "seatsLeft": 10 }
+          ]
+        },
+        "widebay": {
+          "label": "Wide Bay",
+          "address": "60 John St, Maryborough QLD 4650",
+          "sessions": [
+            { "id": "wb-009-2026-03-01", "dateISO": "2026-03-01", "label": "Sun 1 Mar", "start": "08:30", "end": "11:30", "seatsLeft": 8 },
+            { "id": "wb-009-2026-03-15", "dateISO": "2026-03-15", "label": "Sun 15 Mar", "start": "08:30", "end": "11:30", "seatsLeft": 10 },
+            { "id": "wb-009-2026-04-12", "dateISO": "2026-04-12", "label": "Sun 12 Apr", "start": "08:30", "end": "11:30", "seatsLeft": 10 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hltaid011",
+      "code": "HLTAID011",
+      "offerName": "The Complete First Aider",
+      "price": 159,
+      "duration": "Approx. 7 hours (1 day)",
+      "validity": "3 years (CPR renewed annually)",
+      "includes": [
+        "First Aid + CPR Course (2-in-1)",
+        "\"Save a Life\" Learning Vault",
+        "Free Refresher Session (within 3 months)",
+        "Skills Mastery Guarantee (retrain free)",
+        "Renewal Reminders & Expiry Tracking",
+        "Forward-to-Employer Certificate"
+      ],
+      "rules": {
+        "industry": ["other"],
+        "level": ["full_first_aid"]
+      },
+      "locations": {
+        "townsville": {
+          "label": "Townsville",
+          "address": "40 Charles St, Aitkenvale QLD 4814",
+          "sessions": [
+            { "id": "tsv-011-2026-02-22", "dateISO": "2026-02-22", "label": "Sun 22 Feb", "start": "08:30", "end": "16:30", "seatsLeft": 4 },
+            { "id": "tsv-011-2026-03-08", "dateISO": "2026-03-08", "label": "Sun 8 Mar", "start": "08:30", "end": "16:30", "seatsLeft": 7 },
+            { "id": "tsv-011-2026-03-22", "dateISO": "2026-03-22", "label": "Sun 22 Mar", "start": "08:30", "end": "16:30", "seatsLeft": 10 },
+            { "id": "tsv-011-2026-04-05", "dateISO": "2026-04-05", "label": "Sun 5 Apr", "start": "08:30", "end": "16:30", "seatsLeft": 10 }
+          ]
+        },
+        "widebay": {
+          "label": "Wide Bay",
+          "address": "60 John St, Maryborough QLD 4650",
+          "sessions": [
+            { "id": "wb-011-2026-03-01", "dateISO": "2026-03-01", "label": "Sun 1 Mar", "start": "08:30", "end": "16:30", "seatsLeft": 7 },
+            { "id": "wb-011-2026-03-15", "dateISO": "2026-03-15", "label": "Sun 15 Mar", "start": "08:30", "end": "16:30", "seatsLeft": 9 },
+            { "id": "wb-011-2026-04-12", "dateISO": "2026-04-12", "label": "Sun 12 Apr", "start": "08:30", "end": "16:30", "seatsLeft": 10 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hltaid012",
+      "code": "HLTAID012",
+      "offerName": "The Educator Shield",
+      "price": 199,
+      "duration": "Approx. 8 hours (1 day)",
+      "validity": "3 years (CPR renewed annually)",
+      "includes": [
+        "CPR & AED (HLTAID009)",
+        "Provide First Aid (HLTAID011)",
+        "Anaphylaxis management",
+        "Asthma emergency response",
+        "ACECQA approved for childcare",
+        "Statement of Attainment on completion"
+      ],
+      "rules": {
+        "industry": ["childcare"]
+      },
+      "locations": {
+        "townsville": {
+          "label": "Townsville",
+          "address": "40 Charles St, Aitkenvale QLD 4814",
+          "sessions": [
+            { "id": "tsv-012-2026-02-22", "dateISO": "2026-02-22", "label": "Sun 22 Feb", "start": "08:00", "end": "16:30", "seatsLeft": 5 },
+            { "id": "tsv-012-2026-03-08", "dateISO": "2026-03-08", "label": "Sun 8 Mar", "start": "08:00", "end": "16:30", "seatsLeft": 8 },
+            { "id": "tsv-012-2026-03-22", "dateISO": "2026-03-22", "label": "Sun 22 Mar", "start": "08:00", "end": "16:30", "seatsLeft": 10 },
+            { "id": "tsv-012-2026-04-05", "dateISO": "2026-04-05", "label": "Sun 5 Apr", "start": "08:00", "end": "16:30", "seatsLeft": 10 }
+          ]
+        },
+        "widebay": {
+          "label": "Wide Bay",
+          "address": "60 John St, Maryborough QLD 4650",
+          "sessions": [
+            { "id": "wb-012-2026-03-01", "dateISO": "2026-03-01", "label": "Sun 1 Mar", "start": "08:00", "end": "16:30", "seatsLeft": 6 },
+            { "id": "wb-012-2026-03-15", "dateISO": "2026-03-15", "label": "Sun 15 Mar", "start": "08:00", "end": "16:30", "seatsLeft": 10 },
+            { "id": "wb-012-2026-04-12", "dateISO": "2026-04-12", "label": "Sun 12 Apr", "start": "08:00", "end": "16:30", "seatsLeft": 10 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hltaid015",
+      "code": "HLTAID015",
+      "offerName": "Advanced Resuscitation",
+      "price": 199,
+      "duration": "Approx. 6 hours",
+      "validity": "12 months",
+      "includes": [
+        "Advanced resuscitation techniques",
+        "Oxygen therapy equipment",
+        "Advanced airway management",
+        "Pain management protocols",
+        "Statement of Attainment on completion"
+      ],
+      "rules": {
+        "industry": ["healthcare"]
+      },
+      "locations": {
+        "townsville": {
+          "label": "Townsville",
+          "address": "40 Charles St, Aitkenvale QLD 4814",
+          "sessions": [
+            { "id": "tsv-015-2026-03-08", "dateISO": "2026-03-08", "label": "Sun 8 Mar", "start": "08:30", "end": "15:00", "seatsLeft": 6 },
+            { "id": "tsv-015-2026-04-05", "dateISO": "2026-04-05", "label": "Sun 5 Apr", "start": "08:30", "end": "15:00", "seatsLeft": 8 }
+          ]
+        },
+        "widebay": {
+          "label": "Wide Bay",
+          "address": "60 John St, Maryborough QLD 4650",
+          "sessions": [
+            { "id": "wb-015-2026-03-15", "dateISO": "2026-03-15", "label": "Sun 15 Mar", "start": "08:30", "end": "15:00", "seatsLeft": 7 },
+            { "id": "wb-015-2026-04-12", "dateISO": "2026-04-12", "label": "Sun 12 Apr", "start": "08:30", "end": "15:00", "seatsLeft": 9 }
+          ]
+        }
+      }
+    }
+  ]
+}
