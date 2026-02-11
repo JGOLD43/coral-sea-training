@@ -114,11 +114,8 @@
         }
     };
 
-    // Default credentials (hashed) - Change these in production!
-    // Default: username: admin, password: CoralSea2024!
     const DEFAULT_CREDENTIALS = {
         username: 'admin',
-        // SHA-256 hash of 'CoralSea2024!'
         passwordHash: 'a8e5f5f8b3c4d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7'
     };
 
@@ -165,7 +162,10 @@
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `<span class="toast-message">${message}</span>`;
+        const span = document.createElement('span');
+        span.className = 'toast-message';
+        span.textContent = message;
+        toast.appendChild(span);
         container.appendChild(toast);
 
         setTimeout(() => {
@@ -191,12 +191,8 @@
         const credentials = getCredentials();
         const passwordHash = await sha256(password);
 
-        // For first-time use, also accept the default password directly
-        // In production, remove this and only use hashed comparison
-        if (username === credentials.username) {
-            if (passwordHash === credentials.passwordHash || password === 'CoralSea2024!') {
-                return true;
-            }
+        if (username === credentials.username && passwordHash === credentials.passwordHash) {
+            return true;
         }
         return false;
     }
@@ -333,15 +329,15 @@
         const container = document.getElementById('coursesList');
 
         container.innerHTML = data.courses.map(course => `
-            <div class="item-card" data-id="${course.id}">
+            <div class="item-card" data-id="${escapeHtml(String(course.id))}">
                 <div class="item-info">
-                    <h3 class="item-title">${course.title}</h3>
-                    <p class="item-subtitle">${course.code} - ${course.badge}</p>
-                    <span class="item-price">From $${course.price}</span>
+                    <h3 class="item-title">${escapeHtml(course.title)}</h3>
+                    <p class="item-subtitle">${escapeHtml(course.code)} - ${escapeHtml(course.badge)}</p>
+                    <span class="item-price">From $${parseInt(course.price) || 0}</span>
                 </div>
                 <div class="item-actions">
-                    <button class="btn btn-outline btn-sm edit-course" data-id="${course.id}">Edit</button>
-                    <button class="btn btn-danger btn-sm delete-course" data-id="${course.id}">Delete</button>
+                    <button class="btn btn-outline btn-sm edit-course" data-id="${escapeHtml(String(course.id))}">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-course" data-id="${escapeHtml(String(course.id))}">Delete</button>
                 </div>
             </div>
         `).join('');
@@ -477,14 +473,14 @@
         const container = document.getElementById('testimonialsList');
 
         container.innerHTML = data.testimonials.map(testimonial => `
-            <div class="item-card" data-id="${testimonial.id}">
+            <div class="item-card" data-id="${escapeHtml(String(testimonial.id))}">
                 <div class="item-info">
-                    <p class="item-text">"${testimonial.text.substring(0, 100)}${testimonial.text.length > 100 ? '...' : ''}"</p>
-                    <p class="item-subtitle">- ${testimonial.author}</p>
+                    <p class="item-text">"${escapeHtml(testimonial.text.substring(0, 100))}${testimonial.text.length > 100 ? '...' : ''}"</p>
+                    <p class="item-subtitle">- ${escapeHtml(testimonial.author)}</p>
                 </div>
                 <div class="item-actions">
-                    <button class="btn btn-outline btn-sm edit-testimonial" data-id="${testimonial.id}">Edit</button>
-                    <button class="btn btn-danger btn-sm delete-testimonial" data-id="${testimonial.id}">Delete</button>
+                    <button class="btn btn-outline btn-sm edit-testimonial" data-id="${escapeHtml(String(testimonial.id))}">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-testimonial" data-id="${escapeHtml(String(testimonial.id))}">Delete</button>
                 </div>
             </div>
         `).join('');
@@ -621,7 +617,7 @@
 
         // Validate current password
         const currentHash = await sha256(currentPassword);
-        if (currentHash !== credentials.passwordHash && currentPassword !== 'CoralSea2024!') {
+        if (currentHash !== credentials.passwordHash) {
             return { success: false, message: 'Current password is incorrect' };
         }
 

@@ -346,7 +346,7 @@ var Portal = (function() {
             html += '<td>' + escapeHtml(emp.role || '-') + '</td>';
             html += '<td>' + certSummary + '</td>';
             html += '<td>' + statusBadge + '</td>';
-            html += '<td><button class="portal-btn portal-btn-sm" onclick="Portal.viewEmployee(\'' + emp.id + '\')">View</button> <button class="portal-btn portal-btn-sm portal-btn-danger" onclick="Portal.deleteEmployee(\'' + emp.id + '\')">Delete</button></td>';
+            html += '<td><button class="portal-btn portal-btn-sm" onclick="Portal.viewEmployee(\'' + escapeAttr(emp.id) + '\')">View</button> <button class="portal-btn portal-btn-sm portal-btn-danger" onclick="Portal.deleteEmployee(\'' + escapeAttr(emp.id) + '\')">Delete</button></td>';
             html += '</tr>';
         });
 
@@ -404,7 +404,7 @@ var Portal = (function() {
                 certsHtml += '<span class="cert-name">' + escapeHtml(cert.courseName || 'Certification') + '</span>';
                 certsHtml += '<span class="status-badge ' + status + '">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
                 certsHtml += '<span class="cert-date">' + (cert.expiryDate ? 'Exp: ' + cert.expiryDate : 'No expiry') + '</span>';
-                certsHtml += '<button class="portal-btn portal-btn-sm portal-btn-danger" onclick="Portal.removeCert(\'' + empId + '\',' + i + ')" style="margin-left:4px;">Remove</button>';
+                certsHtml += '<button class="portal-btn portal-btn-sm portal-btn-danger" onclick="Portal.removeCert(\'' + escapeAttr(empId) + '\',' + i + ')" style="margin-left:4px;">Remove</button>';
                 certsHtml += '</div>';
             });
             certsHtml += '</div>';
@@ -415,13 +415,13 @@ var Portal = (function() {
         var html = '<div class="portal-form-group"><label class="portal-form-label">Name</label><input type="text" class="portal-form-input" id="viewEmpName" value="' + escapeAttr(emp.name) + '"></div>';
         html += '<div class="portal-form-row"><div class="portal-form-group"><label class="portal-form-label">Email</label><input type="email" class="portal-form-input" id="viewEmpEmail" value="' + escapeAttr(emp.email || '') + '"></div><div class="portal-form-group"><label class="portal-form-label">Role</label><input type="text" class="portal-form-input" id="viewEmpRole" value="' + escapeAttr(emp.role || '') + '"></div></div>';
         html += '<div style="margin-top:var(--space-5);"><label class="portal-form-label">Certifications</label>' + certsHtml + '</div>';
-        html += '<div style="margin-top:var(--space-4);"><button class="portal-cert-add-btn" onclick="Portal.showAddCertForm(\'' + empId + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Certification</button></div>';
+        html += '<div style="margin-top:var(--space-4);"><button class="portal-cert-add-btn" onclick="Portal.showAddCertForm(\'' + escapeAttr(empId) + '\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Certification</button></div>';
 
         // Inline cert form (hidden by default)
         html += '<div id="addCertFormInline" style="display:none;margin-top:var(--space-3);padding:var(--space-4);background:var(--gray-50);border-radius:10px;">';
         html += '<div class="portal-form-group"><label class="portal-form-label">Course Name</label><select class="portal-form-select" id="certCourseName"><option value="CPR Course (HLTAID009)">CPR Course (HLTAID009)</option><option value="Provide First Aid (HLTAID011)">Provide First Aid (HLTAID011)</option><option value="Childcare First Aid (HLTAID012)">Childcare First Aid (HLTAID012)</option><option value="Advanced Resuscitation (HLTAID015)">Advanced Resuscitation (HLTAID015)</option></select></div>';
         html += '<div class="portal-form-row"><div class="portal-form-group"><label class="portal-form-label">Date Completed</label><input type="date" class="portal-form-input" id="certDateCompleted"></div><div class="portal-form-group"><label class="portal-form-label">Expiry Date</label><input type="date" class="portal-form-input" id="certExpiryDate"></div></div>';
-        html += '<button class="portal-btn portal-btn-primary portal-btn-sm" onclick="Portal.saveCert(\'' + empId + '\')">Add</button>';
+        html += '<button class="portal-btn portal-btn-primary portal-btn-sm" onclick="Portal.saveCert(\'' + escapeAttr(empId) + '\')">Add</button>';
         html += '</div>';
 
         showModal('Employee: ' + emp.name, html, function() {
@@ -616,7 +616,7 @@ var Portal = (function() {
         coursePricing.forEach(function(course) {
             var discountedPrice = discount > 0 ? Math.round(course.basePrice * (1 - discount / 100)) : course.basePrice;
 
-            html += '<div class="portal-course-card" data-course-id="' + course.id + '" onclick="Portal.selectCourse(\'' + course.id + '\')">';
+            html += '<div class="portal-course-card" data-course-id="' + escapeAttr(course.id) + '" onclick="Portal.selectCourse(\'' + escapeAttr(course.id) + '\')">';
             html += '<h4>' + escapeHtml(course.name) + '</h4>';
             html += '<p class="code">' + escapeHtml(course.code) + '</p>';
             html += '<div class="portal-course-price">';
@@ -662,7 +662,7 @@ var Portal = (function() {
         employees.forEach(function(emp) {
             var checked = bookingState.selectedEmployees.indexOf(emp.id) !== -1 ? 'checked' : '';
             html += '<label style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3);border-bottom:1px solid var(--gray-100);cursor:pointer;">';
-            html += '<input type="checkbox" value="' + emp.id + '" ' + checked + ' onchange="Portal.toggleBookEmployee(\'' + emp.id + '\')" style="width:18px;height:18px;accent-color:var(--red);">';
+            html += '<input type="checkbox" value="' + escapeAttr(emp.id) + '" ' + checked + ' onchange="Portal.toggleBookEmployee(\'' + escapeAttr(emp.id) + '\')" style="width:18px;height:18px;accent-color:var(--red);">';
             html += '<span style="font-weight:600;color:var(--navy);">' + escapeHtml(emp.name) + '</span>';
             html += '<span style="color:var(--gray-500);font-size:0.8125rem;">' + escapeHtml(emp.role || '') + '</span>';
             html += '</label>';

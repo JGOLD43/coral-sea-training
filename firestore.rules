@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Course pricing - read-only for everyone
+    // Course pricing - read-only for authenticated users
     match /coursePricing/{courseId} {
       allow read: if request.auth != null;
       allow write: if false; // Admin only via Firebase Console
@@ -18,26 +18,45 @@ service cloud.firestore {
       // Partners can read their own document
       allow read: if request.auth != null && request.auth.uid == partnerId;
 
-      // Partners can create their own document on registration
-      allow create: if request.auth != null && request.auth.uid == partnerId;
+      // Partners can create their own document on registration with required fields
+      allow create: if request.auth != null && request.auth.uid == partnerId
+        && request.resource.data.keys().hasAll(['businessName', 'contactName', 'email'])
+        && request.resource.data.businessName is string
+        && request.resource.data.contactName is string
+        && request.resource.data.email is string
+        && request.resource.data.businessName.size() > 0
+        && request.resource.data.businessName.size() <= 200
+        && request.resource.data.contactName.size() <= 200
+        && request.resource.data.email.size() <= 200;
 
       // Partners can update their own document, EXCEPT protected fields
       allow update: if request.auth != null && request.auth.uid == partnerId
         && !request.resource.data.diff(resource.data).affectedKeys()
-            .hasAny(['discountTier', 'discountPercent', 'status']);
+            .hasAny(['discountTier', 'discountPercent', 'status', 'createdAt']);
 
       // Employees subcollection
       match /employees/{employeeId} {
-        allow read, write: if request.auth != null && request.auth.uid == partnerId;
+        allow read: if request.auth != null && request.auth.uid == partnerId;
+        allow create: if request.auth != null && request.auth.uid == partnerId
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.name.size() <= 200;
+        allow update: if request.auth != null && request.auth.uid == partnerId;
+        allow delete: if request.auth != null && request.auth.uid == partnerId;
       }
 
       // Bookings subcollection
       match /bookings/{bookingId} {
         allow read: if request.auth != null && request.auth.uid == partnerId;
-        allow create: if request.auth != null && request.auth.uid == partnerId;
-        // Partners cannot update booking status (admin only)
+        allow create: if request.auth != null && request.auth.uid == partnerId
+          && request.resource.data.keys().hasAll(['courseName', 'courseDate', 'employees'])
+          && request.resource.data.courseName is string
+          && request.resource.data.courseDate is string
+          && request.resource.data.employees is list;
+        // Partners cannot update protected booking fields (admin/Cloud Functions only)
         allow update: if request.auth != null && request.auth.uid == partnerId
-          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']);
+          && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['status', 'acuityAppointmentIds', 'acuitySyncStatus', 'acuitySyncedAt', 'acuitySyncError']);
       }
     }
   }
