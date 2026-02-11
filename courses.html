@@ -272,51 +272,10 @@
                     </button>
                 </div>
 
-                <!-- ===== STEP: Contact Details ===== -->
-                <div class="funnel-step" id="step-contact">
-                    <div class="funnel-step-header">
-                        <h2 class="funnel-title">Your Personalised Course Plan is Ready</h2>
-                        <p class="funnel-subtitle">Where should we send your recommendation and booking details? <strong>Having this in your inbox makes it easy to forward to your employer for approval.</strong></p>
-                    </div>
-
-                    <div class="funnel-form">
-                        <div class="funnel-form-row">
-                            <div class="funnel-form-group">
-                                <label class="form-label" for="funnelName">Full Name *</label>
-                                <input type="text" id="funnelName" class="form-input" placeholder="Your full name" required>
-                            </div>
-                            <div class="funnel-form-group">
-                                <label class="form-label" for="funnelPhone">Phone Number *</label>
-                                <input type="tel" id="funnelPhone" class="form-input" placeholder="04XX XXX XXX" required>
-                            </div>
-                        </div>
-                        <div class="funnel-form-group">
-                            <label class="form-label" for="funnelEmail">Email Address *</label>
-                            <input type="email" id="funnelEmail" class="form-input" placeholder="Your email address" required>
-                            <span class="funnel-form-hint">We'll send your course recommendation here &mdash; perfect for forwarding to your boss</span>
-                        </div>
-                        <div class="funnel-form-group" id="companyField" style="display:none;">
-                            <label class="form-label" for="funnelCompany">Company / Organisation</label>
-                            <input type="text" id="funnelCompany" class="form-input" placeholder="Your company name">
-                        </div>
-
-                        <div class="funnel-form-trust">
-                            <div class="funnel-form-trust-item">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                                <span>Your details are secure and never shared</span>
-                            </div>
-                            <div class="funnel-form-trust-item">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><polyline points="20 6 9 17 4 12"/></svg>
-                                <span>No spam &mdash; just your course details</span>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-primary btn-lg funnel-submit" onclick="submitFunnel()" style="width:100%;">
-                            Get My Course Recommendation
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                        </button>
-
-                        <p class="funnel-form-disclaimer">By submitting, you agree to be contacted about your course enquiry. We respond within 24 hours.</p>
+                <!-- ===== STEP: Your Offer ===== -->
+                <div class="funnel-step" id="step-offer">
+                    <div id="offerContent">
+                        <!-- Populated by JavaScript -->
                     </div>
 
                     <button class="funnel-back" onclick="goBack()">
@@ -325,9 +284,9 @@
                     </button>
                 </div>
 
-                <!-- ===== STEP: Result / Recommendation ===== -->
-                <div class="funnel-step" id="step-result">
-                    <div class="funnel-result" id="funnelResult">
+                <!-- ===== STEP: Booking Confirmed ===== -->
+                <div class="funnel-step" id="step-confirmed">
+                    <div id="confirmedContent">
                         <!-- Populated by JavaScript -->
                     </div>
                 </div>
@@ -401,6 +360,7 @@
         company: ''
     };
 
+    var currentRec = null;
     var stepHistory = [];
     var currentStepId = 'step-type';
 
@@ -431,12 +391,11 @@
 
     function updateProgress() {
         var stepsCompleted = stepHistory.length;
-        // On-site team path skips location = 4 steps, others = 5
         var totalSteps = (funnelData.type === 'team' && funnelData.delivery === 'onsite') ? 4 : 5;
 
-        if (currentStepId === 'step-result') {
+        if (currentStepId === 'step-offer' || currentStepId === 'step-confirmed') {
             document.getElementById('progressFill').style.width = '100%';
-            document.getElementById('stepLabel').textContent = 'Your recommendation';
+            document.getElementById('stepLabel').textContent = currentStepId === 'step-confirmed' ? 'Booked!' : 'Your offer';
         } else {
             var progress = ((stepsCompleted + 1) / totalSteps) * 100;
             document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
@@ -461,7 +420,6 @@
             if (value === 'individual') {
                 navigateTo('step-industry');
             } else {
-                document.getElementById('companyField').style.display = 'block';
                 navigateTo('step-delivery');
             }
         }, 300);
@@ -500,50 +458,30 @@
         funnelData.urgency = value;
         highlightOption(btn);
         setTimeout(function() {
-            navigateTo('step-contact');
+            showOffer();
         }, 300);
     }
 
-    // ---- Submit & Recommendation ----
+    // ---- Offer Page ----
 
-    function submitFunnel() {
-        var name = document.getElementById('funnelName').value.trim();
-        var email = document.getElementById('funnelEmail').value.trim();
-        var phone = document.getElementById('funnelPhone').value.trim();
-        var company = document.getElementById('funnelCompany').value.trim();
-
-        if (!name) { shakeField('funnelName'); return; }
-        if (!email || email.indexOf('@') === -1) { shakeField('funnelEmail'); return; }
-        if (!phone) { shakeField('funnelPhone'); return; }
-
-        funnelData.name = name;
-        funnelData.email = email;
-        funnelData.phone = phone;
-        funnelData.company = company;
-
-        var rec = getRecommendation();
-        document.getElementById('funnelResult').innerHTML = buildResultHTML(rec);
-        sendLeadEmail(rec);
-        navigateTo('step-result');
-    }
-
-    function shakeField(id) {
-        var el = document.getElementById(id);
-        el.style.borderColor = 'var(--red)';
-        el.focus();
-        el.classList.add('shake');
-        setTimeout(function() { el.classList.remove('shake'); }, 500);
+    function showOffer() {
+        currentRec = getRecommendation();
+        document.getElementById('offerContent').innerHTML = buildOfferHTML(currentRec);
+        navigateTo('step-offer');
     }
 
     function getRecommendation() {
         var rec = {};
 
         if (funnelData.type === 'team') {
+            rec.isTeam = true;
             if (funnelData.delivery === 'onsite') {
                 rec.course = 'On-Site Group Training';
                 rec.code = 'Custom Package';
                 rec.badge = 'Corporate Solution';
-                rec.description = 'We\'ll bring nationally accredited training directly to your workplace. Your dedicated training coordinator will design a package around your team\'s needs, schedule, and compliance requirements.';
+                rec.price = null;
+                rec.priceLabel = 'Custom Quote';
+                rec.description = 'We bring nationally accredited training directly to your workplace. All equipment included &mdash; your team gets certified without leaving the office.';
                 rec.duration = 'Flexible &mdash; tailored to your team';
                 rec.validity = 'All certifications nationally recognised';
                 rec.includes = [
@@ -554,12 +492,15 @@
                     'Compliance reporting for your records',
                     'Dedicated training coordinator'
                 ];
+                rec.btnText = 'Get My Team Quote';
             } else {
                 rec.course = 'Group Venue Booking';
                 rec.code = 'HLTAID011 / HLTAID012';
                 rec.badge = 'Group Booking';
-                rec.description = 'Book your team into one of our scheduled courses. We\'ll coordinate the details and ensure everyone gets certified together. Group discounts available.';
-                rec.duration = '1 day per course (times vary)';
+                rec.price = null;
+                rec.priceLabel = 'Group Rates Available';
+                rec.description = 'Book your team into a scheduled course at our venue. Group discounts available &mdash; we\'ll coordinate everything.';
+                rec.duration = '1 day per course';
                 rec.validity = 'All certifications nationally recognised';
                 rec.includes = [
                     'Choice of CPR, First Aid, or Childcare courses',
@@ -569,17 +510,19 @@
                     'Compliance certificates for your records',
                     'Statement of Attainment on completion'
                 ];
+                rec.btnText = 'Get My Team Quote';
             }
-            rec.groupNote = true;
-            rec.groupMessage = 'A member of our team will follow up with group pricing and availability tailored to your team size.';
         } else {
+            rec.isTeam = false;
             if (funnelData.industry === 'childcare') {
                 rec.course = 'Childcare First Aid';
                 rec.code = 'HLTAID012';
                 rec.badge = 'Recommended For You';
-                rec.description = 'The complete childcare first aid package. This ACECQA-approved course covers CPR, First Aid, Anaphylaxis, and Asthma management &mdash; everything required for Cert III, Diploma, and educator roles.';
+                rec.price = 140;
+                rec.priceLabel = '$140';
+                rec.description = 'The complete ACECQA-approved package &mdash; CPR, First Aid, Anaphylaxis and Asthma all in one day. Everything required for Cert III, Diploma, and educator roles.';
                 rec.duration = 'Approx. 8 hours (1 day)';
-                rec.validity = '3 years (CPR component renewed annually)';
+                rec.validity = '3 years (CPR renewed annually)';
                 rec.includes = [
                     'CPR & AED (HLTAID009)',
                     'Provide First Aid (HLTAID011)',
@@ -588,13 +531,16 @@
                     'ACECQA approved for childcare',
                     'Statement of Attainment on completion'
                 ];
+                rec.btnText = 'Book Now &mdash; $140';
             } else {
                 rec.course = 'Provide First Aid';
                 rec.code = 'HLTAID011';
                 rec.badge = 'Most Popular';
-                rec.description = 'Our most popular course &mdash; and for good reason. Includes CPR certification bundled in, plus comprehensive first aid skills. Nationally recognised and meets all workplace compliance requirements.';
+                rec.price = 120;
+                rec.priceLabel = '$120';
+                rec.description = 'Our most popular course. Includes CPR certification bundled in, plus comprehensive first aid skills. Nationally recognised and meets all workplace compliance requirements.';
                 rec.duration = 'Approx. 7 hours (1 day)';
-                rec.validity = '3 years (CPR component renewed annually)';
+                rec.validity = '3 years (CPR renewed annually)';
                 rec.includes = [
                     'CPR & AED (HLTAID009) included',
                     'Wound management & bandaging',
@@ -603,6 +549,7 @@
                     'Medical emergencies',
                     'Statement of Attainment on completion'
                 ];
+                rec.btnText = 'Book Now &mdash; $120';
             }
         }
 
@@ -615,17 +562,16 @@
             rec.locationDisplay = 'On-site at your workplace';
         }
 
-        // Urgency messaging
         if (funnelData.urgency === 'asap') {
-            rec.urgencyMessage = 'We\'ve flagged your booking as urgent. Our team will prioritise finding you the next available spot.';
+            rec.urgencyNote = 'Flagged as urgent &mdash; we\'ll prioritise finding you the next available spot.';
         } else {
-            rec.urgencyMessage = 'No rush &mdash; we\'ll send you upcoming course dates so you can choose the one that works best.';
+            rec.urgencyNote = 'We\'ll send you upcoming dates so you can pick the one that works best.';
         }
 
         return rec;
     }
 
-    function buildResultHTML(rec) {
+    function buildOfferHTML(rec) {
         var checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--green);flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>';
 
         var includesHTML = '';
@@ -633,27 +579,23 @@
             includesHTML += '<div class="funnel-result-feature">' + checkSvg + '<span>' + rec.includes[i] + '</span></div>';
         }
 
-        var groupHTML = '';
-        if (rec.groupNote) {
-            groupHTML = '<div class="funnel-result-group-note">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:#f59e0b;flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>' +
-                '<p>' + rec.groupMessage + '</p>' +
-                '</div>';
-        }
+        var companyFieldHTML = rec.isTeam
+            ? '<div class="funnel-form-group"><label class="form-label" for="funnelCompany">Company / Organisation *</label><input type="text" id="funnelCompany" class="form-input" placeholder="Your company name"></div>'
+            : '';
 
         var html = '' +
-            '<div class="funnel-result-success">' +
-                '<div class="funnel-result-check">' +
-                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
-                '</div>' +
-                '<h2>Great News, ' + funnelData.name.split(' ')[0] + '!</h2>' +
-                '<p>Based on your answers, here\'s what we recommend:</p>' +
+            '<div class="funnel-step-header">' +
+                '<h2 class="funnel-title">Here\'s Your Course</h2>' +
+                '<p class="funnel-subtitle">Based on your answers, this is the perfect fit.</p>' +
             '</div>' +
 
             '<div class="funnel-result-card">' +
                 '<div class="funnel-result-badge">' + rec.badge + '</div>' +
                 '<h3 class="funnel-result-course">' + rec.course + '</h3>' +
-                '<p class="funnel-result-code">' + rec.code + '</p>' +
+                '<div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4);">' +
+                    '<p class="funnel-result-code" style="margin:0;">' + rec.code + '</p>' +
+                    '<span style="font-size:1.75rem;font-weight:800;color:var(--red);">' + rec.priceLabel + '</span>' +
+                '</div>' +
                 '<p class="funnel-result-desc">' + rec.description + '</p>' +
 
                 '<div class="funnel-result-meta">' +
@@ -676,63 +618,151 @@
                     includesHTML +
                 '</div>' +
 
-                groupHTML +
-
-                '<div class="funnel-result-urgency">' +
-                    '<p>' + rec.urgencyMessage + '</p>' +
-                '</div>' +
+                '<div class="funnel-result-urgency"><p>' + rec.urgencyNote + '</p></div>' +
             '</div>' +
 
-            '<div class="funnel-result-actions">' +
-                '<div class="funnel-result-confirmation">' +
-                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--green);"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
-                    '<p><strong>Your details have been sent to our team.</strong> We\'ll be in touch within 24 hours with your personalised booking details and next available course dates.</p>' +
+            '<div class="funnel-form" style="margin-top:var(--space-6);">' +
+                '<h3 style="font-size:1.25rem;color:var(--navy);margin-bottom:var(--space-2);text-align:center;">Book Your Spot</h3>' +
+                '<p style="font-size:0.9375rem;color:var(--gray-600);text-align:center;margin-bottom:var(--space-6);">Enter your details and we\'ll email your booking confirmation &mdash; easy to forward to your employer for approval.</p>' +
+                '<div class="funnel-form-row">' +
+                    '<div class="funnel-form-group">' +
+                        '<label class="form-label" for="funnelName">Full Name *</label>' +
+                        '<input type="text" id="funnelName" class="form-input" placeholder="Your full name" required>' +
+                    '</div>' +
+                    '<div class="funnel-form-group">' +
+                        '<label class="form-label" for="funnelPhone">Phone Number *</label>' +
+                        '<input type="tel" id="funnelPhone" class="form-input" placeholder="04XX XXX XXX" required>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="funnel-form-group">' +
+                    '<label class="form-label" for="funnelEmail">Email Address *</label>' +
+                    '<input type="email" id="funnelEmail" class="form-input" placeholder="Your email address" required>' +
+                '</div>' +
+                companyFieldHTML +
+
+                '<div class="funnel-form-trust">' +
+                    '<div class="funnel-form-trust-item">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
+                        '<span>Booking confirmation sent instantly to your email</span>' +
+                    '</div>' +
+                    '<div class="funnel-form-trust-item">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);"><polyline points="20 6 9 17 4 12"/></svg>' +
+                        '<span>Forward to your employer for approval</span>' +
+                    '</div>' +
                 '</div>' +
 
-                '<div class="funnel-result-next-steps">' +
-                    '<h4>What Happens Next?</h4>' +
-                    '<div class="funnel-result-step"><span class="funnel-result-step-num">1</span><p>Our team reviews your details and checks availability</p></div>' +
-                    '<div class="funnel-result-step"><span class="funnel-result-step-num">2</span><p>We\'ll email you course dates, pricing, and booking confirmation</p></div>' +
-                    '<div class="funnel-result-step"><span class="funnel-result-step-num">3</span><p>Forward the email to your employer for approval if needed</p></div>' +
-                '</div>' +
+                '<button class="btn btn-primary btn-lg funnel-submit" onclick="submitBooking()" style="width:100%;font-size:1.125rem;">' +
+                    rec.btnText +
+                    ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+                '</button>' +
 
-                '<div class="funnel-result-cta-row">' +
-                    '<a href="tel:0419675022" class="btn btn-primary btn-lg">' +
-                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
-                        'Want to Book Now? Call Us' +
-                    '</a>' +
-                    '<a href="index.html" class="btn btn-outline btn-lg">Back to Homepage</a>' +
-                '</div>' +
+                '<p class="funnel-form-disclaimer">Pay on the day of your course. This secures your spot and sends booking details to our team.</p>' +
             '</div>';
 
         return html;
     }
 
-    function sendLeadEmail(rec) {
+    // ---- Submit Booking ----
+
+    function submitBooking() {
+        var name = document.getElementById('funnelName').value.trim();
+        var email = document.getElementById('funnelEmail').value.trim();
+        var phone = document.getElementById('funnelPhone').value.trim();
+        var companyEl = document.getElementById('funnelCompany');
+        var company = companyEl ? companyEl.value.trim() : '';
+
+        if (!name) { shakeField('funnelName'); return; }
+        if (!email || email.indexOf('@') === -1) { shakeField('funnelEmail'); return; }
+        if (!phone) { shakeField('funnelPhone'); return; }
+
+        funnelData.name = name;
+        funnelData.email = email;
+        funnelData.phone = phone;
+        funnelData.company = company;
+
+        sendBookingEmail(currentRec);
+        document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
+        navigateTo('step-confirmed');
+    }
+
+    function shakeField(id) {
+        var el = document.getElementById(id);
+        el.style.borderColor = 'var(--red)';
+        el.focus();
+        el.classList.add('shake');
+        setTimeout(function() { el.classList.remove('shake'); }, 500);
+    }
+
+    function buildConfirmedHTML(rec) {
+        var firstName = funnelData.name.split(' ')[0];
+
+        return '' +
+            '<div class="funnel-result-success">' +
+                '<div class="funnel-result-check">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+                '</div>' +
+                '<h2>You\'re Booked, ' + firstName + '!</h2>' +
+                '<p>Your spot for <strong>' + rec.course + '</strong> has been secured.</p>' +
+            '</div>' +
+
+            '<div class="funnel-result-card">' +
+                '<div class="funnel-result-confirmation" style="margin-bottom:var(--space-4);border:none;background:var(--green-light);">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--green);flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+                    '<p><strong>Booking confirmation has been sent.</strong> Check your email at <strong>' + funnelData.email + '</strong> &mdash; forward it to your employer for approval if needed.</p>' +
+                '</div>' +
+
+                '<div class="funnel-result-meta">' +
+                    '<div class="funnel-result-meta-item">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>' +
+                        '<div><strong>Course:</strong> ' + rec.course + ' (' + rec.code + ')</div>' +
+                    '</div>' +
+                    '<div class="funnel-result-meta-item">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+                        '<div><strong>Location:</strong> ' + rec.locationDisplay + '</div>' +
+                    '</div>' +
+                    (rec.price ? '<div class="funnel-result-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><div><strong>Price:</strong> ' + rec.priceLabel + ' (pay on the day)</div></div>' : '') +
+                '</div>' +
+
+                '<div class="funnel-result-next-steps" style="margin-top:var(--space-6);">' +
+                    '<h4>What Happens Next?</h4>' +
+                    '<div class="funnel-result-step"><span class="funnel-result-step-num">1</span><p>Check your email for booking confirmation details</p></div>' +
+                    '<div class="funnel-result-step"><span class="funnel-result-step-num">2</span><p>We\'ll confirm your course date and send a reminder before the day</p></div>' +
+                    '<div class="funnel-result-step"><span class="funnel-result-step-num">3</span><p>Show up, get trained, leave certified &mdash; pay on the day</p></div>' +
+                '</div>' +
+            '</div>' +
+
+            '<div class="funnel-result-cta-row">' +
+                '<a href="tel:0419675022" class="btn btn-primary btn-lg">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+                    'Questions? Call Us' +
+                '</a>' +
+                '<a href="index.html" class="btn btn-outline btn-lg">Back to Homepage</a>' +
+            '</div>';
+    }
+
+    function sendBookingEmail(rec) {
         var situationLabel = funnelData.type === 'individual'
             ? (funnelData.industry === 'childcare' ? 'Individual - Childcare/Education' : 'Individual - General/Workplace')
             : (funnelData.delivery === 'onsite' ? 'Team - On-site Training' : 'Team - Venue Booking');
 
-        var subject = encodeURIComponent('Course Enquiry: ' + rec.course + ' - ' + funnelData.name);
+        var subject = encodeURIComponent('NEW BOOKING: ' + rec.course + ' - ' + funnelData.name);
         var body = encodeURIComponent(
-            'NEW LEAD FROM WEBSITE FUNNEL\n' +
+            'NEW BOOKING FROM WEBSITE\n' +
             '================================\n\n' +
             'Name: ' + funnelData.name + '\n' +
             'Email: ' + funnelData.email + '\n' +
             'Phone: ' + funnelData.phone + '\n' +
             (funnelData.company ? 'Company: ' + funnelData.company + '\n' : '') +
             '\n' +
-            'PREFERENCES\n' +
+            'BOOKING DETAILS\n' +
             '--------------------------------\n' +
+            'Course: ' + rec.course + ' (' + rec.code + ')\n' +
+            (rec.price ? 'Price: ' + rec.priceLabel + '\n' : '') +
             'Type: ' + situationLabel + '\n' +
             'Preferred Location: ' + funnelData.location + '\n' +
             'Urgency: ' + funnelData.urgency + '\n' +
             '\n' +
-            'RECOMMENDATION\n' +
-            '--------------------------------\n' +
-            'Course: ' + rec.course + ' (' + rec.code + ')\n' +
-            '\n' +
-            'This lead was generated from the course finder funnel on the website.'
+            'ACTION REQUIRED: Please confirm course date and send booking details to the student.'
         );
 
         var mailtoLink = 'mailto:admin@coralseatraining.com.au?subject=' + subject + '&body=' + body;
@@ -742,12 +772,12 @@
         document.body.appendChild(iframe);
         setTimeout(function() { document.body.removeChild(iframe); }, 2000);
 
-        console.log('Lead submitted:', funnelData);
+        console.log('Booking submitted:', funnelData);
         if (typeof gtag !== 'undefined') {
-            gtag('event', 'funnel_lead', {
-                'event_category': 'Lead Generation',
+            gtag('event', 'purchase', {
+                'event_category': 'Booking',
                 'event_label': rec.course,
-                'value': funnelData.type === 'team' ? 3 : 1
+                'value': rec.price || 0
             });
         }
     }
