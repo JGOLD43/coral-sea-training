@@ -88,23 +88,6 @@
             <div class="hero-grid">
                 <div class="hero-content">
                     <h1 class="hero-title">Walk In Today. Walk Out <span>Ready to Save a Life.</span></h1>
-                    <p class="hero-description">In just one day, you'll have the skills and confidence to act in any emergency &mdash; plus a nationally recognised qualification accepted by every employer in Australia. No study beforehand, no homework, no stress. Just show up.</p>
-                    <div class="hero-stats-row">
-                        <div class="hero-stat"><strong>10,000+</strong> Queenslanders certified</div>
-                        <div class="hero-stat"><strong>98%</strong> pass first time</div>
-                        <div class="hero-stat"><strong>1 day</strong> is all it takes</div>
-                    </div>
-                    <div class="hero-cta">
-                        <a href="courses.html" class="btn btn-primary btn-lg">
-                            Find My Course &amp; Book
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                        </a>
-                        <a href="tel:0419675022" class="btn btn-outline btn-lg">Call: 0419 675 022</a>
-                    </div>
-                    <div class="hero-guarantee">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--green);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                        <span><strong>100% Skills Mastery Guarantee:</strong> Don't feel confident? Come back and retrain for free &mdash; no questions asked.</span>
-                    </div>
                     <div class="hero-trust">
                         <div class="trust-item">
                             <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -122,6 +105,24 @@
                             <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="#FBBC04" stroke="#FBBC04"/></svg>
                             <span class="trust-text">4.4 Google Rating</span>
                         </div>
+                    </div>
+                    <p class="hero-description">Get your nationally recognised First Aid certification in one day &mdash; no study, no homework, just show up and leave qualified.</p>
+                    <div class="hero-stats-row">
+                        <div class="hero-stat"><strong>10,000+</strong> Queenslanders certified</div>
+                        <div class="hero-stat"><strong>98%</strong> pass first time</div>
+                        <div class="hero-stat"><strong>1 day</strong> is all it takes</div>
+                    </div>
+                    <p class="hero-next-date" id="heroNextDate" style="font-size:0.9375rem;color:var(--red);font-weight:600;margin-top:var(--space-3);"></p>
+                    <div class="hero-cta">
+                        <a href="courses.html" class="btn btn-primary btn-lg">
+                            Find My Course &amp; Book
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                        <a href="tel:0419675022" class="btn btn-outline btn-lg">Call: 0419 675 022</a>
+                    </div>
+                    <div class="hero-guarantee">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--green);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        <span><strong>100% Skills Mastery Guarantee:</strong> Don't feel confident? Come back and retrain for free &mdash; no questions asked.</span>
                     </div>
                 </div>
                 <div class="hero-media">
@@ -905,7 +906,7 @@
     <script src="js/course-data.js"></script>
     <script src="js/main.js"></script>
     <script>
-    // Dynamic urgency banner from course data
+    // Dynamic urgency banner + hero date from course data
     (function() {
         var next = getNextDate('townsville');
         if (next) {
@@ -914,6 +915,10 @@
                 bannerText.innerHTML =
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
                     '<strong>Only 4 Spots Left:</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="courses.html">Book now before it fills</a>';
+            }
+            var heroDate = document.getElementById('heroNextDate');
+            if (heroDate) {
+                heroDate.innerHTML = 'Next Townsville course: ' + next.formattedLong + ' &mdash; <a href="courses.html" style="color:var(--red);text-decoration:underline;">Book now</a>';
             }
         }
     })();
