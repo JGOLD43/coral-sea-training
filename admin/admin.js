@@ -12,7 +12,8 @@
 
     const CONFIG = {
         sessionTimeout: 30 * 60 * 1000, // 30 minutes
-        storagePrefix: 'cst_admin_'
+        storagePrefix: 'cst_admin_',
+        functionsBaseUrl: 'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net'
     };
 
     const DEFAULT_DATA = {
@@ -301,6 +302,7 @@
             courses: 'Manage Courses',
             testimonials: 'Manage Testimonials',
             contact: 'Contact Information',
+            scheduling: 'Scheduling',
             settings: 'Settings'
         };
         UI.sectionTitle.textContent = titles[sectionName] || 'Dashboard';
@@ -309,6 +311,7 @@
         if (sectionName === 'courses') loadCourses();
         if (sectionName === 'testimonials') loadTestimonials();
         if (sectionName === 'contact') loadContactInfo();
+        if (sectionName === 'scheduling') initScheduling();
     }
 
     // =====================================================
@@ -605,6 +608,8 @@
     function hideModal() {
         UI.modal.style.display = 'none';
         modalSaveCallback = null;
+        // Restore save button visibility (viewAppointment hides it)
+        if (UI.saveModal) UI.saveModal.style.display = '';
     }
 
     // =====================================================
@@ -664,6 +669,534 @@
     }
 
     // =====================================================
+    // Acuity Scheduling Integration
+    // =====================================================
+
+    // HTML escape helper
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str || '';
+        return div.innerHTML;
+    }
+
+    // Date format helper
+    function formatDateISO(date) {
+        return date.toISOString().split('T')[0];
+    }
+
+    // Firebase admin login (runs alongside existing localStorage auth)
+    function firebaseAdminLogin(password) {
+        if (typeof firebase === 'undefined' || !firebase.auth) return;
+        var adminEmail = 'admin@coralseatraining.com.au';
+        firebase.auth().signInWithEmailAndPassword(adminEmail, password).catch(function(err) {
+            console.warn('Firebase admin auth failed:', err.message);
+        });
+    }
+
+    // Get Firebase ID token for Cloud Functions calls
+    async function getFirebaseToken() {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            throw new Error('Firebase not loaded');
+        }
+        var user = firebase.auth().currentUser;
+        if (!user) throw new Error('Not authenticated with Firebase — sign in again');
+        return user.getIdToken();
+    }
+
+    // Acuity API client (calls Cloud Functions proxy)
+    async function acuityFetch(endpoint, options) {
+        options = options || {};
+        var token = await getFirebaseToken();
+        var url = new URL(CONFIG.functionsBaseUrl + '/' + endpoint.replace(/^\//, ''));
+
+        if (options.params) {
+            Object.keys(options.params).forEach(function(k) {
+                var v = options.params[k];
+                if (v !== '' && v !== null && v !== undefined) {
+                    url.searchParams.set(k, v);
+                }
+            });
+        }
+
+        var fetchOptions = {
+            method: options.method || 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        if (options.body) {
+            fetchOptions.body = JSON.stringify(options.body);
+        }
+
+        var controller = new AbortController();
+        var timeoutId = setTimeout(function() { controller.abort(); }, 15000);
+        fetchOptions.signal = controller.signal;
+
+        try {
+            var response = await fetch(url.toString(), fetchOptions);
+            clearTimeout(timeoutId);
+            if (!response.ok) {
+                var errData = await response.json().catch(function() { return { error: 'Request failed' }; });
+                throw new Error(errData.error || 'API request failed: ' + response.status);
+            }
+            return response.json();
+        } catch (err) {
+            clearTimeout(timeoutId);
+            if (err.name === 'AbortError') throw new Error('Request timed out');
+            throw err;
+        }
+    }
+
+    // Scheduling state
+    var schedulingState = {
+        appointments: [],
+        appointmentTypes: [],
+        clients: [],
+        calendarMonth: new Date().getMonth(),
+        calendarYear: new Date().getFullYear(),
+        initialized: false
+    };
+
+    // Initialize scheduling section
+    async function initScheduling() {
+        if (schedulingState.initialized) {
+            return;
+        }
+
+        try {
+            // Load appointment types
+            var types = await acuityFetch('getAppointmentTypes');
+            schedulingState.appointmentTypes = types;
+
+            // Populate type filter dropdown
+            var typeSelect = document.getElementById('filterType');
+            types.forEach(function(type) {
+                var opt = document.createElement('option');
+                opt.value = type.id;
+                opt.textContent = type.name;
+                typeSelect.appendChild(opt);
+            });
+
+            // Set default date range (today to 30 days out)
+            var today = new Date();
+            var thirtyOut = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+            document.getElementById('filterDateFrom').value = formatDateISO(today);
+            document.getElementById('filterDateTo').value = formatDateISO(thirtyOut);
+
+            schedulingState.initialized = true;
+
+            await loadAppointments();
+            loadSchedulingStats();
+        } catch (err) {
+            console.error('Scheduling init error:', err);
+            showToast('Failed to connect to scheduling: ' + err.message, 'error');
+        }
+    }
+
+    // Load and render appointments
+    async function loadAppointments() {
+        var fromDate = document.getElementById('filterDateFrom').value;
+        var toDate = document.getElementById('filterDateTo').value;
+        var typeId = document.getElementById('filterType').value;
+        var status = document.getElementById('filterStatus').value;
+
+        var params = {};
+        if (fromDate) params.minDate = fromDate + 'T00:00:00';
+        if (toDate) params.maxDate = toDate + 'T23:59:59';
+        if (typeId) params.appointmentTypeID = typeId;
+        if (status === 'canceled') params.canceled = 'true';
+
+        try {
+            var appointments = await acuityFetch('getAppointments', { params: params });
+            schedulingState.appointments = appointments;
+            renderAppointments();
+        } catch (err) {
+            showToast('Failed to load appointments: ' + err.message, 'error');
+        }
+    }
+
+    function renderAppointments() {
+        var container = document.getElementById('appointmentsList');
+        var appointments = schedulingState.appointments;
+        var statusFilter = document.getElementById('filterStatus').value;
+
+        // Client-side status filter for completed
+        if (statusFilter === 'completed') {
+            var now = new Date();
+            appointments = appointments.filter(function(a) {
+                return !a.canceled && new Date(a.datetime) < now;
+            });
+        } else if (statusFilter === 'scheduled') {
+            var now2 = new Date();
+            appointments = appointments.filter(function(a) {
+                return !a.canceled && new Date(a.datetime) >= now2;
+            });
+        }
+
+        if (appointments.length === 0) {
+            container.innerHTML = '<div class="empty-state">No appointments found for the selected filters.</div>';
+            return;
+        }
+
+        container.innerHTML = appointments.map(function(apt) {
+            var dateObj = new Date(apt.datetime);
+            var dateStr = dateObj.toLocaleDateString('en-AU', {
+                weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+            });
+            var timeStr = dateObj.toLocaleTimeString('en-AU', {
+                hour: '2-digit', minute: '2-digit'
+            });
+            var statusClass = apt.canceled ? 'canceled' :
+                (dateObj < new Date() ? 'completed' : 'scheduled');
+            var statusLabel = statusClass.charAt(0).toUpperCase() + statusClass.slice(1);
+
+            var actions = '<button class="btn btn-outline btn-sm view-apt" data-id="' + apt.id + '">View</button>';
+            if (!apt.canceled && dateObj >= new Date()) {
+                actions += ' <button class="btn btn-outline btn-sm reschedule-apt" data-id="' + apt.id + '">Reschedule</button>';
+                actions += ' <button class="btn btn-danger btn-sm cancel-apt" data-id="' + apt.id + '">Cancel</button>';
+            }
+
+            return '<div class="item-card appointment-card" data-id="' + apt.id + '">' +
+                '<div class="item-info">' +
+                    '<h3 class="item-title">' + escapeHtml(apt.type) + '</h3>' +
+                    '<p class="item-subtitle">' + escapeHtml(apt.firstName) + ' ' + escapeHtml(apt.lastName) +
+                    (apt.email ? ' &mdash; ' + escapeHtml(apt.email) : '') + '</p>' +
+                    '<div class="appointment-meta">' +
+                        '<span class="appointment-date">' + dateStr + ' at ' + timeStr + '</span>' +
+                        '<span class="appointment-status status-' + statusClass + '">' + statusLabel + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="item-actions">' + actions + '</div>' +
+            '</div>';
+        }).join('');
+
+        // Attach event listeners
+        container.querySelectorAll('.view-apt').forEach(function(btn) {
+            btn.addEventListener('click', function() { viewAppointment(btn.dataset.id); });
+        });
+        container.querySelectorAll('.cancel-apt').forEach(function(btn) {
+            btn.addEventListener('click', function() { cancelAppointment(btn.dataset.id); });
+        });
+        container.querySelectorAll('.reschedule-apt').forEach(function(btn) {
+            btn.addEventListener('click', function() { showRescheduleModal(btn.dataset.id); });
+        });
+    }
+
+    // View appointment detail
+    async function viewAppointment(id) {
+        try {
+            var apt = await acuityFetch('getAppointment', { params: { id: id } });
+            var dateObj = new Date(apt.datetime);
+
+            showModal('Appointment Details', '' +
+                '<div class="appointment-detail">' +
+                    '<div class="form-section">' +
+                        '<h3>Appointment</h3>' +
+                        '<div class="detail-row"><span class="detail-label">Type:</span> ' + escapeHtml(apt.type) + '</div>' +
+                        '<div class="detail-row"><span class="detail-label">Date:</span> ' + dateObj.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '</div>' +
+                        '<div class="detail-row"><span class="detail-label">Time:</span> ' + dateObj.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }) + '</div>' +
+                        '<div class="detail-row"><span class="detail-label">Duration:</span> ' + (apt.duration || 0) + ' minutes</div>' +
+                        '<div class="detail-row"><span class="detail-label">Calendar:</span> ' + escapeHtml(apt.calendar || 'Default') + '</div>' +
+                        '<div class="detail-row"><span class="detail-label">Status:</span> ' + (apt.canceled ? 'Cancelled' : 'Active') + '</div>' +
+                    '</div>' +
+                    '<div class="form-section">' +
+                        '<h3>Client</h3>' +
+                        '<div class="detail-row"><span class="detail-label">Name:</span> ' + escapeHtml(apt.firstName) + ' ' + escapeHtml(apt.lastName) + '</div>' +
+                        '<div class="detail-row"><span class="detail-label">Email:</span> ' + escapeHtml(apt.email || 'N/A') + '</div>' +
+                        '<div class="detail-row"><span class="detail-label">Phone:</span> ' + escapeHtml(apt.phone || 'N/A') + '</div>' +
+                    '</div>' +
+                    (apt.notes ? '<div class="form-section"><h3>Notes</h3><p>' + escapeHtml(apt.notes) + '</p></div>' : '') +
+                '</div>'
+            , null);
+
+            // Hide save button for view-only modal
+            UI.saveModal.style.display = 'none';
+        } catch (err) {
+            showToast('Failed to load appointment details', 'error');
+        }
+    }
+
+    // Cancel appointment
+    async function cancelAppointment(id) {
+        if (!confirm('Cancel this appointment? The client will be notified by Acuity.')) return;
+
+        try {
+            await acuityFetch('cancelAppointment', { method: 'PUT', params: { id: id } });
+            showToast('Appointment cancelled');
+            await loadAppointments();
+            loadSchedulingStats();
+        } catch (err) {
+            showToast('Failed to cancel: ' + err.message, 'error');
+        }
+    }
+
+    // Reschedule modal
+    async function showRescheduleModal(id) {
+        var apt = schedulingState.appointments.find(function(a) { return a.id == id; });
+        if (!apt) return;
+
+        var currentDate = new Date(apt.datetime);
+        var currentDateStr = currentDate.toLocaleDateString('en-AU') + ' at ' +
+            currentDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+
+        showModal('Reschedule Appointment', '' +
+            '<form id="rescheduleForm">' +
+                '<p style="margin-bottom:1rem">Current: <strong>' + currentDateStr + '</strong></p>' +
+                '<div class="form-group">' +
+                    '<label for="rescheduleDate">New Date</label>' +
+                    '<input type="date" id="rescheduleDate" required min="' + formatDateISO(new Date()) + '">' +
+                '</div>' +
+                '<div class="form-group">' +
+                    '<label for="rescheduleTime">Available Times</label>' +
+                    '<select id="rescheduleTime" required>' +
+                        '<option value="">Select a date first</option>' +
+                    '</select>' +
+                '</div>' +
+            '</form>'
+        , async function() {
+            var datetime = document.getElementById('rescheduleTime').value;
+            if (!datetime) { showToast('Please select a time', 'error'); return; }
+
+            try {
+                await acuityFetch('rescheduleAppointment', {
+                    method: 'PUT',
+                    params: { id: id },
+                    body: { datetime: datetime }
+                });
+                showToast('Appointment rescheduled');
+                hideModal();
+                await loadAppointments();
+                loadSchedulingStats();
+            } catch (err) {
+                showToast('Reschedule failed: ' + err.message, 'error');
+            }
+        });
+
+        // Make save button visible again (viewAppointment hides it)
+        UI.saveModal.style.display = '';
+
+        // Load times when date changes
+        document.getElementById('rescheduleDate').addEventListener('change', async function() {
+            var date = this.value;
+            var timeSelect = document.getElementById('rescheduleTime');
+            timeSelect.innerHTML = '<option value="">Loading...</option>';
+
+            try {
+                var times = await acuityFetch('getAvailableTimes', {
+                    params: { date: date, appointmentTypeID: apt.appointmentTypeID }
+                });
+                if (times.length === 0) {
+                    timeSelect.innerHTML = '<option value="">No availability</option>';
+                } else {
+                    timeSelect.innerHTML = times.map(function(t) {
+                        var d = new Date(t.time);
+                        return '<option value="' + t.time + '">' +
+                            d.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }) +
+                        '</option>';
+                    }).join('');
+                }
+            } catch (err) {
+                timeSelect.innerHTML = '<option value="">Error loading times</option>';
+            }
+        });
+    }
+
+    // Quick stats
+    async function loadSchedulingStats() {
+        var today = new Date();
+        var todayStr = formatDateISO(today);
+        var weekEnd = new Date(today);
+        weekEnd.setDate(weekEnd.getDate() + (7 - weekEnd.getDay()));
+        var monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+        try {
+            var results = await Promise.all([
+                acuityFetch('getAppointments', { params: { minDate: todayStr + 'T00:00:00', maxDate: todayStr + 'T23:59:59' } }),
+                acuityFetch('getAppointments', { params: { minDate: todayStr + 'T00:00:00', maxDate: formatDateISO(weekEnd) + 'T23:59:59' } }),
+                acuityFetch('getAppointments', { params: { minDate: todayStr + 'T00:00:00', maxDate: formatDateISO(monthEnd) + 'T23:59:59' } })
+            ]);
+
+            document.getElementById('schedulingToday').textContent = results[0].length;
+            document.getElementById('schedulingWeek').textContent = results[1].length;
+            document.getElementById('schedulingMonth').textContent = results[2].length;
+            document.getElementById('schedulingTypes').textContent = schedulingState.appointmentTypes.length;
+        } catch (err) {
+            console.error('Stats load error:', err);
+        }
+    }
+
+    // Calendar view
+    async function renderCalendar() {
+        var year = schedulingState.calendarYear;
+        var month = schedulingState.calendarMonth;
+
+        document.getElementById('calMonthYear').textContent =
+            new Date(year, month).toLocaleDateString('en-AU', { month: 'long', year: 'numeric' });
+
+        var firstDay = new Date(year, month, 1);
+        var lastDay = new Date(year, month + 1, 0);
+
+        try {
+            var apts = await acuityFetch('getAppointments', {
+                params: {
+                    minDate: formatDateISO(firstDay) + 'T00:00:00',
+                    maxDate: formatDateISO(lastDay) + 'T23:59:59'
+                }
+            });
+
+            // Group by date
+            var aptsByDate = {};
+            apts.forEach(function(apt) {
+                var dateKey = apt.datetime.split('T')[0];
+                if (!aptsByDate[dateKey]) aptsByDate[dateKey] = [];
+                aptsByDate[dateKey].push(apt);
+            });
+
+            var grid = document.getElementById('calendarGrid');
+            var html = '<div class="calendar-header-row">';
+            ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(function(d) {
+                html += '<div class="calendar-day-header">' + d + '</div>';
+            });
+            html += '</div>';
+
+            var startDay = firstDay.getDay();
+            html += '<div class="calendar-body-row">';
+            for (var i = 0; i < startDay; i++) {
+                html += '<div class="calendar-cell empty"></div>';
+            }
+
+            for (var d = 1; d <= lastDay.getDate(); d++) {
+                var dateKey = formatDateISO(new Date(year, month, d));
+                var dayApts = aptsByDate[dateKey] || [];
+                var isToday = dateKey === formatDateISO(new Date());
+
+                html += '<div class="calendar-cell' + (isToday ? ' today' : '') + (dayApts.length > 0 ? ' has-appointments' : '') + '">';
+                html += '<span class="calendar-date">' + d + '</span>';
+
+                if (dayApts.length > 0) {
+                    html += '<span class="calendar-count">' + dayApts.length + ' apt' + (dayApts.length > 1 ? 's' : '') + '</span>';
+                    dayApts.slice(0, 2).forEach(function(apt) {
+                        var time = new Date(apt.datetime).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+                        html += '<div class="calendar-apt-preview">' + time + ' ' + escapeHtml(apt.firstName) + '</div>';
+                    });
+                    if (dayApts.length > 2) {
+                        html += '<div class="calendar-apt-more">+' + (dayApts.length - 2) + ' more</div>';
+                    }
+                }
+
+                html += '</div>';
+
+                if ((startDay + d) % 7 === 0 && d < lastDay.getDate()) {
+                    html += '</div><div class="calendar-body-row">';
+                }
+            }
+            html += '</div>';
+
+            grid.innerHTML = html;
+        } catch (err) {
+            showToast('Failed to load calendar: ' + err.message, 'error');
+        }
+    }
+
+    // Client list
+    async function loadClients() {
+        try {
+            var clients = await acuityFetch('getClients');
+            schedulingState.clients = clients;
+            renderClients();
+        } catch (err) {
+            showToast('Failed to load clients: ' + err.message, 'error');
+        }
+    }
+
+    function renderClients(filter) {
+        var container = document.getElementById('clientsList');
+        var clients = schedulingState.clients;
+
+        if (filter) {
+            var q = filter.toLowerCase();
+            clients = clients.filter(function(c) {
+                return ((c.firstName || '') + ' ' + (c.lastName || '')).toLowerCase().indexOf(q) !== -1 ||
+                    (c.email || '').toLowerCase().indexOf(q) !== -1 ||
+                    (c.phone || '').toLowerCase().indexOf(q) !== -1;
+            });
+        }
+
+        if (clients.length === 0) {
+            container.innerHTML = '<div class="empty-state">' + (filter ? 'No clients matching "' + escapeHtml(filter) + '".' : 'No clients found.') + '</div>';
+            return;
+        }
+
+        container.innerHTML = clients.map(function(c) {
+            return '<div class="item-card">' +
+                '<div class="item-info">' +
+                    '<h3 class="item-title">' + escapeHtml(c.firstName) + ' ' + escapeHtml(c.lastName) + '</h3>' +
+                    '<p class="item-subtitle">' + escapeHtml(c.email || 'No email') + (c.phone ? ' | ' + escapeHtml(c.phone) : '') + '</p>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    // Scheduling event listeners
+    function initSchedulingListeners() {
+        var applyBtn = document.getElementById('applyFilters');
+        var refreshBtn = document.getElementById('refreshAppointments');
+        var refreshClientsBtn = document.getElementById('refreshClients');
+
+        if (applyBtn) applyBtn.addEventListener('click', loadAppointments);
+        if (refreshBtn) refreshBtn.addEventListener('click', loadAppointments);
+        if (refreshClientsBtn) refreshClientsBtn.addEventListener('click', loadClients);
+
+        // Sub-tabs
+        document.querySelectorAll('.scheduling-tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.scheduling-tab').forEach(function(t) { t.classList.remove('active'); });
+                document.querySelectorAll('.scheduling-subtab').forEach(function(s) { s.classList.remove('active'); });
+                tab.classList.add('active');
+
+                var subtabName = tab.dataset.subtab;
+                var subtabEl = document.getElementById('scheduling' + subtabName.charAt(0).toUpperCase() + subtabName.slice(1));
+                if (subtabEl) subtabEl.classList.add('active');
+
+                if (subtabName === 'calendar') renderCalendar();
+                if (subtabName === 'clients') loadClients();
+            });
+        });
+
+        // Calendar navigation
+        var calPrev = document.getElementById('calPrev');
+        var calNext = document.getElementById('calNext');
+
+        if (calPrev) calPrev.addEventListener('click', function() {
+            schedulingState.calendarMonth--;
+            if (schedulingState.calendarMonth < 0) {
+                schedulingState.calendarMonth = 11;
+                schedulingState.calendarYear--;
+            }
+            renderCalendar();
+        });
+
+        if (calNext) calNext.addEventListener('click', function() {
+            schedulingState.calendarMonth++;
+            if (schedulingState.calendarMonth > 11) {
+                schedulingState.calendarMonth = 0;
+                schedulingState.calendarYear++;
+            }
+            renderCalendar();
+        });
+
+        // Client search
+        var clientSearch = document.getElementById('clientSearch');
+        if (clientSearch) {
+            clientSearch.addEventListener('input', function() {
+                renderClients(this.value);
+            });
+        }
+    }
+
+    // =====================================================
     // Event Listeners
     // =====================================================
 
@@ -676,6 +1209,8 @@
 
             if (await validateLogin(username, password)) {
                 createSession();
+                // Also sign into Firebase for Cloud Functions auth
+                firebaseAdminLogin(password);
                 showDashboard();
                 UI.loginError.style.display = 'none';
             } else {
@@ -687,6 +1222,9 @@
         // Logout
         UI.logoutBtn.addEventListener('click', () => {
             destroySession();
+            if (typeof firebase !== 'undefined' && firebase.auth) {
+                firebase.auth().signOut().catch(function() {});
+            }
             showLoginScreen();
         });
 
@@ -775,6 +1313,9 @@
                 importData(e.target.files[0]);
             }
         });
+
+        // Scheduling event listeners
+        initSchedulingListeners();
     }
 
     // =====================================================

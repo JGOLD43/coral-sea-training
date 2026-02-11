@@ -8,6 +8,11 @@ service cloud.firestore {
       allow write: if false; // Admin only via Firebase Console
     }
 
+    // Acuity appointments mirror - Cloud Functions only (Admin SDK bypasses rules)
+    match /acuityAppointments/{appointmentId} {
+      allow read, write: if false;
+    }
+
     // Partner documents
     match /partners/{partnerId} {
       // Partners can read their own document
