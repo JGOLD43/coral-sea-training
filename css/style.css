@@ -1899,8 +1899,14 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     right: 0;
     z-index: 1001;
-    background: var(--navy);
+    background: var(--red);
     padding: var(--space-2) 0;
+    animation: urgencyBannerPulse 3s ease-in-out infinite;
+}
+
+@keyframes urgencyBannerPulse {
+    0%, 100% { background: var(--red); }
+    50% { background: var(--red-dark); }
 }
 
 .urgency-text {
@@ -1908,19 +1914,27 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
+    font-weight: 600;
     color: var(--white);
     text-align: center;
+    letter-spacing: 0.01em;
+}
+
+.urgency-text strong {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .urgency-text a {
-    color: #fbbf24;
-    font-weight: 700;
+    color: var(--white);
+    font-weight: 800;
     text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .urgency-text a:hover {
-    color: var(--white);
+    text-decoration-thickness: 2px;
 }
 
 /* Shift header down when urgency banner is present */
