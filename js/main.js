@@ -203,4 +203,19 @@
         });
     });
 
+    // =====================================================
+    // Primary CTA Click Tracking (sitewide)
+    // =====================================================
+
+    document.querySelectorAll('.btn-primary, .btn-white').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'cta_primary_click', {
+                    'event_label': this.textContent.trim().substring(0, 50),
+                    'page_location': window.location.pathname
+                });
+            }
+        });
+    });
+
 })();
