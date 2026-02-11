@@ -403,7 +403,7 @@ var Portal = (function() {
                 certsHtml += '<div class="portal-cert-item">';
                 certsHtml += '<span class="cert-name">' + escapeHtml(cert.courseName || 'Certification') + '</span>';
                 certsHtml += '<span class="status-badge ' + status + '">' + status.charAt(0).toUpperCase() + status.slice(1) + '</span>';
-                certsHtml += '<span class="cert-date">' + (cert.expiryDate ? 'Exp: ' + cert.expiryDate : 'No expiry') + '</span>';
+                certsHtml += '<span class="cert-date">' + (cert.expiryDate ? 'Exp: ' + escapeHtml(cert.expiryDate) : 'No expiry') + '</span>';
                 certsHtml += '<button class="portal-btn portal-btn-sm portal-btn-danger" onclick="Portal.removeCert(\'' + escapeAttr(empId) + '\',' + i + ')" style="margin-left:4px;">Remove</button>';
                 certsHtml += '</div>';
             });

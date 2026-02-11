@@ -30,7 +30,10 @@ service cloud.firestore {
         && request.resource.data.contactName.size() > 0
         && request.resource.data.contactName.size() <= 200
         && request.resource.data.email.size() > 0
-        && request.resource.data.email.size() <= 200;
+        && request.resource.data.email.size() <= 200
+        // Validate optional fields when present
+        && (!('phone' in request.resource.data.keys()) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 30))
+        && (!('abn' in request.resource.data.keys()) || (request.resource.data.abn is string && request.resource.data.abn.size() <= 20));
 
       // Partners can update their own document — whitelist of allowed fields only
       allow update: if request.auth != null && request.auth.uid == partnerId
@@ -42,25 +45,33 @@ service cloud.firestore {
         && request.resource.data.contactName is string
         && request.resource.data.contactName.size() <= 200
         && request.resource.data.email is string
-        && request.resource.data.email.size() <= 200;
+        && request.resource.data.email.size() <= 200
+        && (!('phone' in request.resource.data.keys()) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 30))
+        && (!('abn' in request.resource.data.keys()) || (request.resource.data.abn is string && request.resource.data.abn.size() <= 20));
 
       // Partners cannot delete their own document
       allow delete: if false;
 
-      // Employees subcollection — field whitelist on create and update
+      // Employees subcollection — field whitelist with type/size validation
       match /employees/{employeeId} {
         allow read: if request.auth != null && request.auth.uid == partnerId;
         allow create: if request.auth != null && request.auth.uid == partnerId
           && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'certifications'])
           && request.resource.data.name is string
           && request.resource.data.name.size() > 0
-          && request.resource.data.name.size() <= 200;
+          && request.resource.data.name.size() <= 200
+          && (!('email' in request.resource.data.keys()) || (request.resource.data.email is string && request.resource.data.email.size() <= 254))
+          && (!('phone' in request.resource.data.keys()) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 30))
+          && (!('certifications' in request.resource.data.keys()) || (request.resource.data.certifications is list && request.resource.data.certifications.size() <= 50));
         allow update: if request.auth != null && request.auth.uid == partnerId
           && request.resource.data.diff(resource.data).affectedKeys()
               .hasOnly(['name', 'email', 'phone', 'certifications'])
           && request.resource.data.name is string
           && request.resource.data.name.size() > 0
-          && request.resource.data.name.size() <= 200;
+          && request.resource.data.name.size() <= 200
+          && (!('email' in request.resource.data.keys()) || (request.resource.data.email is string && request.resource.data.email.size() <= 254))
+          && (!('phone' in request.resource.data.keys()) || (request.resource.data.phone is string && request.resource.data.phone.size() <= 30))
+          && (!('certifications' in request.resource.data.keys()) || (request.resource.data.certifications is list && request.resource.data.certifications.size() <= 50));
         allow delete: if request.auth != null && request.auth.uid == partnerId;
       }
 
@@ -78,11 +89,15 @@ service cloud.firestore {
           && request.resource.data.courseDate is string
           && request.resource.data.courseDate.size() <= 20
           && request.resource.data.employees is list
-          && request.resource.data.employees.size() <= 100;
-        // Partners can only update notes — all sync/status fields are Cloud Functions only
+          && request.resource.data.employees.size() <= 100
+          && (!('notes' in request.resource.data.keys()) || (request.resource.data.notes is string && request.resource.data.notes.size() <= 5000))
+          && (!('courseCode' in request.resource.data.keys()) || (request.resource.data.courseCode is string && request.resource.data.courseCode.size() <= 50));
+        // Partners can only update notes — with size limit
         allow update: if request.auth != null && request.auth.uid == partnerId
           && request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['notes']);
+              .hasOnly(['notes'])
+          && request.resource.data.notes is string
+          && request.resource.data.notes.size() <= 5000;
       }
     }
   }

@@ -129,12 +129,20 @@ exports.getAppointment = functions.https.onRequest((req, res) => {
     });
 });
 
-// POST /api/appointments — Create appointment
+// POST /api/appointments — Create appointment (whitelist allowed fields)
 exports.createAppointment = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
+        if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
         try {
             await verifyAdmin(req);
-            const data = await acuityPost('/appointments', req.body);
+            const body = req.body || {};
+            const safeBody = {};
+            const allowed = ['appointmentTypeID', 'datetime', 'firstName', 'lastName',
+                'email', 'phone', 'calendarID', 'notes', 'fields'];
+            for (const key of allowed) {
+                if (body[key] !== undefined) safeBody[key] = body[key];
+            }
+            const data = await acuityPost('/appointments', safeBody);
             res.json(data);
         } catch (err) {
             handleError(res, err);
@@ -142,9 +150,10 @@ exports.createAppointment = functions.https.onRequest((req, res) => {
     });
 });
 
-// PUT /api/appointments/:id/cancel — Cancel appointment
+// PUT /api/appointments/:id/cancel — Cancel appointment (PUT only)
 exports.cancelAppointment = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
+        if (req.method !== 'PUT' && req.method !== 'OPTIONS') { res.status(405).json({ error: 'Method not allowed' }); return; }
         try {
             await verifyAdmin(req);
             const id = validateId(req.query.id || (req.body && req.body.id));
@@ -156,9 +165,10 @@ exports.cancelAppointment = functions.https.onRequest((req, res) => {
     });
 });
 
-// PUT /api/appointments/:id/reschedule — Reschedule appointment
+// PUT /api/appointments/:id/reschedule — Reschedule appointment (PUT only)
 exports.rescheduleAppointment = functions.https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
+        if (req.method !== 'PUT' && req.method !== 'OPTIONS') { res.status(405).json({ error: 'Method not allowed' }); return; }
         try {
             await verifyAdmin(req);
             const id = validateId(req.query.id || (req.body && req.body.id));
@@ -255,14 +265,18 @@ exports.acuityWebhook = functions.https.onRequest(async (req, res) => {
         return;
     }
 
-    // Verify webhook secret (set via: firebase functions:config:set acuity.webhook_secret="...")
+    // Verify webhook secret — fail-closed: reject if secret not configured
+    // Set via: firebase functions:config:set acuity.webhook_secret="YOUR_SECRET"
     const webhookSecret = (functions.config().acuity && functions.config().acuity.webhook_secret) || '';
-    if (webhookSecret) {
-        const providedSecret = req.headers['x-acuity-secret'] || req.query.secret || '';
-        if (providedSecret !== webhookSecret) {
-            res.status(403).send('Forbidden');
-            return;
-        }
+    if (!webhookSecret) {
+        functions.logger.error('Webhook secret not configured — rejecting request');
+        res.status(403).send('Forbidden');
+        return;
+    }
+    const providedSecret = req.headers['x-acuity-secret'] || req.query.secret || '';
+    if (providedSecret !== webhookSecret) {
+        res.status(403).send('Forbidden');
+        return;
     }
 
     const { action, id } = req.body;

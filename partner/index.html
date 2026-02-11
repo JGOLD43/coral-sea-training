@@ -570,7 +570,7 @@
                 .catch(function(error) {
                     setLoading(btn, false);
                     if (error.code === 'auth/email-already-in-use') {
-                        showError(errorEl, 'An account with this email already exists.');
+                        showError(errorEl, 'Registration failed. Please try again or sign in.');
                     } else if (error.code === 'auth/weak-password') {
                         showError(errorEl, 'Password is too weak. Use at least 8 characters.');
                     } else {

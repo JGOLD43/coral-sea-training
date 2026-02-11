@@ -360,28 +360,28 @@
 
         showModal('Edit Course', `
             <form id="editCourseForm">
-                <input type="hidden" name="id" value="${course.id}">
+                <input type="hidden" name="id" value="${escapeAttr(String(course.id))}">
                 <div class="form-group">
                     <label for="courseTitle">Course Title</label>
-                    <input type="text" id="courseTitle" name="title" value="${course.title}" required>
+                    <input type="text" id="courseTitle" name="title" value="${escapeAttr(course.title)}" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="courseCode">Course Code</label>
-                        <input type="text" id="courseCode" name="code" value="${course.code}" required>
+                        <input type="text" id="courseCode" name="code" value="${escapeAttr(course.code)}" required>
                     </div>
                     <div class="form-group">
                         <label for="coursePrice">Price ($)</label>
-                        <input type="number" id="coursePrice" name="price" value="${course.price}" required min="0">
+                        <input type="number" id="coursePrice" name="price" value="${parseInt(course.price) || 0}" required min="0">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="courseBadge">Badge Text</label>
-                    <input type="text" id="courseBadge" name="badge" value="${course.badge}">
+                    <input type="text" id="courseBadge" name="badge" value="${escapeAttr(course.badge)}">
                 </div>
                 <div class="form-group">
                     <label for="courseFeatures">Features (one per line)</label>
-                    <textarea id="courseFeatures" name="features" rows="4">${course.features.join('\n')}</textarea>
+                    <textarea id="courseFeatures" name="features" rows="4">${escapeHtml(course.features.join('\n'))}</textarea>
                 </div>
             </form>
         `, () => {
@@ -503,14 +503,14 @@
 
         showModal('Edit Testimonial', `
             <form id="editTestimonialForm">
-                <input type="hidden" name="id" value="${testimonial.id}">
+                <input type="hidden" name="id" value="${escapeAttr(String(testimonial.id))}">
                 <div class="form-group">
                     <label for="testimonialText">Testimonial Text</label>
-                    <textarea id="testimonialText" name="text" rows="4" required>${testimonial.text}</textarea>
+                    <textarea id="testimonialText" name="text" rows="4" required>${escapeHtml(testimonial.text)}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="testimonialAuthor">Author</label>
-                    <input type="text" id="testimonialAuthor" name="author" value="${testimonial.author}" required>
+                    <input type="text" id="testimonialAuthor" name="author" value="${escapeAttr(testimonial.author)}" required>
                 </div>
             </form>
         `, () => {
@@ -668,11 +668,15 @@
     // Acuity Scheduling Integration
     // =====================================================
 
-    // HTML escape helper
+    // HTML escape helpers
     function escapeHtml(str) {
         var div = document.createElement('div');
         div.textContent = str || '';
         return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+        return (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     // Date format helper
