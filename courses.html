@@ -67,6 +67,17 @@
         .team-step-indicator { display:flex; justify-content:center; gap:var(--space-2); margin-bottom:var(--space-4); }
         .team-step-dot { width:8px; height:8px; border-radius:50%; background:var(--gray-300); transition:background 0.2s; }
         .team-step-dot.active { background:var(--red); }
+        /* Ask-a-question modal */
+        .question-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:var(--space-4); opacity:0; visibility:hidden; transition:opacity 0.2s, visibility 0.2s; }
+        .question-modal-overlay.open { opacity:1; visibility:visible; }
+        .question-modal { background:white; border-radius:16px; max-width:480px; width:100%; padding:var(--space-6); position:relative; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+        .question-modal-close { position:absolute; top:var(--space-3); right:var(--space-3); background:none; border:none; cursor:pointer; color:var(--gray-400); padding:4px; }
+        .question-modal-close:hover { color:var(--navy); }
+        /* Case study card */
+        .case-study-card { background:var(--white); border-radius:12px; padding:var(--space-4); border-left:4px solid var(--red); box-shadow:var(--shadow-sm); }
+        .case-study-card h5 { font-size:0.875rem; color:var(--navy); margin-bottom:var(--space-2); }
+        .case-study-card .cs-label { font-size:0.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:2px; }
+        .case-study-card .cs-text { font-size:0.8125rem; color:var(--gray-600); margin-bottom:var(--space-1); }
         @media (max-width:640px) {
             .funnel-tooltip-trigger:hover::after, .funnel-tooltip-trigger:focus::after { left:0; transform:none; width:200px; }
             .trainer-card { padding:var(--space-3); }
@@ -451,6 +462,33 @@
         </div>
     </section>
 
+    <!-- Ask-a-Question Modal -->
+    <div class="question-modal-overlay" id="questionModalOverlay" onclick="closeQuestionModal(event)">
+        <div class="question-modal" onclick="event.stopPropagation()">
+            <button class="question-modal-close" onclick="closeQuestionModal()" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <h3 style="font-family:var(--font-display);font-size:1.25rem;color:var(--navy);margin-bottom:var(--space-1);">Ask a Question</h3>
+            <p style="font-size:0.8125rem;color:var(--gray-500);margin-bottom:var(--space-4);">We'll get back to you within 2 hours.</p>
+            <form id="questionForm" onsubmit="submitQuestion(event)">
+                <div class="funnel-form-group" style="margin-bottom:var(--space-3);">
+                    <input type="text" id="qName" class="form-input" placeholder="Name *" aria-label="Your name" required>
+                </div>
+                <div class="funnel-form-group" style="margin-bottom:var(--space-3);">
+                    <input type="email" id="qEmail" class="form-input" placeholder="Email *" aria-label="Email address" required>
+                </div>
+                <div class="funnel-form-group" style="margin-bottom:var(--space-3);">
+                    <input type="tel" id="qPhone" class="form-input" placeholder="Phone (optional)" aria-label="Phone number">
+                </div>
+                <div class="funnel-form-group" style="margin-bottom:var(--space-3);">
+                    <textarea id="qMessage" class="form-input" placeholder="Your question..." rows="3" aria-label="Your question" required style="resize:vertical;"></textarea>
+                </div>
+                <input type="hidden" id="qContext" name="context" value="">
+                <button type="submit" class="btn btn-primary btn-lg" id="qSubmitBtn" style="width:100%;">Send Question</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -614,6 +652,14 @@
     fetch('data/comparison.json').then(function(r){return r.json();}).then(function(d){comparisonData=d;}).catch(function(){});
     fetch('data/childcare.json').then(function(r){return r.json();}).then(function(d){childcareData=d;}).catch(function(){});
 
+    var funnelConfig = null;
+    var caseStudyData = null;
+    var testimonialsMini = null;
+
+    fetch('data/funnel-config.json').then(function(r){return r.json();}).then(function(d){funnelConfig=d;}).catch(function(){});
+    fetch('data/case-studies.json').then(function(r){return r.json();}).then(function(d){caseStudyData=d;}).catch(function(){});
+    fetch('data/testimonials-mini.json').then(function(r){return r.json();}).then(function(d){testimonialsMini=d;}).catch(function(){});
+
     // Get future sessions for a course + location from sessionData
     function getSessionsForCourse(courseCode, locationId) {
         if (!sessionData || !sessionData.courses) return [];
@@ -690,6 +736,7 @@
         currentStepId = stepId;
         updateProgress();
         updateWrapperWidth();
+        fireEvent('quiz_step_view', { step_name: stepNameMap[stepId] || stepId });
         document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -878,10 +925,11 @@
                 obs.observe(trainerEl);
             }
 
-            // GA4: upsell shown
+            // GA4: upsell shown / order bump view
             var kitUpsellEl = document.getElementById('kitUpsellOffer');
             if (kitUpsellEl) {
                 fireEvent('upsell_shown', { course: currentRec.code });
+                fireEvent('order_bump_view', { course: currentRec.code });
             }
         }, 100);
     }
@@ -1255,11 +1303,11 @@
         // ---- Secondary CTAs ----
         var secondaryCTAHTML = '' +
             '<div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);justify-content:center;flex-wrap:wrap;">' +
-                '<a href="tel:' + phoneTel + '" onclick="fireEvent(\'secondary_call_click\',{location:funnelData.location})" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
+                '<a href="tel:' + phoneTel + '" onclick="fireEvent(\'call_click\',{location:funnelData.location});fireEvent(\'secondary_call_click\',{location:funnelData.location})" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
                     'Prefer to call? ' + phoneNumber +
                 '</a>' +
-                '<a href="contact.html?show=form" onclick="fireEvent(\'secondary_question_click\')" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
+                '<a href="#" onclick="openQuestionModal();return false;" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
                     'Have a question?' +
                 '</a>' +
@@ -1311,11 +1359,16 @@
             '</video>' +
         '</div>';
 
-        // ---- Mini Testimonial near form ----
+        // ---- Mini Testimonial near form (from testimonials-mini.json or fallback) ----
+        var miniT = null;
+        if (testimonialsMini && testimonialsMini.testimonials && testimonialsMini.testimonials.length > 0) {
+            var tIdx = Math.floor(Math.random() * testimonialsMini.testimonials.length);
+            miniT = testimonialsMini.testimonials[tIdx];
+        }
         var miniTestimonialHTML = '<div class="mini-testimonial">' +
             '<span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' +
-            '&ldquo;Best first aid course I\'ve done. Relaxed, practical, and I actually feel ready to help now.&rdquo;' +
-            '<cite>&mdash; Mark T., Townsville</cite>' +
+            '&ldquo;' + (miniT ? miniT.quote : 'Best first aid course I\'ve done. Relaxed, practical, and I actually feel ready to help now.') + '&rdquo;' +
+            '<cite>&mdash; ' + (miniT ? miniT.author + ', ' + miniT.source : 'Mark T., Google Review') + '</cite>' +
         '</div>';
 
         // ---- Kit Upsell Checkbox ----
@@ -1348,6 +1401,47 @@
                 '<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--green);margin-bottom:var(--space-2);">ACECQA Compliance</div>' +
                 extraItems +
                 (childcareData.complianceNote ? '<p style="font-size:0.75rem;color:var(--gray-500);margin-top:var(--space-2);font-style:italic;">' + childcareData.complianceNote + '</p>' : '') +
+            '</div>';
+        }
+
+        // ---- Case Study for Team Path (B2) ----
+        var caseStudyHTML = '';
+        if (rec.isTeam && caseStudyData && caseStudyData.caseStudies && caseStudyData.caseStudies.length > 0) {
+            var cs = caseStudyData.caseStudies[0]; // Show first case study
+            caseStudyHTML = '<div class="case-study-card" style="margin-bottom:var(--space-4);">' +
+                '<h5>' + cs.title + '</h5>' +
+                '<div class="cs-label" style="color:var(--red);">Before</div>' +
+                '<div class="cs-text">' + cs.before + '</div>' +
+                '<div class="cs-label" style="color:var(--green);">After</div>' +
+                '<div class="cs-text">' + cs.after + '</div>' +
+                '<div class="cs-label" style="color:var(--navy);">Time to implement</div>' +
+                '<div class="cs-text" style="font-weight:600;">' + cs.timeToImplement + '</div>' +
+            '</div>';
+        }
+
+        // ---- "Book a 10-min call" CTA for Team Path (E2) ----
+        var callCTAHTML = '';
+        if (rec.isTeam) {
+            callCTAHTML = '<div style="text-align:center;padding:var(--space-3);border:1px solid var(--gray-200);border-radius:10px;margin-top:var(--space-3);background:var(--gray-50);">' +
+                '<p style="font-size:0.8125rem;color:var(--gray-600);margin-bottom:var(--space-2);">Prefer to discuss your team\'s needs?</p>' +
+                '<a href="tel:' + phoneTel + '" onclick="fireEvent(\'corporate_calendar_click\',{location:funnelData.location})" style="display:inline-flex;align-items:center;gap:6px;font-size:0.875rem;color:var(--navy);font-weight:700;text-decoration:none;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--red);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/></svg>' +
+                    'Book a 10-min Call &mdash; ' + phoneNumber +
+                '</a>' +
+            '</div>';
+        }
+
+        // ---- Membership Interest Capture (D3) ----
+        var membershipHTML = '';
+        if (!rec.isTeam) {
+            membershipHTML = '<div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border:1px solid #7dd3fc;border-radius:10px;padding:var(--space-3) var(--space-4);margin-top:var(--space-3);cursor:pointer;" onclick="toggleMembership()" id="membershipOffer">' +
+                '<label style="display:flex;align-items:start;gap:var(--space-2);cursor:pointer;font-size:0.875rem;color:var(--navy);">' +
+                    '<input type="checkbox" id="membershipCheck" style="margin-top:3px;flex-shrink:0;" onclick="event.stopPropagation();toggleMembership()">' +
+                    '<div>' +
+                        '<strong>Annual Refresh Club &mdash; $49/yr</strong>' +
+                        '<div style="font-size:0.75rem;color:var(--gray-500);margin-top:2px;">Auto renewal reminders, refresher videos, and 15% off kits. We\'ll follow up with details.</div>' +
+                    '</div>' +
+                '</label>' +
             '</div>';
         }
 
@@ -1454,6 +1548,9 @@
                         // Mini testimonial near form
                         miniTestimonialHTML +
 
+                        // Case study (team path only)
+                        (rec.isTeam ? caseStudyHTML : '') +
+
                         // Team path: 2-step form
                         (rec.isTeam ? teamFormHTML :
                             // Individual path: schedule + single form
@@ -1473,6 +1570,9 @@
                             // Kit upsell checkbox
                             kitUpsellHTML +
 
+                            // Membership interest capture
+                            membershipHTML +
+
                             '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" ' + (funnelData.location !== 'onsite' ? 'disabled' : '') + '>' +
                                 'Select a date above' +
                                 ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
@@ -1483,6 +1583,8 @@
                             '<span>&#10003; Pay on the day</span>' +
                             '<span>&#10003; Forward to employer</span>' +
                         '</div>' +
+                        // "Book a 10-min call" CTA for team path
+                        (rec.isTeam ? callCTAHTML : '') +
                         (!rec.isTeam ? '<p class="funnel-offer-mate-deal" style="text-align:center;font-size:0.8125rem;color:var(--gray-600);margin-top:var(--space-3);"><strong style="color:var(--navy);">Bring a mate?</strong> Book together and train side by side &mdash; call <a href="tel:' + phoneTel + '" style="color:var(--red);font-weight:600;">' + phoneNumber + '</a> for group pricing.</p>' : '') +
                     '</div>' +
                     urgencyStripHTML +
@@ -1589,6 +1691,104 @@
         document.getElementById('teamDot1').style.background = 'var(--red)';
     }
 
+    // ---- Question Modal (G1) ----
+
+    function openQuestionModal() {
+        fireEvent('question_modal_open');
+        // Prefill context from current quiz state
+        var ctx = '';
+        if (currentRec) {
+            ctx = 'Course: ' + currentRec.course + ' (' + currentRec.code + ')';
+            if (funnelData.location) ctx += ' | Location: ' + funnelData.location;
+            if (selectedSession) ctx += ' | Session: ' + selectedSession.label;
+            if (funnelData.urgency) ctx += ' | Urgency: ' + funnelData.urgency;
+        }
+        var ctxInput = document.getElementById('qContext');
+        if (ctxInput) ctxInput.value = ctx;
+        // Prefill name/email if already entered in booking form
+        var nameEl = document.getElementById('funnelName');
+        var emailEl = document.getElementById('funnelEmail');
+        if (nameEl && nameEl.value) document.getElementById('qName').value = nameEl.value;
+        if (emailEl && emailEl.value) document.getElementById('qEmail').value = emailEl.value;
+        document.getElementById('questionModalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeQuestionModal(e) {
+        if (e && e.target !== document.getElementById('questionModalOverlay')) return;
+        document.getElementById('questionModalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function submitQuestion(e) {
+        e.preventDefault();
+        var qName = document.getElementById('qName').value.trim();
+        var qEmail = document.getElementById('qEmail').value.trim();
+        var qPhone = document.getElementById('qPhone').value.trim();
+        var qMessage = document.getElementById('qMessage').value.trim();
+        var qContext = document.getElementById('qContext').value;
+        if (!qName || !qEmail || !qMessage) return;
+
+        var btn = document.getElementById('qSubmitBtn');
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+
+        var formData = new FormData();
+        formData.append('name', qName);
+        formData.append('email', qEmail);
+        if (qPhone) formData.append('phone', qPhone);
+        formData.append('message', qMessage);
+        formData.append('context', qContext);
+        formData.append('intent', 'question');
+        formData.append('_subject', 'QUESTION: ' + (currentRec ? currentRec.course : 'Courses page') + ' - ' + qName);
+
+        fetch('https://formspree.io/f/PLACEHOLDER_BOOKING', {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(function(response) {
+            if (response.ok) {
+                fireEvent('question_submit_success');
+                document.getElementById('questionForm').innerHTML = '<div style="text-align:center;padding:var(--space-4);">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:48px;height:48px;color:var(--green);margin-bottom:var(--space-3);"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+                    '<h4 style="color:var(--navy);margin-bottom:var(--space-2);">Question Sent!</h4>' +
+                    '<p style="font-size:0.875rem;color:var(--gray-600);">We\'ll get back to you within 2 hours.</p>' +
+                '</div>';
+                setTimeout(closeQuestionModal, 3000);
+            } else {
+                btn.textContent = 'Try Again';
+                btn.disabled = false;
+            }
+        }).catch(function() {
+            btn.textContent = 'Try Again';
+            btn.disabled = false;
+        });
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeQuestionModal();
+    });
+
+    // ---- Membership Interest Toggle (D3) ----
+
+    var membershipSelected = false;
+    function toggleMembership() {
+        var cb = document.getElementById('membershipCheck');
+        var card = document.getElementById('membershipOffer');
+        if (!cb || !card) return;
+        if (document.activeElement !== cb) cb.checked = !cb.checked;
+        membershipSelected = cb.checked;
+        if (membershipSelected) {
+            card.style.borderColor = 'var(--green)';
+            card.style.background = 'linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%)';
+            fireEvent('membership_interest', { price: 49 });
+        } else {
+            card.style.borderColor = '#7dd3fc';
+            card.style.background = 'linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%)';
+        }
+    }
+
     // ---- Kit Upsell Toggle ----
 
     var kitUpsellSelected = false;
@@ -1602,6 +1802,7 @@
         if (kitUpsellSelected) {
             card.classList.add('selected');
             fireEvent('upsell_accepted', { kit: upsellData ? upsellData.kit.name : 'Home & Family Kit' });
+            fireEvent('order_bump_check', { kit: upsellData ? upsellData.kit.name : 'Home & Family Kit' });
         } else {
             card.classList.remove('selected');
         }
@@ -1676,6 +1877,11 @@
             formData.append('upsell_kit', upsellData.kit.name + ' (' + upsellData.kit.priceLabel + ')');
         }
 
+        // Membership interest
+        if (membershipSelected) {
+            formData.append('membership_interest', 'Annual Refresh Club ($49/yr)');
+        }
+
         if (selectedSession) {
             formData.append('session_id', selectedSession.id);
             formData.append('session_date', selectedSession.dateISO);
@@ -1698,6 +1904,9 @@
                     session_id: selectedSession ? selectedSession.id : 'request_next',
                     price: currentRec.price || 0
                 });
+                if (currentRec.isTeam) {
+                    fireEvent('team_quote_submit', { course: currentRec.code, location: funnelData.location });
+                }
                 fireEvent('book_submit', { event_label: currentRec.course, value: currentRec.price || 0 });
                 document.getElementById('confirmedContent').innerHTML = buildConfirmedHTML(currentRec);
                 navigateTo('step-confirmed');
@@ -1770,6 +1979,14 @@
                     '<h4 style="color:var(--green);">First Aid Kit Added!</h4>' +
                     '<p>We\'ve added a <strong>' + (upsellData ? upsellData.kit.name : 'Home & Family Kit') + '</strong> to your order. We\'ll include delivery details in your confirmation email.</p>' +
                 '</div>';
+        }
+
+        // Membership confirmation
+        if (membershipSelected && !rec.isTeam) {
+            postBookUpsell += '<div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border:1px solid #7dd3fc;border-radius:12px;padding:var(--space-4);margin-top:var(--space-3);text-align:center;">' +
+                '<h4 style="font-family:var(--font-heading);font-size:1rem;color:var(--navy);margin-bottom:var(--space-1);">Annual Refresh Club &mdash; Interest Noted!</h4>' +
+                '<p style="font-size:0.875rem;color:var(--gray-600);">We\'ll include details about the Annual Refresh Club ($49/yr) in your confirmation email.</p>' +
+            '</div>';
         }
 
         return '' +

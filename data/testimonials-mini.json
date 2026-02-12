@@ -1,0 +1,39 @@
+{
+  "testimonials": [
+    {
+      "quote": "Best first aid course I've done. Relaxed, practical, and I actually feel ready to help now.",
+      "author": "Mark T.",
+      "location": "Townsville",
+      "source": "Google Review",
+      "stars": 5
+    },
+    {
+      "quote": "First time feeling confident and not overwhelmed. The instructor gave confidence in the most important parts.",
+      "author": "Jamie Lee",
+      "location": "Townsville",
+      "source": "Google Review",
+      "stars": 5
+    },
+    {
+      "quote": "Professional and thorough. I would recommend these guys in a heartbeat!",
+      "author": "Caitlin Murrell",
+      "location": "Wide Bay",
+      "source": "Google Review",
+      "stars": 5
+    },
+    {
+      "quote": "No homework, no stress. Showed up, learned heaps, walked out certified. Exactly what I needed.",
+      "author": "Ben R.",
+      "location": "Townsville",
+      "source": "Google Review",
+      "stars": 5
+    },
+    {
+      "quote": "Organised our whole team in under a week. The trainer came to us and made it easy for everyone.",
+      "author": "Sarah K.",
+      "location": "Wide Bay",
+      "source": "Google Review",
+      "stars": 5
+    }
+  ]
+}

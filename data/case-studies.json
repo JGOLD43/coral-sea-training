@@ -1,0 +1,28 @@
+{
+  "caseStudies": [
+    {
+      "id": "construction-renewals",
+      "title": "Regional Construction Company",
+      "before": "45 staff across 3 sites — compliance tracking was a spreadsheet nightmare with frequent lapses.",
+      "after": "On-site training eliminated 2 travel days per person. Zero compliance lapses since partnering.",
+      "timeToImplement": "Booked in 48 hours, first session within 2 weeks",
+      "industry": "construction"
+    },
+    {
+      "id": "childcare-group",
+      "title": "Childcare Centre Group (4 Centres)",
+      "before": "60+ educators needing HLTAID012 renewals — admin spent 15+ hours per cycle chasing certificates.",
+      "after": "Auto-scheduled renewals removed the admin burden entirely. ACECQA audit passed with 100% compliance.",
+      "timeToImplement": "Booked in 24 hours, all centres trained within 3 weeks",
+      "industry": "childcare"
+    },
+    {
+      "id": "aged-care",
+      "title": "Aged Care Facility",
+      "before": "30 staff needed CPR + First Aid with minimal disruption to resident care schedules.",
+      "after": "Split into 3 small groups across a single week — 8 hours total admin time saved per year on tracking.",
+      "timeToImplement": "Set up within 1 business day",
+      "industry": "healthcare"
+    }
+  ]
+}

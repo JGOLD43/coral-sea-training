@@ -1,0 +1,27 @@
+{
+  "video": {
+    "url": "",
+    "thumbnail": "",
+    "enabled": false
+  },
+  "phones": {
+    "townsville": "0419 675 022",
+    "townsvilleTel": "0419675022",
+    "widebay": "0488 488 467",
+    "widebayTel": "0488488467"
+  },
+  "calendly": {
+    "url": "",
+    "enabled": false
+  },
+  "confirmationSLA": "within 2 hours",
+  "toggles": {
+    "enableUpsell": true,
+    "enableMembership": true,
+    "enableVideo": false,
+    "enableTrainerStrip": true,
+    "enableCompetitorAnchor": true,
+    "enableCaseStudy": true,
+    "enableQuestionModal": true
+  }
+}
