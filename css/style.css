@@ -2399,13 +2399,12 @@ body:has(.urgency-banner) .page-header {
    ===================================================== */
 
 .funnel-section {
-    padding: calc(80px + var(--space-12)) 0 var(--space-16);
-    min-height: 100vh;
+    padding: calc(80px + var(--space-8)) 0 var(--space-12);
     background: var(--off-white);
 }
 
 body:has(.urgency-banner) .funnel-section {
-    padding-top: calc(80px + 36px + var(--space-12));
+    padding-top: calc(80px + 36px + var(--space-8));
 }
 
 .funnel-wrapper {
@@ -2423,7 +2422,7 @@ body:has(.urgency-banner) .funnel-section {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 .funnel-progress-bar {
@@ -2460,7 +2459,7 @@ body:has(.urgency-banner) .funnel-section {
     border-radius: 10px;
     font-size: 0.75rem;
     color: var(--gray-500);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 .funnel-social-proof strong {
@@ -2532,6 +2531,13 @@ body:has(.urgency-banner) .funnel-section {
     grid-template-columns: 1fr;
 }
 
+@media (min-width: 540px) {
+    .funnel-options-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-5);
+    }
+}
+
 .funnel-option {
     display: flex;
     align-items: center;
@@ -2546,6 +2552,34 @@ body:has(.urgency-banner) .funnel-section {
     font-family: var(--font-body);
     width: 100%;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* 2-card layout: stack icon on top for bigger visual presence */
+.funnel-options-2 .funnel-option {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--space-6) var(--space-5);
+}
+
+.funnel-options-2 .funnel-option-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+}
+
+.funnel-options-2 .funnel-option-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.funnel-options-2 .funnel-option-check {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+}
+
+.funnel-options-2 .funnel-option {
+    position: relative;
 }
 
 .funnel-option:hover {
@@ -2597,6 +2631,10 @@ body:has(.urgency-banner) .funnel-section {
     font-weight: 700;
     color: var(--navy);
     margin: 0 0 var(--space-1) 0;
+}
+
+.funnel-options-2 .funnel-option-text h3 {
+    font-size: 1.125rem;
 }
 
 .funnel-option-text p {
