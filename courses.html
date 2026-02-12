@@ -478,6 +478,18 @@
                     </button>
                 </div>
 
+                <!-- ===== STEP: Book Your Spot (Individual) ===== -->
+                <div class="funnel-step" id="step-booking">
+                    <div id="bookingContent">
+                        <!-- Populated by JavaScript -->
+                    </div>
+
+                    <button class="funnel-back" onclick="goBack()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
+                        Back
+                    </button>
+                </div>
+
                 <!-- ===== STEP: Booking Confirmed ===== -->
                 <div class="funnel-step" id="step-confirmed">
                     <div id="confirmedContent">
@@ -765,6 +777,7 @@
         'step-location': 'Location',
         'step-urgency': 'Timing',
         'step-offer': 'Your Course',
+        'step-booking': 'Book Your Spot',
         'step-confirmed': 'Booked'
     };
 
@@ -780,6 +793,10 @@
         if (currentStepId === 'step-confirmed') {
             document.getElementById('progressFill').style.width = '100%';
             document.getElementById('stepLabel').textContent = 'Booked!';
+            if (stepNameEl) stepNameEl.textContent = '';
+        } else if (currentStepId === 'step-booking') {
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('stepLabel').textContent = 'Almost done \u2014 pick your date';
             if (stepNameEl) stepNameEl.textContent = '';
         } else if (currentStepId === 'step-offer') {
             document.getElementById('progressFill').style.width = '100%';
@@ -821,7 +838,7 @@
         if (funnelData.urgency === 'asap') items.push('ASAP');
         else if (funnelData.urgency === 'flexible') items.push('Flexible');
 
-        if (items.length === 0 || currentStepId === 'step-type' || currentStepId === 'step-offer' || currentStepId === 'step-confirmed') {
+        if (items.length === 0 || currentStepId === 'step-type' || currentStepId === 'step-offer' || currentStepId === 'step-booking' || currentStepId === 'step-confirmed') {
             container.style.display = 'none';
             return;
         }
@@ -932,7 +949,7 @@
         fireEvent('quiz_complete', { course_recommended: currentRec.code, location: funnelData.location, urgency: funnelData.urgency });
         fireEvent('results_view', { course_recommended: currentRec.code, location: funnelData.location });
 
-        // Track form focus
+        // Track form focus (team path has form on offer page; individual path has it on booking step)
         setTimeout(function() {
             var fields = document.querySelectorAll('#funnelName, #funnelEmail, #funnelPhone');
             fields.forEach(function(f) {
@@ -944,7 +961,7 @@
                 });
             });
 
-            // GA4: trainer section view
+            // GA4: trainer section view (team path only now)
             var trainerEl = document.getElementById('trainerSection');
             if (trainerEl && typeof IntersectionObserver !== 'undefined') {
                 var obs = new IntersectionObserver(function(entries) {
@@ -1519,105 +1536,223 @@
                 '</div>';
         }
 
+        // ---- Build card HTML (shared between paths) ----
+        var cardHTML = '<div class="funnel-result-card" style="margin-bottom:0;">' +
+            '<div class="funnel-result-badge">' + rec.badge + '</div>' +
+            '<h3 class="funnel-result-course">' + rec.course + '</h3>' +
+            (rec.code ? '<p style="font-size:0.8125rem;color:var(--gray-500);margin-top:2px;">' + rec.code + '</p>' : '') +
+            '<div class="funnel-offer-price">' +
+                (rec.anchorPrice ? '<span class="funnel-offer-price-anchor"><s>' + rec.anchorPrice + '</s> if bought separately</span>' : '') +
+                '<span class="funnel-offer-price-amount">' + rec.priceLabel + '</span>' +
+                '<span class="funnel-offer-price-sub">per person &bull; pay on the day</span>' +
+            '</div>' +
+            valueStackHTML +
+            childcareExtraHTML +
+            '<div class="funnel-offer-meta-strip">' +
+                '<div class="funnel-offer-meta-item">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+                    '<span>' + rec.duration + '</span>' +
+                '</div>' +
+                '<div class="funnel-offer-meta-item">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
+                    '<span>Valid ' + rec.validity + '</span>' +
+                '</div>' +
+                '<div class="funnel-offer-meta-item">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
+                    '<span>' + rec.locationDisplay + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="funnel-offer-guarantee-strip">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
+                '<span><strong>100% Skills Mastery Guarantee</strong> &mdash; 98% pass first time. Don\'t feel confident? Come back and retrain free.</span>' +
+            '</div>' +
+        '</div>';
+
         // ---- Build final HTML ----
         var html = '' +
             '<div class="funnel-step-header">' +
                 '<h2 class="funnel-title">Here\'s Your Perfect Match</h2>' +
                 '<p class="funnel-subtitle">Based on your answers, this is the exact course you need.</p>' +
             '</div>' +
+            choiceSummaryHTML;
 
-            choiceSummaryHTML +
-
-            (teamPackagesHTML ? teamPackagesHTML : '') +
-
-            '<div class="funnel-offer-layout">' +
-
-                '<div class="funnel-offer-main">' +
-                    '<div class="funnel-result-card" style="margin-bottom:0;">' +
-                        '<div class="funnel-result-badge">' + rec.badge + '</div>' +
-                        '<h3 class="funnel-result-course">' + rec.course + '</h3>' +
-                        (rec.code ? '<p style="font-size:0.8125rem;color:var(--gray-500);margin-top:2px;">' + rec.code + '</p>' : '') +
-                        '<div class="funnel-offer-price">' +
-                            (rec.anchorPrice ? '<span class="funnel-offer-price-anchor"><s>' + rec.anchorPrice + '</s> if bought separately</span>' : '') +
-                            '<span class="funnel-offer-price-amount">' + rec.priceLabel + '</span>' +
-                            '<span class="funnel-offer-price-sub">per person &bull; pay on the day</span>' +
-                        '</div>' +
-                        valueStackHTML +
-                        childcareExtraHTML +
-                        '<div class="funnel-offer-meta-strip">' +
-                            '<div class="funnel-offer-meta-item">' +
-                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                                '<span>' + rec.duration + '</span>' +
+        if (rec.isTeam) {
+            // Team path: packages + form in two-column layout (unchanged)
+            html += (teamPackagesHTML ? teamPackagesHTML : '') +
+                '<div class="funnel-offer-layout">' +
+                    '<div class="funnel-offer-main">' + cardHTML + '</div>' +
+                    '<div class="funnel-offer-sidebar">' +
+                        '<div class="funnel-offer-form-card">' +
+                            '<h3 class="funnel-offer-form-title">Get Your Team Quote</h3>' +
+                            '<p class="funnel-offer-form-sub">No study required. ' + confirmText + '. Pay on the day.</p>' +
+                            miniTestimonialHTML +
+                            caseStudyHTML +
+                            teamFormHTML +
+                            '<div class="funnel-offer-form-trust">' +
+                                '<span>&#10003; ' + confirmText + '</span>' +
+                                '<span>&#10003; Pay on the day</span>' +
+                                '<span>&#10003; Forward to employer</span>' +
                             '</div>' +
-                            '<div class="funnel-offer-meta-item">' +
-                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
-                                '<span>Valid ' + rec.validity + '</span>' +
-                            '</div>' +
-                            '<div class="funnel-offer-meta-item">' +
-                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>' +
-                                '<span>' + rec.locationDisplay + '</span>' +
-                            '</div>' +
+                            callCTAHTML +
                         '</div>' +
-                        '<div class="funnel-offer-guarantee-strip">' +
-                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
-                            '<span><strong>100% Skills Mastery Guarantee</strong> &mdash; 98% pass first time. Don\'t feel confident? Come back and retrain free.</span>' +
-                        '</div>' +
+                        urgencyStripHTML +
+                        secondaryCTAHTML +
                     '</div>' +
-                '</div>' +
-
-                '<div class="funnel-offer-sidebar">' +
-                    '<div class="funnel-offer-form-card">' +
-                        '<h3 class="funnel-offer-form-title">' + (rec.isTeam ? 'Get Your Team Quote' : 'Reserve Your Spot') + '</h3>' +
-                        '<p class="funnel-offer-form-sub">No study required. ' + confirmText + '. Pay on the day.</p>' +
-
-                        // Mini testimonial near form
-                        miniTestimonialHTML +
-
-                        // Case study (team path only)
-                        (rec.isTeam ? caseStudyHTML : '') +
-
-                        // Team path: 2-step form
-                        (rec.isTeam ? teamFormHTML :
-                            // Individual path: schedule + single form
-                            scheduleHTML +
-                            '<div class="funnel-form-group">' +
-                                '<input type="text" id="funnelName" class="form-input" placeholder="Full name *" aria-label="Full name" required>' +
-                            '</div>' +
-                            '<div class="funnel-form-row">' +
-                                '<div class="funnel-form-group">' +
-                                    '<input type="email" id="funnelEmail" class="form-input" placeholder="Email *" aria-label="Email address" required>' +
-                                '</div>' +
-                                '<div class="funnel-form-group">' +
-                                    '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone (optional)" aria-label="Phone number">' +
-                                '</div>' +
-                            '</div>' +
-
-                            '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" ' + (funnelData.location !== 'onsite' ? 'disabled' : '') + '>' +
-                                'Select a date above' +
-                                ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
-                            '</button>' +
-                            '<p style="text-align:center;font-size:0.75rem;color:var(--gray-500);margin-top:var(--space-2);">' +
-                                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;vertical-align:text-bottom;margin-right:2px;color:var(--green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
-                                'Skills Mastery Guarantee: retrain free if you\'re not confident.' +
-                            '</p>'
-                        ) +
-                        '<div class="funnel-offer-form-trust">' +
-                            '<span>&#10003; ' + confirmText + '</span>' +
-                            '<span>&#10003; Pay on the day</span>' +
-                            '<span>&#10003; Forward to employer</span>' +
-                        '</div>' +
-                        // "Book a 10-min call" CTA for team path
-                        (rec.isTeam ? callCTAHTML : '') +
-                    '</div>' +
-                    urgencyStripHTML +
-
-                    // Secondary CTAs
-                    secondaryCTAHTML +
-                '</div>' +
-
+                '</div>';
+        } else {
+            // Individual path: centered card + "Yes — Book This Course" CTA
+            html += '<div style="max-width:560px;margin:0 auto;">' +
+                cardHTML +
+                '<div style="margin-top:var(--space-4);">' + miniTestimonialHTML + '</div>' +
+                '<button class="btn btn-primary btn-lg" onclick="confirmCourse()" style="width:100%;font-size:1.125rem;margin-top:var(--space-4);">' +
+                    'Yes \u2014 Book This Course ' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+                '</button>' +
+                '<p style="text-align:center;font-size:0.75rem;color:var(--gray-500);margin-top:var(--space-2);">No payment required now. Pay on the day.</p>' +
             '</div>';
+        }
 
         return html;
+    }
+
+    // ---- Booking Step (Individual path) ----
+
+    function buildBookingHTML(rec) {
+        var slaHours = (sessionData && sessionData.meta && sessionData.meta.confirmationSLAHours) || 2;
+        var confirmText = 'Fast confirmation (within ' + slaHours + ' hours)';
+        var phoneNumber = funnelData.location === 'widebay' ? '0488 488 467' : '0419 675 022';
+        var phoneTel = funnelData.location === 'widebay' ? '0488488467' : '0419675022';
+
+        // Schedule selection
+        var sessions = getSessionsForCourse(rec.code, funnelData.location);
+        var showSeats = sessionData && sessionData.meta && sessionData.meta.showSeatCounts;
+        fireEvent('session_list_view', { count_sessions: sessions.length });
+
+        var scheduleHTML = '<div style="margin-bottom:var(--space-4);">' +
+            '<h4 style="font-family:var(--font-heading);font-size:1rem;color:var(--navy);margin-bottom:var(--space-3);">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;vertical-align:text-bottom;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                'Choose Your Date' +
+            '</h4>';
+
+        if (sessions.length > 0) {
+            var initialShow = Math.min(sessions.length, funnelData.urgency === 'flexible' ? 6 : 3);
+            var baseStyle = 'cursor:pointer;border:2px solid var(--gray-200);border-radius:10px;padding:var(--space-3);margin-bottom:var(--space-2);transition:all 0.15s ease;background:white;display:flex;justify-content:space-between;align-items:center;';
+
+            for (var si = 0; si < sessions.length; si++) {
+                var sess = sessions[si];
+                var isHidden = si >= initialShow;
+                var seatLabel = showSeats
+                    ? '<span style="font-size:0.75rem;font-weight:600;color:' + (sess.seatsLeft <= 4 ? 'var(--red)' : 'var(--green)') + ';">' + sess.seatsLeft + ' seats left</span>'
+                    : '<span style="font-size:0.75rem;font-weight:600;color:var(--gray-500);">Limited seats</span>';
+
+                scheduleHTML += '<div class="session-card" data-session-id="' + sess.id + '" data-session-date="' + sess.dateISO + '" data-session-label="' + sess.label + ' ' + sess.start + '&ndash;' + sess.end + '" onclick="selectSessionCard(this)"' + (isHidden ? ' data-extra-session="true"' : '') + ' style="' + (isHidden ? 'display:none;' : '') + baseStyle + '">' +
+                    '<div>' +
+                        '<div style="font-weight:700;color:var(--navy);font-size:0.9375rem;">' + sess.label + '</div>' +
+                        '<div style="font-size:0.8125rem;color:var(--gray-500);">' + sess.start + ' &ndash; ' + sess.end + '</div>' +
+                    '</div>' +
+                    seatLabel +
+                '</div>';
+            }
+
+            if (sessions.length > initialShow) {
+                scheduleHTML += '<button onclick="showMoreSessions(this)" style="background:none;border:none;color:var(--red);font-size:0.8125rem;font-weight:600;cursor:pointer;padding:var(--space-2) 0;width:100%;text-align:center;">Show ' + (sessions.length - initialShow) + ' more dates &darr;</button>';
+            }
+        } else {
+            scheduleHTML += '<div style="text-align:center;padding:var(--space-4);background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);">' +
+                '<p style="font-size:0.875rem;color:var(--gray-600);margin-bottom:var(--space-2);">No dates currently posted for this location.</p>' +
+            '</div>';
+        }
+
+        // "Request next available" option
+        scheduleHTML += '<div class="session-card" data-session-id="request_next" data-session-date="" data-session-label="Next available date" onclick="selectSessionCard(this)" style="cursor:pointer;border:2px dashed var(--gray-300);border-radius:10px;padding:var(--space-3);margin-top:var(--space-2);transition:all 0.15s ease;background:white;display:flex;justify-content:space-between;align-items:center;">' +
+            '<div>' +
+                '<div style="font-weight:700;color:var(--navy);font-size:0.9375rem;">Request next available</div>' +
+                '<div style="font-size:0.8125rem;color:var(--gray-500);">We\'ll contact you with the next open date</div>' +
+            '</div>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--gray-400);flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>' +
+        '</div>';
+        scheduleHTML += '</div>';
+
+        // Urgency strip
+        var urgencyStripHTML = '';
+        if (sessions.length > 0) {
+            var nextSess = sessions[0];
+            if (showSeats && nextSess.seatsLeft <= 6) {
+                urgencyStripHTML = '<div class="funnel-offer-urgency-strip"><p>Only <strong>' + nextSess.seatsLeft + ' seats left</strong> for ' + nextSess.label + '. Reserve now.</p></div>';
+            } else {
+                urgencyStripHTML = '<div class="funnel-offer-urgency-strip"><p>Limited seats. Sessions fill fast &mdash; reserve now.</p></div>';
+            }
+        }
+
+        // Secondary CTAs
+        var secondaryCTAHTML = '' +
+            '<div style="display:flex;gap:var(--space-3);margin-top:var(--space-4);justify-content:center;flex-wrap:wrap;">' +
+                '<a href="tel:' + phoneTel + '" onclick="fireEvent(\'call_click\',{location:funnelData.location});fireEvent(\'secondary_call_click\',{location:funnelData.location})" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' +
+                    'Prefer to call? ' + phoneNumber +
+                '</a>' +
+                '<a href="#" onclick="openQuestionModal();return false;" style="display:inline-flex;align-items:center;gap:6px;font-size:0.8125rem;color:var(--navy);font-weight:600;text-decoration:none;padding:8px 16px;border:1px solid var(--gray-200);border-radius:8px;background:white;transition:border-color 0.15s;">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+                    'Have a question?' +
+                '</a>' +
+            '</div>';
+
+        return '' +
+            '<div class="funnel-step-header">' +
+                '<h2 class="funnel-title">Book Your Spot</h2>' +
+                '<p class="funnel-subtitle">' + esc(rec.course) + ' (' + esc(rec.code) + ') &mdash; ' + esc(rec.priceLabel) + ' &bull; pay on the day</p>' +
+            '</div>' +
+            '<div style="max-width:480px;margin:0 auto;">' +
+                scheduleHTML +
+                '<div class="funnel-form-group">' +
+                    '<input type="text" id="funnelName" class="form-input" placeholder="Full name *" aria-label="Full name" required>' +
+                '</div>' +
+                '<div class="funnel-form-row">' +
+                    '<div class="funnel-form-group">' +
+                        '<input type="email" id="funnelEmail" class="form-input" placeholder="Email *" aria-label="Email address" required>' +
+                    '</div>' +
+                    '<div class="funnel-form-group">' +
+                        '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone (optional)" aria-label="Phone number">' +
+                    '</div>' +
+                '</div>' +
+                '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" disabled>' +
+                    'Select a date above' +
+                    ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+                '</button>' +
+                '<p style="text-align:center;font-size:0.75rem;color:var(--gray-500);margin-top:var(--space-2);">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;vertical-align:text-bottom;margin-right:2px;color:var(--green);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
+                    'Skills Mastery Guarantee: retrain free if you\'re not confident.' +
+                '</p>' +
+                '<div class="funnel-offer-form-trust">' +
+                    '<span>&#10003; ' + confirmText + '</span>' +
+                    '<span>&#10003; Pay on the day</span>' +
+                    '<span>&#10003; Forward to employer</span>' +
+                '</div>' +
+            '</div>' +
+            urgencyStripHTML +
+            secondaryCTAHTML;
+    }
+
+    function confirmCourse() {
+        selectedSession = null;
+        bookingMode = 'none';
+        formStartTracked = false;
+        fireEvent('course_confirmed', { course: currentRec.code, price: currentRec.price || 0 });
+        document.getElementById('bookingContent').innerHTML = buildBookingHTML(currentRec);
+        navigateTo('step-booking');
+
+        // Track form focus
+        setTimeout(function() {
+            var fields = document.querySelectorAll('#funnelName, #funnelEmail, #funnelPhone');
+            fields.forEach(function(f) {
+                f.addEventListener('focus', function() {
+                    if (!formStartTracked) {
+                        formStartTracked = true;
+                        fireEvent('booking_form_start');
+                    }
+                });
+            });
+        }, 100);
     }
 
     // ---- Session Card Selection ----
