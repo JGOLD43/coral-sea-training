@@ -1,0 +1,10 @@
+{
+  "kit": {
+    "id": "home",
+    "name": "Home & Family Kit",
+    "price": 49,
+    "priceLabel": "$49",
+    "description": "Comprehensive first-aid kit ideal for home and travel. Bandages, burns care, wound dressings and more.",
+    "orderUrl": "order-kits.html?product=home"
+  }
+}

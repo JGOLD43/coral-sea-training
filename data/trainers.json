@@ -1,0 +1,18 @@
+{
+  "trainers": [
+    {
+      "name": "John Smith",
+      "title": "Paramedic & Lead Trainer",
+      "region": "Townsville",
+      "credentials": ["15 years emergency response", "Cert. IV Training & Assessment"],
+      "photo": "assets/trainers/john-smith.jpg"
+    },
+    {
+      "name": "Samira Khan",
+      "title": "Registered Nurse & Trainer",
+      "region": "Wide Bay",
+      "credentials": ["12 years critical care", "Mental health first aid instructor"],
+      "photo": "assets/trainers/samira-khan.jpg"
+    }
+  ]
+}

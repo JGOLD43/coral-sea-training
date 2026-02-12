@@ -26,6 +26,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231B8A3D' stroke='%23D90A0A' stroke-width='6'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='50' font-weight='bold'%3E+%3C/text%3E%3C/svg%3E">
+    <style>
+        /* Tooltip component */
+        .funnel-tooltip-trigger { position:relative; cursor:help; font-size:0.875rem; color:var(--gray-400); font-style:normal; margin-left:4px; }
+        .funnel-tooltip-trigger:hover::after, .funnel-tooltip-trigger:focus::after {
+            content:attr(data-tooltip); position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+            background:var(--navy); color:white; font-size:0.75rem; font-weight:400; line-height:1.4; padding:8px 12px;
+            border-radius:8px; white-space:normal; width:240px; z-index:10; box-shadow:0 4px 12px rgba(0,0,0,0.15);
+            pointer-events:none;
+        }
+        .funnel-tooltip-trigger:hover::before, .funnel-tooltip-trigger:focus::before {
+            content:''; position:absolute; bottom:calc(100% + 2px); left:50%; transform:translateX(-50%);
+            border:6px solid transparent; border-top-color:var(--navy); z-index:10;
+        }
+        /* Trainer card */
+        .trainer-card { text-align:center; background:var(--white); border-radius:12px; padding:var(--space-4); border:1px solid var(--gray-200); }
+        .trainer-card img { width:72px; height:72px; border-radius:50%; object-fit:cover; margin-bottom:var(--space-2); background:var(--gray-200); }
+        .trainer-card h5 { font-family:var(--font-display); font-size:1rem; color:var(--navy); margin-bottom:2px; }
+        .trainer-card .trainer-title { font-size:0.75rem; color:var(--red); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:var(--space-1); }
+        .trainer-card .trainer-cred { font-size:0.75rem; color:var(--gray-500); }
+        /* Mini testimonial */
+        .mini-testimonial { font-size:0.8125rem; font-style:italic; color:var(--gray-600); background:var(--gray-50); border:1px solid var(--gray-200); border-radius:10px; padding:var(--space-3); margin-bottom:var(--space-4); }
+        .mini-testimonial .stars { color:#f59e0b; font-style:normal; font-size:0.75rem; display:block; margin-bottom:4px; }
+        .mini-testimonial cite { font-size:0.75rem; color:var(--gray-500); font-style:normal; display:block; margin-top:4px; }
+        /* Price comparison */
+        .price-comparison { background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border:1px solid #f59e0b; border-radius:10px; padding:var(--space-3) var(--space-4); margin-top:var(--space-4); }
+        .price-comparison .label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#92400e; margin-bottom:var(--space-2); }
+        .price-comparison .row { display:flex; justify-content:space-between; font-size:0.8125rem; padding:4px 0; }
+        .price-comparison .theirs { color:var(--gray-500); text-decoration:line-through; }
+        .price-comparison .ours { color:var(--green); font-weight:700; }
+        .price-comparison .highlight { font-size:0.8125rem; color:#92400e; font-weight:600; margin-top:var(--space-2); }
+        /* Kit upsell offer */
+        .kit-upsell-offer { background:var(--gray-50); border:2px solid var(--gray-200); border-radius:10px; padding:var(--space-3) var(--space-4); margin-top:var(--space-3); cursor:pointer; transition:border-color 0.15s; }
+        .kit-upsell-offer.selected { border-color:var(--green); background:var(--green-light); }
+        .kit-upsell-offer label { display:flex; align-items:start; gap:var(--space-2); cursor:pointer; font-size:0.875rem; color:var(--navy); }
+        /* Video container */
+        .funnel-video-container { position:relative; border-radius:12px; overflow:hidden; background:#000; margin-bottom:var(--space-4); }
+        .funnel-video-container video, .funnel-video-container iframe { width:100%; display:block; aspect-ratio:16/9; }
+        /* Team 2-step form */
+        .team-step-indicator { display:flex; justify-content:center; gap:var(--space-2); margin-bottom:var(--space-4); }
+        .team-step-dot { width:8px; height:8px; border-radius:50%; background:var(--gray-300); transition:background 0.2s; }
+        .team-step-dot.active { background:var(--red); }
+        @media (max-width:640px) {
+            .funnel-tooltip-trigger:hover::after, .funnel-tooltip-trigger:focus::after { left:0; transform:none; width:200px; }
+            .trainer-card { padding:var(--space-3); }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -88,7 +134,10 @@
                     <div class="funnel-progress-bar">
                         <div class="funnel-progress-fill" id="progressFill" style="width: 20%"></div>
                     </div>
-                    <span class="funnel-step-label" id="stepLabel">Takes 30 seconds</span>
+                    <div style="display:flex;justify-content:space-between;margin-top:6px;">
+                        <span class="funnel-step-label" id="stepLabel">Takes 30 seconds</span>
+                        <span id="stepLabelName" style="font-size:0.75rem;color:var(--gray-500);font-weight:500;"></span>
+                    </div>
                 </div>
 
                 <!-- Social Proof Banner -->
@@ -269,7 +318,7 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Just CPR</h3>
+                                <h3>Just CPR <span class="funnel-tooltip-trigger" data-tooltip="CPR only (HLTAID009). Covers chest compressions, rescue breathing, and AED use. Renew annually. ~3 hours." aria-label="More info about CPR">&#9432;</span></h3>
                                 <p>Annual refresh &mdash; 3 hours, in and out</p>
                             </div>
                             <div class="funnel-option-check">
@@ -282,7 +331,7 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--red);"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>Full First Aid</h3>
+                                <h3>Full First Aid <span class="funnel-tooltip-trigger" data-tooltip="Provide First Aid (HLTAID011). Includes CPR plus wound care, burns, fractures, and medical emergencies. Valid 3 years. ~7 hours." aria-label="More info about Full First Aid">&#9432;</span></h3>
                                 <p>CPR included &mdash; the complete workplace certification</p>
                             </div>
                             <div class="funnel-option-check">
@@ -351,8 +400,8 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--red);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>ASAP &mdash; Within a Week</h3>
-                                <p>I need this urgently for work or compliance</p>
+                                <h3>Need Training Within a Week</h3>
+                                <p>Urgent &mdash; I need this for work or compliance ASAP</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -365,7 +414,7 @@
                             </div>
                             <div class="funnel-option-text">
                                 <h3>I'm Flexible</h3>
-                                <p>No rush &mdash; send me the next available dates</p>
+                                <p>No rush &mdash; show me all available dates</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -554,6 +603,17 @@
         .then(function(d) { sessionData = d; })
         .catch(function() { sessionData = null; });
 
+    // Fetch additional data files
+    var trainerData = null;
+    var upsellData = null;
+    var comparisonData = null;
+    var childcareData = null;
+
+    fetch('data/trainers.json').then(function(r){return r.json();}).then(function(d){trainerData=d;}).catch(function(){});
+    fetch('data/upsell.json').then(function(r){return r.json();}).then(function(d){upsellData=d;}).catch(function(){});
+    fetch('data/comparison.json').then(function(r){return r.json();}).then(function(d){comparisonData=d;}).catch(function(){});
+    fetch('data/childcare.json').then(function(r){return r.json();}).then(function(d){childcareData=d;}).catch(function(){});
+
     // Get future sessions for a course + location from sessionData
     function getSessionsForCourse(courseCode, locationId) {
         if (!sessionData || !sessionData.courses) return [];
@@ -655,6 +715,19 @@
         }
     }
 
+    // Step name labels for progress bar
+    var stepNameMap = {
+        'step-type': 'About You',
+        'step-industry': 'Industry',
+        'step-level': 'Course Level',
+        'step-partner': 'Partnership',
+        'step-delivery': 'Delivery',
+        'step-location': 'Location',
+        'step-urgency': 'Timing',
+        'step-offer': 'Your Course',
+        'step-confirmed': 'Booked'
+    };
+
     function updateProgress() {
         var stepsCompleted = stepHistory.length;
         var totalSteps = 5;
@@ -662,18 +735,23 @@
             totalSteps = (funnelData.delivery === 'onsite') ? 5 : 6;
         }
 
+        var stepNameEl = document.getElementById('stepLabelName');
+
         if (currentStepId === 'step-confirmed') {
             document.getElementById('progressFill').style.width = '100%';
             document.getElementById('stepLabel').textContent = 'Booked!';
+            if (stepNameEl) stepNameEl.textContent = '';
         } else if (currentStepId === 'step-offer') {
             document.getElementById('progressFill').style.width = '100%';
             document.getElementById('stepLabel').textContent = 'Your course';
+            if (stepNameEl) stepNameEl.textContent = '';
         } else {
             var progress = ((stepsCompleted + 1) / totalSteps) * 100;
             document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
             var labels = ['', 'Almost there', 'Nearly done', 'Last step'];
             var label = labels[stepsCompleted] || ('Step ' + (stepsCompleted + 1));
             document.getElementById('stepLabel').textContent = label;
+            if (stepNameEl) stepNameEl.textContent = stepNameMap[currentStepId] || '';
         }
     }
 
@@ -787,6 +865,24 @@
                     }
                 });
             });
+
+            // GA4: trainer section view
+            var trainerEl = document.getElementById('trainerSection');
+            if (trainerEl && typeof IntersectionObserver !== 'undefined') {
+                var obs = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting) {
+                        fireEvent('bio_view', { course: currentRec.code });
+                        obs.disconnect();
+                    }
+                }, { threshold: 0.5 });
+                obs.observe(trainerEl);
+            }
+
+            // GA4: upsell shown
+            var kitUpsellEl = document.getElementById('kitUpsellOffer');
+            if (kitUpsellEl) {
+                fireEvent('upsell_shown', { course: currentRec.code });
+            }
         }, 100);
     }
 
@@ -1169,6 +1265,124 @@
                 '</a>' +
             '</div>';
 
+        // ---- Price Comparison ----
+        var priceCompHTML = '';
+        if (!rec.isTeam && comparisonData && comparisonData.courses && comparisonData.courses[rec.code]) {
+            var comp = comparisonData.courses[rec.code];
+            priceCompHTML = '<div class="price-comparison">' +
+                '<div class="label">How We Compare</div>' +
+                '<div class="row"><span>Typical provider:</span><span class="theirs">$' + comp.competitorPrice + ' &bull; ' + comp.competitorTimeOff + ' off work</span></div>' +
+                '<div class="row"><span>Coral Sea Training:</span><span class="ours">$' + comp.oursPrice + ' &bull; ' + comp.oursTimeOff + '</span></div>' +
+                '<div class="highlight">' + comp.highlight + '</div>' +
+            '</div>';
+        }
+
+        // ---- Trainer Bios ----
+        var trainerHTML = '';
+        if (trainerData && trainerData.trainers && trainerData.trainers.length > 0) {
+            var trainerCards = '';
+            for (var ti = 0; ti < trainerData.trainers.length; ti++) {
+                var t = trainerData.trainers[ti];
+                var credBullets = '';
+                for (var ci = 0; ci < t.credentials.length; ci++) {
+                    credBullets += '<div class="trainer-cred">&bull; ' + t.credentials[ci] + '</div>';
+                }
+                trainerCards += '<div class="trainer-card">' +
+                    '<div style="width:72px;height:72px;background:var(--gray-200);border-radius:50%;margin:0 auto var(--space-2);display:flex;align-items:center;justify-content:center;">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;color:var(--gray-400);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                    '</div>' +
+                    '<h5>' + t.name + '</h5>' +
+                    '<div class="trainer-title">' + t.title + (t.region ? ' &mdash; ' + t.region : '') + '</div>' +
+                    credBullets +
+                '</div>';
+            }
+            trainerHTML = '<div style="margin-top:var(--space-6);" id="trainerSection">' +
+                '<h4 style="font-family:var(--font-display);font-size:1.125rem;color:var(--navy);text-align:center;margin-bottom:var(--space-4);">Meet Your Trainers</h4>' +
+                '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--space-3);">' +
+                    trainerCards +
+                '</div>' +
+            '</div>';
+        }
+
+        // ---- Explainer Video (placeholder — hidden until real video supplied) ----
+        var videoHTML = '<div class="funnel-video-container" id="funnelVideo" style="display:none;margin-top:var(--space-6);">' +
+            '<video controls preload="none" poster="" style="width:100%;aspect-ratio:16/9;">' +
+                '<source src="" type="video/mp4">' +
+            '</video>' +
+        '</div>';
+
+        // ---- Mini Testimonial near form ----
+        var miniTestimonialHTML = '<div class="mini-testimonial">' +
+            '<span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' +
+            '&ldquo;Best first aid course I\'ve done. Relaxed, practical, and I actually feel ready to help now.&rdquo;' +
+            '<cite>&mdash; Mark T., Townsville</cite>' +
+        '</div>';
+
+        // ---- Kit Upsell Checkbox ----
+        var kitUpsellHTML = '';
+        if (!rec.isTeam && upsellData && upsellData.kit) {
+            var kit = upsellData.kit;
+            kitUpsellHTML = '<div class="kit-upsell-offer" id="kitUpsellOffer" onclick="toggleKitUpsell()">' +
+                '<label>' +
+                    '<input type="checkbox" id="kitUpsellCheck" style="margin-top:3px;flex-shrink:0;" onclick="event.stopPropagation();toggleKitUpsell()">' +
+                    '<div>' +
+                        '<strong>Add a ' + kit.name + ' for ' + kit.priceLabel + '</strong>' +
+                        '<div style="font-size:0.75rem;color:var(--gray-500);margin-top:2px;">' + kit.description + '</div>' +
+                    '</div>' +
+                '</label>' +
+            '</div>';
+        }
+
+        // ---- Childcare enhanced description ----
+        var childcareExtraHTML = '';
+        if (!rec.isTeam && funnelData.industry === 'childcare' && childcareData) {
+            var extraItems = '';
+            if (childcareData.extras) {
+                for (var ce = 0; ce < childcareData.extras.length; ce++) {
+                    extraItems += '<div style="display:flex;align-items:start;gap:6px;font-size:0.8125rem;color:var(--gray-700);margin-bottom:4px;">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>' +
+                        '<span>' + childcareData.extras[ce] + '</span></div>';
+                }
+            }
+            childcareExtraHTML = '<div style="background:#ecfdf5;border:1px solid var(--green);border-radius:10px;padding:var(--space-3) var(--space-4);margin-top:var(--space-4);">' +
+                '<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--green);margin-bottom:var(--space-2);">ACECQA Compliance</div>' +
+                extraItems +
+                (childcareData.complianceNote ? '<p style="font-size:0.75rem;color:var(--gray-500);margin-top:var(--space-2);font-style:italic;">' + childcareData.complianceNote + '</p>' : '') +
+            '</div>';
+        }
+
+        // ---- Team 2-step form ----
+        var teamFormHTML = '';
+        if (rec.isTeam) {
+            teamFormHTML = '' +
+                '<div class="team-step-indicator"><div class="team-step-dot active" id="teamDot1"></div><div class="team-step-dot" id="teamDot2"></div></div>' +
+                '<div id="teamFormStep1">' +
+                    '<div class="funnel-form-group"><input type="text" id="funnelName" class="form-input" placeholder="Contact name *" aria-label="Contact name" required></div>' +
+                    '<div class="funnel-form-group"><input type="email" id="funnelEmail" class="form-input" placeholder="Work email *" aria-label="Work email" required></div>' +
+                    '<div class="funnel-form-group"><input type="tel" id="funnelPhone" class="form-input" placeholder="Phone *" aria-label="Phone number" required></div>' +
+                    '<div class="funnel-form-group"><input type="text" id="funnelCompany" class="form-input" placeholder="Company / Organisation *" aria-label="Company name" required></div>' +
+                    '<button class="btn btn-primary btn-lg" onclick="teamFormNext()" style="width:100%;">Next: Team Details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>' +
+                '</div>' +
+                '<div id="teamFormStep2" style="display:none;">' +
+                    '<div class="funnel-form-group">' +
+                        '<select id="funnelTeamSize" class="form-select" aria-label="Team size">' +
+                            '<option value="">Team size *</option>' +
+                            '<option value="4-8">4-8 people</option>' +
+                            '<option value="9-15">9-15 people</option>' +
+                            '<option value="16-25">16-25 people</option>' +
+                            '<option value="26-50">26-50 people</option>' +
+                            '<option value="50+">50+ people</option>' +
+                        '</select>' +
+                    '</div>' +
+                    '<div class="funnel-form-group"><input type="text" id="funnelDates" class="form-input" placeholder="Preferred dates (optional)" aria-label="Preferred training dates"></div>' +
+                    '<div class="funnel-form-group"><textarea id="funnelNotes" class="form-input" placeholder="Anything else we should know?" rows="2" aria-label="Additional notes" style="resize:vertical;"></textarea></div>' +
+                    '<div style="display:flex;gap:var(--space-2);">' +
+                        '<button class="btn btn-outline" onclick="teamFormBack()" style="flex:0 0 auto;">Back</button>' +
+                        '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="flex:1;">Get My Team Quote <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>' +
+                    '</div>' +
+                '</div>';
+        }
+
         // ---- Build final HTML ----
         var html = '' +
             '<div class="funnel-step-header">' +
@@ -1193,6 +1407,8 @@
                             '<span class="funnel-offer-price-sub">per person &bull; pay on the day</span>' +
                         '</div>' +
                         valueStackHTML +
+                        childcareExtraHTML +
+                        priceCompHTML +
                         '<div class="funnel-offer-meta-strip">' +
                             '<div class="funnel-offer-meta-item">' +
                                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
@@ -1232,28 +1448,36 @@
 
                 '<div class="funnel-offer-sidebar">' +
                     '<div class="funnel-offer-form-card">' +
-                        '<h3 class="funnel-offer-form-title">Reserve Your Spot</h3>' +
+                        '<h3 class="funnel-offer-form-title">' + (rec.isTeam ? 'Get Your Team Quote' : 'Reserve Your Spot') + '</h3>' +
                         '<p class="funnel-offer-form-sub">No study required. ' + confirmText + '. Pay on the day.</p>' +
 
-                        // Schedule selection (individual only)
-                        scheduleHTML +
+                        // Mini testimonial near form
+                        miniTestimonialHTML +
 
-                        '<div class="funnel-form-group">' +
-                            '<input type="text" id="funnelName" class="form-input" placeholder="Full name *" required>' +
-                        '</div>' +
-                        '<div class="funnel-form-row">' +
+                        // Team path: 2-step form
+                        (rec.isTeam ? teamFormHTML :
+                            // Individual path: schedule + single form
+                            scheduleHTML +
                             '<div class="funnel-form-group">' +
-                                '<input type="email" id="funnelEmail" class="form-input" placeholder="Email *" required>' +
+                                '<input type="text" id="funnelName" class="form-input" placeholder="Full name *" aria-label="Full name" required>' +
                             '</div>' +
-                            '<div class="funnel-form-group">' +
-                                '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone (optional)">' +
+                            '<div class="funnel-form-row">' +
+                                '<div class="funnel-form-group">' +
+                                    '<input type="email" id="funnelEmail" class="form-input" placeholder="Email *" aria-label="Email address" required>' +
+                                '</div>' +
+                                '<div class="funnel-form-group">' +
+                                    '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone (optional)" aria-label="Phone number">' +
+                                '</div>' +
                             '</div>' +
-                        '</div>' +
-                        companyFieldHTML +
-                        '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" ' + (!rec.isTeam && funnelData.location !== 'onsite' ? 'disabled' : '') + '>' +
-                            (rec.isTeam ? rec.btnText : 'Select a date above') +
-                            ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
-                        '</button>' +
+
+                            // Kit upsell checkbox
+                            kitUpsellHTML +
+
+                            '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" ' + (funnelData.location !== 'onsite' ? 'disabled' : '') + '>' +
+                                'Select a date above' +
+                                ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+                            '</button>'
+                        ) +
                         '<div class="funnel-offer-form-trust">' +
                             '<span>&#10003; ' + confirmText + '</span>' +
                             '<span>&#10003; Pay on the day</span>' +
@@ -1268,6 +1492,12 @@
                 '</div>' +
 
             '</div>' +
+
+            // Trainers section
+            trainerHTML +
+
+            // Explainer video (hidden until real video supplied)
+            videoHTML +
 
             '<div class="funnel-offer-details">' +
                 '<div class="funnel-offer-details-col">' +
@@ -1330,6 +1560,53 @@
         showOffer();
     }
 
+    // ---- Team 2-Step Form ----
+
+    function teamFormNext() {
+        var name = document.getElementById('funnelName').value.trim();
+        var email = document.getElementById('funnelEmail').value.trim();
+        var phone = document.getElementById('funnelPhone').value.trim();
+        var company = document.getElementById('funnelCompany').value.trim();
+        if (!name) { shakeField('funnelName'); return; }
+        if (!email || email.indexOf('@') === -1) { shakeField('funnelEmail'); return; }
+        if (!phone) { shakeField('funnelPhone'); return; }
+        if (!company) { shakeField('funnelCompany'); return; }
+
+        document.getElementById('teamFormStep1').style.display = 'none';
+        document.getElementById('teamFormStep2').style.display = 'block';
+        document.getElementById('teamDot1').classList.remove('active');
+        document.getElementById('teamDot1').style.background = 'var(--green)';
+        document.getElementById('teamDot2').classList.add('active');
+        fireEvent('team_step1_complete');
+    }
+
+    function teamFormBack() {
+        document.getElementById('teamFormStep2').style.display = 'none';
+        document.getElementById('teamFormStep1').style.display = 'block';
+        document.getElementById('teamDot2').classList.remove('active');
+        document.getElementById('teamDot2').style.background = 'var(--gray-300)';
+        document.getElementById('teamDot1').classList.add('active');
+        document.getElementById('teamDot1').style.background = 'var(--red)';
+    }
+
+    // ---- Kit Upsell Toggle ----
+
+    var kitUpsellSelected = false;
+    function toggleKitUpsell() {
+        var cb = document.getElementById('kitUpsellCheck');
+        var card = document.getElementById('kitUpsellOffer');
+        if (!cb || !card) return;
+        // If triggered by card click (not checkbox directly), toggle the checkbox
+        if (document.activeElement !== cb) cb.checked = !cb.checked;
+        kitUpsellSelected = cb.checked;
+        if (kitUpsellSelected) {
+            card.classList.add('selected');
+            fireEvent('upsell_accepted', { kit: upsellData ? upsellData.kit.name : 'Home & Family Kit' });
+        } else {
+            card.classList.remove('selected');
+        }
+    }
+
     // ---- Submit Booking ----
 
     function submitBooking() {
@@ -1342,11 +1619,20 @@
 
         if (!name) { shakeField('funnelName'); return; }
         if (!email || email.indexOf('@') === -1) { shakeField('funnelEmail'); return; }
-        // Phone is optional — no validation
+        // Phone is optional for individual, required for team (already validated in teamFormNext)
+
+        // For team path, validate team size on step 2
+        if (currentRec.isTeam) {
+            var teamSizeEl = document.getElementById('funnelTeamSize');
+            if (teamSizeEl && !teamSizeEl.value) {
+                teamSizeEl.style.borderColor = 'var(--red)';
+                teamSizeEl.focus();
+                return;
+            }
+        }
 
         // For individual bookings, require a session selection (unless team)
         if (!currentRec.isTeam && funnelData.location !== 'onsite' && bookingMode === 'none') {
-            // Highlight the schedule section
             var scheduleCards = document.querySelectorAll('.session-card');
             if (scheduleCards.length > 0) {
                 scheduleCards[0].style.borderColor = 'var(--red)';
@@ -1374,6 +1660,21 @@
         formData.append('location', funnelData.location);
         formData.append('urgency', funnelData.urgency);
         formData.append('booking_mode', bookingMode || 'direct');
+
+        // Team-specific fields
+        if (currentRec.isTeam) {
+            var teamSizeVal = document.getElementById('funnelTeamSize');
+            var datesVal = document.getElementById('funnelDates');
+            var notesVal = document.getElementById('funnelNotes');
+            if (teamSizeVal) formData.append('team_size', teamSizeVal.value);
+            if (datesVal && datesVal.value) formData.append('preferred_dates', datesVal.value);
+            if (notesVal && notesVal.value) formData.append('notes', notesVal.value);
+        }
+
+        // Kit upsell
+        if (kitUpsellSelected && upsellData && upsellData.kit) {
+            formData.append('upsell_kit', upsellData.kit.name + ' (' + upsellData.kit.priceLabel + ')');
+        }
 
         if (selectedSession) {
             formData.append('session_id', selectedSession.id);
@@ -1456,12 +1757,18 @@
                     '<p>Upgrade to <strong>The Complete First Aider (HLTAID011)</strong> for just $60 more. You\'ll get CPR <em>plus</em> comprehensive workplace skills &mdash; and it\'s valid for 3 years instead of 1. Call us to upgrade your booking.</p>' +
                     '<a href="tel:' + phoneTel + '" class="btn btn-primary" style="margin-top:var(--space-3);">Call to Upgrade &mdash; ' + phoneNumber + '</a>' +
                 '</div>';
-        } else if (!rec.isTeam) {
+        } else if (!rec.isTeam && !kitUpsellSelected) {
             postBookUpsell = '' +
                 '<div class="funnel-confirmed-upsell">' +
                     '<h4>Complete Your Preparation</h4>' +
                     '<p>You\'re getting the training &mdash; make sure you have the gear too. Our workplace-compliant first aid kits are built for real emergencies, not just ticking a box.</p>' +
                     '<a href="shop.html" class="btn btn-primary" style="margin-top:var(--space-3);">Browse First Aid Kits</a>' +
+                '</div>';
+        } else if (!rec.isTeam && kitUpsellSelected) {
+            postBookUpsell = '' +
+                '<div class="funnel-confirmed-upsell" style="background:var(--green-light);border-color:var(--green);">' +
+                    '<h4 style="color:var(--green);">First Aid Kit Added!</h4>' +
+                    '<p>We\'ve added a <strong>' + (upsellData ? upsellData.kit.name : 'Home & Family Kit') + '</strong> to your order. We\'ll include delivery details in your confirmation email.</p>' +
                 '</div>';
         }
 

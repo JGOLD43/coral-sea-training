@@ -1,0 +1,32 @@
+{
+  "courses": {
+    "HLTAID009": {
+      "competitorPrice": 140,
+      "oursPrice": 99,
+      "competitorTimeOff": "Half day",
+      "oursTimeOff": "3 hours",
+      "highlight": "Same certification, less time off work"
+    },
+    "HLTAID011": {
+      "competitorPrice": 220,
+      "oursPrice": 159,
+      "competitorTimeOff": "2 days",
+      "oursTimeOff": "1 day",
+      "highlight": "Includes CPR — no separate booking needed"
+    },
+    "HLTAID012": {
+      "competitorPrice": 280,
+      "oursPrice": 199,
+      "competitorTimeOff": "2 days",
+      "oursTimeOff": "1 day",
+      "highlight": "ACECQA approved — all 3 qualifications in one day"
+    },
+    "HLTAID015": {
+      "competitorPrice": 280,
+      "oursPrice": 199,
+      "competitorTimeOff": "1 day",
+      "oursTimeOff": "6 hours",
+      "highlight": "Advanced skills at a fraction of the cost"
+    }
+  }
+}
