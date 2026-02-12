@@ -398,10 +398,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero {
     position: relative;
-    min-height: 100vh;
     display: flex;
     align-items: center;
-    padding: calc(80px + var(--space-16)) 0 var(--space-16);
+    padding: calc(80px + var(--space-10)) 0 var(--space-12);
     background: var(--off-white);
     overflow: hidden;
 }
@@ -413,14 +412,14 @@ h1, h2, h3, h4, h5, h6 {
     right: 0;
     width: 50%;
     height: 100%;
-    background: linear-gradient(135deg, var(--green-light) 0%, transparent 60%);
+    background: linear-gradient(160deg, rgba(27,138,61,0.06) 0%, transparent 50%);
     pointer-events: none;
 }
 
 .hero-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-12);
+    gap: var(--space-8);
     align-items: center;
 }
 
@@ -452,11 +451,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
     font-weight: 700;
     color: var(--navy);
     line-height: 1.1;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 .hero-title span {
@@ -464,30 +463,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-description {
-    font-size: clamp(1.0625rem, 2vw, 1.25rem);
+    font-size: clamp(1rem, 2vw, 1.125rem);
     color: var(--gray-600);
     max-width: 520px;
-    margin-bottom: var(--space-8);
-    line-height: 1.7;
+    margin-bottom: var(--space-6);
+    line-height: 1.6;
 }
 
 .hero-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4);
-    margin-bottom: var(--space-12);
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
 }
 
 .hero-guarantee {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-3);
     padding: var(--space-3) var(--space-4);
     background: var(--green-light);
+    border: 1px solid rgba(27,138,61,0.15);
     border-radius: 12px;
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     color: var(--gray-700);
-    margin-bottom: var(--space-8);
     line-height: 1.5;
 }
 
@@ -495,25 +494,29 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-8);
-    padding-top: var(--space-8);
-    border-top: 1px solid var(--gray-200);
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
 }
 
 .trust-item {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .trust-icon {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     color: var(--red);
 }
 
 .trust-text {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     color: var(--navy);
 }
@@ -524,9 +527,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-image-wrapper {
     position: relative;
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: var(--shadow-xl);
+    box-shadow: 0 8px 32px rgba(26,35,50,0.12);
 }
 
 .hero-image {
@@ -534,6 +537,7 @@ h1, h2, h3, h4, h5, h6 {
     height: auto;
     aspect-ratio: 4/3;
     object-fit: cover;
+    display: block;
 }
 
 .hero-badge {
@@ -585,7 +589,7 @@ h1, h2, h3, h4, h5, h6 {
 @media (min-width: 1024px) {
     .hero-grid {
         grid-template-columns: 1fr 1fr;
-        gap: var(--space-16);
+        gap: var(--space-12);
     }
 }
 
@@ -3200,19 +3204,23 @@ body:has(.urgency-banner) .funnel-section {
 .hero-stats-row {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-6);
-    margin-bottom: var(--space-8);
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
 }
 
 .hero-stat {
-    font-size: 0.9375rem;
-    color: var(--gray-600);
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+    letter-spacing: 0.01em;
 }
 
 .hero-stat strong {
     display: block;
     font-family: var(--font-display);
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: var(--navy);
     line-height: 1.2;
 }

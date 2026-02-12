@@ -83,7 +83,7 @@
         <div class="container">
             <p class="urgency-text">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <strong>Only 4 Spots Left:</strong> Next Townsville course Feb 22 &mdash; <a href="courses.html">Book now before it fills</a>
+                Next Townsville session &mdash; <a href="courses.html">Reserve your spot</a>
             </p>
         </div>
     </div>
@@ -118,7 +118,7 @@
                         <div class="hero-stat"><strong>98%</strong> pass first time</div>
                         <div class="hero-stat"><strong>1 day</strong> is all it takes</div>
                     </div>
-                    <p class="hero-next-date" id="heroNextDate" style="font-size:0.9375rem;color:var(--red);font-weight:600;margin-top:var(--space-3);"></p>
+                    <p class="hero-next-date" id="heroNextDate" style="font-size:0.875rem;color:var(--red);font-weight:600;margin-bottom:var(--space-4);"></p>
                     <div class="hero-cta">
                         <a href="courses.html" class="btn btn-primary btn-lg">
                             Find My Course &amp; Book
@@ -126,11 +126,11 @@
                         </a>
                         <a href="tel:0419675022" class="btn btn-outline btn-lg">Call: 0419 675 022</a>
                     </div>
-                    <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-3);font-size:0.8125rem;">
-                        <span style="color:#FBBC04;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-                        <span style="color:var(--gray-600);">&ldquo;First time feeling confident and not overwhelmed.&rdquo; &mdash; Jamie Lee</span>
+                    <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-2);padding:var(--space-3) var(--space-4);background:var(--white);border:1px solid var(--gray-200);border-radius:10px;font-size:0.8125rem;box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+                        <span style="color:#FBBC04;flex-shrink:0;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        <span style="color:var(--gray-600);line-height:1.4;">&ldquo;First time feeling confident and not overwhelmed.&rdquo; &mdash; <strong style="color:var(--navy);">Jamie Lee</strong></span>
                     </div>
-                    <div class="hero-guarantee">
+                    <div class="hero-guarantee" style="margin-top:var(--space-3);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--green);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                         <span><strong>100% Skills Mastery Guarantee:</strong> Don't feel confident? Come back and retrain for free &mdash; no questions asked.</span>
                     </div>
@@ -964,7 +964,7 @@
                     <span class="sticky-cta-stars">&#9733;&#9733;&#9733;&#9733;<span style="opacity:0.3;">&#9733;</span></span>
                     <span class="sticky-cta-proof-text">Rated 4.4/5 &bull; 10,000+ certified</span>
                 </div>
-                <span class="sticky-cta-text">100% Skills Mastery Guarantee &mdash; <strong>next Townsville: Feb 22</strong></span>
+                <span class="sticky-cta-text">100% Skills Mastery Guarantee &mdash; <strong>sessions booking now</strong></span>
             </div>
             <div class="sticky-cta-actions">
                 <a href="courses.html" class="btn btn-primary sticky-cta-pulse">Book My Course
@@ -1040,12 +1040,15 @@
                     });
                 });
                 if (soonest) {
-                    var seatsText = (sd.meta && sd.meta.showSeatCounts && soonest.seatsLeft) ? soonest.seatsLeft + ' Spots Left' : 'Limited Spots';
+                    var seatsInfo = '';
+                    if (sd.meta && sd.meta.showSeatCounts && soonest.seatsLeft) {
+                        seatsInfo = ' &bull; ' + soonest.seatsLeft + ' seats left';
+                    }
                     var bannerText = document.querySelector('#urgencyBanner .urgency-text');
                     if (bannerText) {
                         bannerText.innerHTML =
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                            '<strong>' + seatsText + ':</strong> Next Townsville course ' + soonest.label + ' &mdash; <a href="courses.html">Book now before it fills</a>';
+                            'Next Townsville session: <strong>' + soonest.label + '</strong>' + seatsInfo + ' &mdash; <a href="courses.html">Reserve your spot</a>';
                     }
                     // Update sticky CTA too
                     var stickyText = document.querySelector('.sticky-cta-text');
@@ -1061,7 +1064,7 @@
                     if (bannerText) {
                         bannerText.innerHTML =
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                            '<strong>Limited Spots:</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="courses.html">Book now before it fills</a>';
+                            'Next Townsville session: <strong>' + next.formatted + '</strong> &mdash; <a href="courses.html">Reserve your spot</a>';
                     }
                 }
             });
