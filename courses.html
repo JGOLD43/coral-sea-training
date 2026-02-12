@@ -130,7 +130,7 @@
         <div class="container">
             <p class="urgency-text">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <strong>Limited Seats:</strong> Next Townsville session &mdash; <a href="#" onclick="selectType('individual', document.querySelector('#step-type .funnel-option'));return false;">Book now</a>
+                Next Townsville session &mdash; <a href="#" onclick="selectType('individual', document.querySelector('#step-type .funnel-option'));return false;">Reserve your spot</a>
             </p>
         </div>
     </div>
@@ -146,8 +146,8 @@
                         <div class="funnel-progress-fill" id="progressFill" style="width: 20%"></div>
                     </div>
                     <div style="display:flex;justify-content:space-between;margin-top:6px;">
-                        <span class="funnel-step-label" id="stepLabel">Takes 30 seconds</span>
-                        <span id="stepLabelName" style="font-size:0.75rem;color:var(--gray-500);font-weight:500;"></span>
+                        <span class="funnel-step-label" id="stepLabel">Step 1 of 5 — About You</span>
+                        <span id="stepLabelName" style="font-size:0.75rem;color:var(--gray-500);font-weight:500;">Takes 30 seconds</span>
                     </div>
                 </div>
 
@@ -593,16 +593,16 @@
             if (bannerLink) {
                 // Try to get real seat count from session data
                 function updateBannerWithSeats() {
-                    var seatsText = 'Limited Seats';
+                    var seatsInfo = '';
                     if (sessionData && sessionData.meta && sessionData.meta.showSeatCounts) {
                         var sessions = getSessionsForCourse('hltaid011', 'townsville');
                         if (sessions.length > 0 && sessions[0].seatsLeft) {
-                            seatsText = 'Only ' + sessions[0].seatsLeft + ' Seats Left';
+                            seatsInfo = ' &bull; ' + sessions[0].seatsLeft + ' seats left';
                         }
                     }
                     bannerLink.innerHTML =
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                        '<strong>' + seatsText + ':</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Book now before it fills</a>';
+                        'Next Townsville session: <strong>' + next.formatted + '</strong>' + seatsInfo + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Reserve your spot</a>';
                 }
                 // Try immediately if data loaded, retry after short delay
                 if (sessionData) {
@@ -610,7 +610,7 @@
                 } else {
                     bannerLink.innerHTML =
                         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
-                        '<strong>Limited Seats:</strong> Next Townsville course ' + next.formatted + ' &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Book now before it fills</a>';
+                        'Next Townsville session: <strong>' + next.formatted + '</strong> &mdash; <a href="#" onclick="selectType(\'individual\', document.querySelector(\'#step-type .funnel-option\'));return false;">Reserve your spot</a>';
                     setTimeout(updateBannerWithSeats, 1500);
                 }
             }
