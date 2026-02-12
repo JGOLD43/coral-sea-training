@@ -2448,7 +2448,7 @@ body:has(.urgency-banner) .funnel-section {
     background-size: 28.28px 100%;
     border-radius: 5px;
     transition: width 0.2s var(--ease-out);
-    animation: progress-stripes 0.6s linear infinite;
+    animation: progress-stripes 2s linear infinite;
 }
 
 @keyframes progress-stripes {
