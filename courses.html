@@ -187,13 +187,13 @@
                             </div>
                         </button>
 
-                        <button class="funnel-option" onclick="selectType('team', this)">
+                        <button class="funnel-option" onclick="selectType('group', this)">
                             <div class="funnel-option-icon">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                             </div>
                             <div class="funnel-option-text">
-                                <h3>My Team</h3>
-                                <p>Reduce admin + keep everyone compliant (4+ staff)</p>
+                                <h3>2+ People</h3>
+                                <p>Book together &amp; save &mdash; friends, colleagues, or your whole team</p>
                             </div>
                             <div class="funnel-option-check">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -216,6 +216,47 @@
                             Pay on the day
                         </span>
                     </div>
+                </div>
+
+                <!-- ===== STEP: Group Type (2+ people path) ===== -->
+                <div class="funnel-step" id="step-group-type">
+                    <div class="funnel-step-header">
+                        <h2 class="funnel-title">Who Are You Booking With?</h2>
+                        <p class="funnel-subtitle">This helps us find the best option for your group.</p>
+                    </div>
+
+                    <div class="funnel-options funnel-options-2">
+                        <button class="funnel-option" onclick="selectGroupType('friend', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>A Friend or Partner</h3>
+                                <p>2&ndash;3 people &mdash; book the same session together</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+
+                        <button class="funnel-option" onclick="selectGroupType('team', this)">
+                            <div class="funnel-option-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <div class="funnel-option-text">
+                                <h3>My Team</h3>
+                                <p>4+ staff &mdash; get a custom quote with group savings</p>
+                            </div>
+                            <div class="funnel-option-check">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button class="funnel-back" onclick="goBack()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><polyline points="15 18 9 12 15 6"/></svg>
+                        Back
+                    </button>
                 </div>
 
                 <!-- ===== STEP: Industry (Individual path) ===== -->
@@ -618,6 +659,7 @@
 
     var funnelData = {
         type: '',       // individual | team
+        groupType: '',  // friend | '' (set when user picks "2+ People" → "A Friend")
         industry: '',   // childcare | other (individual path)
         level: '',      // cpr | firstaid (individual non-childcare path)
         partner: '',    // yes | interested (team path)
@@ -698,6 +740,7 @@
             if (funnelData.delivery === 'onsite') parts.push('On-site');
             else if (funnelData.delivery === 'venue') parts.push('At venue');
         } else {
+            if (funnelData.groupType === 'friend') parts.push('With a friend');
             if (funnelData.industry === 'childcare') {
                 parts.push('Childcare / Education');
             } else if (funnelData.level === 'cpr') {
@@ -770,6 +813,7 @@
     // Step name labels for progress bar
     var stepNameMap = {
         'step-type': 'About You',
+        'step-group-type': 'Your Group',
         'step-industry': 'Industry',
         'step-level': 'Course Level',
         'step-partner': 'Partnership',
@@ -784,8 +828,10 @@
     function updateProgress() {
         var stepsCompleted = stepHistory.length;
         var totalSteps = 5;
-        if (funnelData.type === 'team') {
-            totalSteps = (funnelData.delivery === 'onsite') ? 5 : 6;
+        if (funnelData.groupType === 'friend') {
+            totalSteps = 6;
+        } else if (funnelData.type === 'team') {
+            totalSteps = (funnelData.delivery === 'onsite') ? 6 : 7;
         }
 
         var stepNameEl = document.getElementById('stepLabelName');
@@ -818,7 +864,8 @@
         if (!container || !pills) return;
 
         var items = [];
-        if (funnelData.type === 'individual') items.push('Just Me');
+        if (funnelData.groupType === 'friend') items.push('With a Friend');
+        else if (funnelData.type === 'individual') items.push('Just Me');
         else if (funnelData.type === 'team') items.push('My Team');
 
         if (funnelData.type === 'individual') {
@@ -838,7 +885,7 @@
         if (funnelData.urgency === 'asap') items.push('ASAP');
         else if (funnelData.urgency === 'flexible') items.push('Flexible');
 
-        if (items.length === 0 || currentStepId === 'step-type' || currentStepId === 'step-offer' || currentStepId === 'step-booking' || currentStepId === 'step-confirmed') {
+        if (items.length === 0 || currentStepId === 'step-type' || currentStepId === 'step-group-type' || currentStepId === 'step-offer' || currentStepId === 'step-booking' || currentStepId === 'step-confirmed') {
             container.style.display = 'none';
             return;
         }
@@ -861,14 +908,32 @@
     // ---- Step Handlers ----
 
     function selectType(value, btn) {
-        funnelData.type = value;
         highlightOption(btn);
         fireEvent('quiz_start');
         fireEvent('quiz_step_complete', { step_name: 'type', step_value: value });
         setTimeout(function() {
             if (value === 'individual') {
+                funnelData.type = 'individual';
+                funnelData.groupType = '';
                 navigateTo('step-industry');
             } else {
+                // value === 'group' — ask friend or team next
+                navigateTo('step-group-type');
+            }
+        }, 150);
+    }
+
+    function selectGroupType(value, btn) {
+        highlightOption(btn);
+        fireEvent('quiz_step_complete', { step_name: 'group_type', step_value: value });
+        setTimeout(function() {
+            if (value === 'friend') {
+                funnelData.type = 'individual';
+                funnelData.groupType = 'friend';
+                navigateTo('step-industry');
+            } else {
+                funnelData.type = 'team';
+                funnelData.groupType = '';
                 navigateTo('step-partner');
             }
         }, 150);
@@ -1728,6 +1793,13 @@
                         '<input type="tel" id="funnelPhone" class="form-input" placeholder="Phone (optional)" aria-label="Phone number">' +
                     '</div>' +
                 '</div>' +
+                (funnelData.groupType === 'friend' ?
+                    '<div class="funnel-form-group">' +
+                        '<select id="funnelGroupSize" class="form-select" aria-label="Number of people">' +
+                            '<option value="2">2 people</option>' +
+                            '<option value="3">3 people</option>' +
+                        '</select>' +
+                    '</div>' : '') +
                 '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" disabled>' +
                     'Select a date above' +
                     ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
@@ -2042,6 +2114,9 @@
         formData.append('location', funnelData.location);
         formData.append('urgency', funnelData.urgency);
         formData.append('booking_mode', bookingMode || 'direct');
+        if (funnelData.groupType) formData.append('group_type', funnelData.groupType);
+        var groupSizeEl = document.getElementById('funnelGroupSize');
+        if (groupSizeEl && groupSizeEl.value) formData.append('group_size', groupSizeEl.value);
 
         // Team-specific fields
         if (currentRec.isTeam) {
