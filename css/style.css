@@ -2437,7 +2437,7 @@ body:has(.urgency-banner) .funnel-section {
     height: 100%;
     background: linear-gradient(90deg, var(--green) 0%, #16a34a 100%);
     border-radius: 5px;
-    transition: width 0.4s var(--ease-out);
+    transition: width 0.2s var(--ease-out);
 }
 
 .funnel-step-label {
@@ -2476,7 +2476,7 @@ body:has(.urgency-banner) .funnel-section {
 /* Steps */
 .funnel-step {
     display: none;
-    animation: fadeInUp 0.4s var(--ease-out);
+    animation: fadeInUp 0.15s var(--ease-out);
 }
 
 .funnel-step.active {

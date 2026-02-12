@@ -152,6 +152,11 @@
                     </div>
                 </div>
 
+                <!-- Choice Summary — fills as user progresses -->
+                <div id="choiceSummary" style="display:none;margin-bottom:var(--space-3);">
+                    <div id="choicePills" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;"></div>
+                </div>
+
                 <!-- Social Proof Banner -->
                 <div class="funnel-social-proof">
                     <span style="font-weight:700;color:var(--navy);">4.4&#9733; on Google</span>
@@ -721,9 +726,10 @@
         stepHistory.push(currentStepId);
         currentStepId = stepId;
         updateProgress();
+        updateChoiceSummary();
         updateWrapperWidth();
         fireEvent('quiz_step_view', { step_name: stepNameMap[stepId] || stepId });
-        document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'instant', block: 'start' });
     }
 
     function goBack() {
@@ -735,8 +741,9 @@
         document.getElementById(prevStep).classList.add('active');
         currentStepId = prevStep;
         updateProgress();
+        updateChoiceSummary();
         updateWrapperWidth();
-        document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelector('.funnel-wrapper').scrollIntoView({ behavior: 'instant', block: 'start' });
     }
 
     function updateWrapperWidth() {
@@ -788,6 +795,44 @@
         }
     }
 
+    function updateChoiceSummary() {
+        var container = document.getElementById('choiceSummary');
+        var pills = document.getElementById('choicePills');
+        if (!container || !pills) return;
+
+        var items = [];
+        if (funnelData.type === 'individual') items.push('Just Me');
+        else if (funnelData.type === 'team') items.push('My Team');
+
+        if (funnelData.type === 'individual') {
+            if (funnelData.industry === 'childcare') items.push('Childcare');
+            else if (funnelData.industry === 'other' && funnelData.level === 'cpr') items.push('CPR');
+            else if (funnelData.industry === 'other' && funnelData.level === 'firstaid') items.push('First Aid');
+            else if (funnelData.industry === 'other') items.push('Other industry');
+        }
+        if (funnelData.type === 'team') {
+            if (funnelData.partner) items.push(funnelData.partner === 'yes' ? 'Partner' : 'Interested');
+            if (funnelData.delivery === 'onsite') items.push('On-site');
+            else if (funnelData.delivery === 'venue') items.push('At venue');
+        }
+        if (funnelData.location === 'townsville') items.push('Townsville');
+        else if (funnelData.location === 'widebay') items.push('Wide Bay');
+        else if (funnelData.location === 'onsite' && funnelData.type === 'individual') items.push('Your workplace');
+        if (funnelData.urgency === 'asap') items.push('ASAP');
+        else if (funnelData.urgency === 'flexible') items.push('Flexible');
+
+        if (items.length === 0 || currentStepId === 'step-type' || currentStepId === 'step-offer' || currentStepId === 'step-confirmed') {
+            container.style.display = 'none';
+            return;
+        }
+        container.style.display = 'block';
+        pills.innerHTML = items.map(function(item) {
+            return '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:var(--green-light);color:var(--green);border-radius:100px;font-size:0.6875rem;font-weight:600;letter-spacing:0.02em;">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:10px;height:10px;"><polyline points="20 6 9 17 4 12"/></svg>' +
+                esc(item) + '</span>';
+        }).join('');
+    }
+
     function highlightOption(btn) {
         var step = btn.closest('.funnel-step');
         step.querySelectorAll('.funnel-option').forEach(function(o) {
@@ -809,7 +854,7 @@
             } else {
                 navigateTo('step-partner');
             }
-        }, 300);
+        }, 150);
     }
 
     function selectPartner(value, btn) {
@@ -818,7 +863,7 @@
         fireEvent('quiz_step_complete', { step_name: 'partner', step_value: value });
         setTimeout(function() {
             navigateTo('step-delivery');
-        }, 300);
+        }, 150);
     }
 
     function selectIndustry(value, btn) {
@@ -831,7 +876,7 @@
             } else {
                 navigateTo('step-level');
             }
-        }, 300);
+        }, 150);
     }
 
     function selectLevel(value, btn) {
@@ -840,7 +885,7 @@
         fireEvent('quiz_step_complete', { step_name: 'level', step_value: value });
         setTimeout(function() {
             navigateTo('step-location');
-        }, 300);
+        }, 150);
     }
 
     function selectDelivery(value, btn) {
@@ -854,7 +899,7 @@
             } else {
                 navigateTo('step-location');
             }
-        }, 300);
+        }, 150);
     }
 
     function selectLocation(value, btn) {
@@ -863,7 +908,7 @@
         fireEvent('quiz_step_complete', { step_name: 'location', step_value: value });
         setTimeout(function() {
             navigateTo('step-urgency');
-        }, 300);
+        }, 150);
     }
 
     function selectUrgency(value, btn) {
@@ -872,7 +917,7 @@
         fireEvent('quiz_step_complete', { step_name: 'urgency', step_value: value });
         setTimeout(function() {
             showOffer();
-        }, 300);
+        }, 150);
     }
 
     // ---- Offer Page ----
