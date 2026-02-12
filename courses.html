@@ -1544,7 +1544,6 @@
                         '</div>' +
                         valueStackHTML +
                         childcareExtraHTML +
-                        priceCompHTML +
                         '<div class="funnel-offer-meta-strip">' +
                             '<div class="funnel-offer-meta-item">' +
                                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
@@ -1562,22 +1561,6 @@
                         '<div class="funnel-offer-guarantee-strip">' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>' +
                             '<span><strong>100% Skills Mastery Guarantee</strong> &mdash; 98% pass first time. Don\'t feel confident? Come back and retrain free.</span>' +
-                        '</div>' +
-                    '</div>' +
-
-                    upsellHTML +
-
-                    // Social proof at decision point
-                    '<div class="funnel-offer-social-proof">' +
-                        '<div class="funnel-offer-review">' +
-                            '<div class="funnel-offer-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
-                            '<p>&ldquo;First time feeling confident and not overwhelmed. The instructor gave confidence in the most important parts.&rdquo;</p>' +
-                            '<span>&mdash; Jamie Lee, Google Review</span>' +
-                        '</div>' +
-                        '<div class="funnel-offer-review">' +
-                            '<div class="funnel-offer-review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
-                            '<p>&ldquo;Professional and thorough. I would recommend these guys in a heartbeat!&rdquo;</p>' +
-                            '<span>&mdash; Caitlin Murrell, Google Review</span>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -1609,12 +1592,6 @@
                                 '</div>' +
                             '</div>' +
 
-                            // Kit upsell checkbox
-                            kitUpsellHTML +
-
-                            // Membership interest capture
-                            membershipHTML +
-
                             '<button class="btn btn-primary btn-lg funnel-submit" id="funnelSubmitBtn" onclick="submitBooking()" style="width:100%;font-size:1.125rem;" ' + (funnelData.location !== 'onsite' ? 'disabled' : '') + '>' +
                                 'Select a date above' +
                                 ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
@@ -1631,7 +1608,6 @@
                         '</div>' +
                         // "Book a 10-min call" CTA for team path
                         (rec.isTeam ? callCTAHTML : '') +
-                        (!rec.isTeam ? '<p class="funnel-offer-mate-deal" style="text-align:center;font-size:0.8125rem;color:var(--gray-600);margin-top:var(--space-3);"><strong style="color:var(--navy);">Bring a mate?</strong> Book together and train side by side &mdash; call <a href="tel:' + phoneTel + '" style="color:var(--red);font-weight:600;">' + phoneNumber + '</a> for group pricing.</p>' : '') +
                     '</div>' +
                     urgencyStripHTML +
 
@@ -1639,23 +1615,6 @@
                     secondaryCTAHTML +
                 '</div>' +
 
-            '</div>' +
-
-            // Trainers section
-            trainerHTML +
-
-            // Explainer video (hidden until real video supplied)
-            videoHTML +
-
-            '<div class="funnel-offer-details">' +
-                '<div class="funnel-offer-details-col">' +
-                    '<h4>What\'s Included</h4>' +
-                    includesHTML +
-                '</div>' +
-                '<div class="funnel-offer-details-col">' +
-                    '<h4>Bonuses &mdash; Included Free</h4>' +
-                    bonusHTML +
-                '</div>' +
             '</div>';
 
         return html;
@@ -2055,11 +2014,11 @@
                 '</div>';
         }
 
-        // Membership confirmation
-        if (membershipSelected && !rec.isTeam) {
+        // Membership offer (post-booking upsell)
+        if (!rec.isTeam) {
             postBookUpsell += '<div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border:1px solid #7dd3fc;border-radius:12px;padding:var(--space-4);margin-top:var(--space-3);text-align:center;">' +
-                '<h4 style="font-family:var(--font-heading);font-size:1rem;color:var(--navy);margin-bottom:var(--space-1);">Annual Refresh Club &mdash; Interest Noted!</h4>' +
-                '<p style="font-size:0.875rem;color:var(--gray-600);">We\'ll include details about the Annual Refresh Club ($49/yr) in your confirmation email.</p>' +
+                '<h4 style="font-family:var(--font-heading);font-size:1rem;color:var(--navy);margin-bottom:var(--space-1);">Never Miss a Renewal &mdash; Annual Refresh Club</h4>' +
+                '<p style="font-size:0.875rem;color:var(--gray-600);">$49/yr gets you auto renewal reminders, refresher videos, and 15% off kits. We\'ll include enrollment details in your confirmation email.</p>' +
             '</div>';
         }
 
