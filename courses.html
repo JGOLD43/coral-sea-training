@@ -78,25 +78,6 @@
         .case-study-card h5 { font-size:0.875rem; color:var(--navy); margin-bottom:var(--space-2); }
         .case-study-card .cs-label { font-size:0.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:2px; }
         .case-study-card .cs-text { font-size:0.8125rem; color:var(--gray-600); margin-bottom:var(--space-1); }
-        /* Progress bar shimmer animation */
-        .funnel-progress-fill {
-            position: relative;
-            overflow: hidden;
-        }
-        .funnel-progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
-            animation: progressShimmer 2s ease-in-out infinite;
-        }
-        @keyframes progressShimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
         @media (max-width:640px) {
             .funnel-tooltip-trigger:hover::after, .funnel-tooltip-trigger:focus::after { left:0; transform:none; width:200px; }
             .trainer-card { padding:var(--space-3); }
