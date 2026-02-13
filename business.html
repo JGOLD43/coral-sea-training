@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="First Aid training for businesses. Group bookings, onsite training, and prepaid credit packs. Flexible options for teams of every size. Coral Sea Training RTO #32221.">
+    <meta property="og:title" content="For Business | Coral Sea Training">
+    <meta property="og:description" content="First Aid training for your team. Public sessions, onsite training, or prepaid credit packs. Flexible options for businesses of every size.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jgold43.github.io/coral-sea-training/business.html">
+    <meta property="og:image" content="https://images.pexels.com/photos/11655091/pexels-photo-11655091.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2">
+    <link rel="canonical" href="https://jgold43.github.io/coral-sea-training/business.html">
+    <title>For Business | Coral Sea Training | RTO #32221</title>
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231B8A3D' stroke='%23D90A0A' stroke-width='6'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='50' font-weight='bold'%3E+%3C/text%3E%3C/svg%3E">
+    <style>
+        /* ========== Business Page Styles ========== */
+
+        /* Format cards grid */
+        .biz-format-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .biz-format-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .biz-format-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 16px;
+            padding: var(--space-6);
+            text-align: center;
+            transition: all 0.2s var(--ease-out);
+        }
+        .biz-format-card:hover {
+            border-color: var(--green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(27, 138, 61, 0.12);
+        }
+        .biz-format-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-4);
+        }
+        .biz-format-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            color: var(--navy);
+            margin-bottom: var(--space-2);
+        }
+        .biz-format-card p {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: var(--space-4);
+            line-height: 1.6;
+        }
+
+        /* Volume pricing table */
+        .biz-pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-4);
+            max-width: 800px;
+            margin: 0 auto var(--space-8);
+        }
+        @media (min-width: 640px) {
+            .biz-pricing-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .biz-pricing-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .biz-pricing-tier {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 14px;
+            padding: var(--space-5);
+            text-align: center;
+            transition: all 0.2s var(--ease-out);
+        }
+        .biz-pricing-tier:hover {
+            border-color: var(--green);
+            box-shadow: var(--shadow-md);
+        }
+        .biz-pricing-tier h4 {
+            font-family: var(--font-body);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: var(--space-1);
+        }
+        .biz-pricing-tier .tier-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: var(--space-3);
+            display: block;
+        }
+        .biz-pricing-tier ul {
+            text-align: left;
+            font-size: 0.8125rem;
+            color: var(--gray-600);
+        }
+        .biz-pricing-tier li {
+            padding: 4px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .biz-pricing-tier li svg {
+            width: 14px;
+            height: 14px;
+            color: var(--green);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Benefits list */
+        .biz-benefits-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            max-width: 560px;
+            margin: 0 auto var(--space-8);
+        }
+        @media (max-width: 480px) {
+            .biz-benefits-list { grid-template-columns: 1fr; }
+        }
+        .biz-benefit-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+        .biz-benefit-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--green);
+            flex-shrink: 0;
+        }
+
+        /* Credit pack cards */
+        .biz-credit-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .biz-credit-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .biz-credit-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 16px;
+            padding: var(--space-6);
+            text-align: center;
+            position: relative;
+            transition: all 0.2s var(--ease-out);
+        }
+        .biz-credit-card:hover {
+            border-color: var(--green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(27, 138, 61, 0.12);
+        }
+        .biz-credit-card.popular {
+            border-color: var(--green);
+            box-shadow: 0 4px 16px rgba(27, 138, 61, 0.15);
+        }
+        .biz-popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--green);
+            color: white;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+        .biz-credit-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--navy);
+            margin-bottom: var(--space-1);
+        }
+        .biz-credit-credits {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--navy);
+            display: block;
+            margin: var(--space-3) 0 var(--space-1);
+        }
+        .biz-credit-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--green);
+            display: block;
+        }
+        .biz-credit-save {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--red);
+            display: block;
+            margin-bottom: var(--space-3);
+        }
+        .biz-credit-desc {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            margin-bottom: var(--space-4);
+        }
+        .biz-credit-card ul {
+            text-align: left;
+            font-size: 0.8125rem;
+            color: var(--gray-600);
+            margin-bottom: var(--space-5);
+        }
+        .biz-credit-card li {
+            padding: 3px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .biz-credit-card li svg {
+            width: 14px;
+            height: 14px;
+            color: var(--green);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Onsite section layout */
+        .biz-onsite-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-8);
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .biz-onsite-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .biz-onsite-info h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: var(--space-4);
+        }
+        .biz-onsite-features {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+        .biz-onsite-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            font-size: 0.9375rem;
+            color: var(--gray-700);
+        }
+        .biz-onsite-feature svg {
+            width: 20px;
+            height: 20px;
+            color: var(--green);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Inquiry form */
+        .biz-inquiry-form {
+            background: var(--white);
+            border-radius: 16px;
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        .biz-inquiry-form h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--navy);
+            margin-bottom: var(--space-1);
+        }
+        .biz-inquiry-form .form-subtitle {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            margin-bottom: var(--space-5);
+        }
+        .biz-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+        @media (max-width: 480px) {
+            .biz-form-row { grid-template-columns: 1fr; }
+        }
+        .biz-form-group {
+            margin-bottom: var(--space-4);
+        }
+        .biz-form-group label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: var(--space-1);
+        }
+        .biz-form-group input,
+        .biz-form-group select,
+        .biz-form-group textarea {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-family: var(--font-body);
+            font-size: 0.9375rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            background: var(--white);
+            color: var(--navy);
+            transition: border-color 0.2s;
+        }
+        .biz-form-group input:focus,
+        .biz-form-group select:focus,
+        .biz-form-group textarea:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+        .biz-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Social proof section */
+        .biz-proof-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-8);
+            margin-bottom: var(--space-10);
+        }
+        .biz-proof-stat {
+            text-align: center;
+        }
+        .biz-proof-stat .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--navy);
+            font-family: var(--font-display);
+            display: block;
+        }
+        .biz-proof-stat .stat-label {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+        }
+        .biz-testimonials-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .biz-testimonials-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        .biz-testimonial-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: var(--space-5);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+        .biz-testimonial-stars {
+            color: #f59e0b;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-2);
+        }
+        .biz-testimonial-card p {
+            font-size: 0.9375rem;
+            color: var(--gray-700);
+            margin-bottom: var(--space-3);
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .biz-testimonial-author {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            font-style: normal;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 640px) {
+            .biz-inquiry-form { padding: var(--space-5); }
+            .biz-format-grid { gap: var(--space-4); }
+            .biz-proof-stats { gap: var(--space-6); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="logo">
+                    <div class="logo-mark">+</div>
+                    <div class="logo-text">
+                        <span class="logo-name">Coral Sea Training</span>
+                        <span class="logo-tagline">RTO #32221</span>
+                    </div>
+                </a>
+                <div class="nav-links" id="navLinks">
+                    <a href="courses.html">Book Now</a>
+                    <a href="about.html">About</a>
+                    <a href="business.html" class="active">For Business</a>
+                    <a href="shop.html">Shop</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="courses.html" class="btn btn-primary" style="margin-left:var(--space-2);">See Dates &amp; Book</a>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="hero" style="padding-bottom:var(--space-12);">
+        <div class="container">
+            <div style="max-width:720px;">
+                <span style="display:inline-block;background:var(--green);color:white;font-size:0.6875rem;font-weight:700;padding:4px 14px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-4);">For Business</span>
+                <h1 class="hero-title" style="font-size:clamp(2rem,5vw,3rem);">First Aid Training for Your Team</h1>
+                <p style="font-size:1.125rem;color:var(--gray-600);margin:var(--space-4) 0 var(--space-6);max-width:600px;">Public sessions, onsite training, or prepaid credit packs. Flexible options for businesses of every size.</p>
+                <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);">
+                    <a href="#inquiry-form" class="btn btn-primary btn-lg">Get a Quote</a>
+                    <a href="tel:0419675022" class="btn btn-outline btn-lg">Call 0419 675 022</a>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:var(--space-6);margin-top:var(--space-6);font-size:0.8125rem;color:var(--gray-500);">
+                    <span><strong style="color:var(--navy);">RTO</strong> #32221</span>
+                    <span><strong style="color:var(--navy);">10,000+</strong> trained</span>
+                    <span><strong style="color:var(--navy);">4.4</strong> <span style="color:#FBBC04;">&#9733;</span> Google</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section 1: Choose Your Format -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-eyebrow">Training Options</span>
+                <h2 class="section-title">Choose Your Format</h2>
+                <p class="section-description">Whether you need a few seats or a full onsite session, we have a solution that fits.</p>
+            </div>
+
+            <div class="biz-format-grid">
+                <!-- Public Sessions -->
+                <div class="biz-format-card">
+                    <div class="biz-format-icon" style="background:var(--green-light);color:var(--green);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3>Public Sessions</h3>
+                    <p>Book seats in our scheduled courses. Same great training, simple group booking.</p>
+                    <a href="courses.html" class="btn btn-primary" style="width:100%;">Book team seats</a>
+                </div>
+
+                <!-- Onsite at Your Workplace -->
+                <div class="biz-format-card">
+                    <div class="biz-format-icon" style="background:var(--red-light);color:var(--red);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="2"/><line x1="15" y1="22" x2="15" y2="2"/><line x1="4" y1="12" x2="20" y2="12"/></svg>
+                    </div>
+                    <h3>Onsite at Your Workplace</h3>
+                    <p>We bring the trainer to you. Minimum 6 people.</p>
+                    <a href="#inquiry-form" class="btn btn-primary" style="width:100%;">Get a quote</a>
+                </div>
+
+                <!-- Private Offsite Session -->
+                <div class="biz-format-card">
+                    <div class="biz-format-icon" style="background:#eff6ff;color:#2563eb;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <h3>Private Offsite Session</h3>
+                    <p>Exclusive session at our Townsville or Wide Bay venue.</p>
+                    <a href="#inquiry-form" class="btn btn-primary" style="width:100%;">Get a quote</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section 2: Team Seats -->
+    <section class="section" style="background:var(--gray-50);">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-eyebrow">Group Booking</span>
+                <h2 class="section-title">Group Booking Made Easy</h2>
+                <p class="section-description">The more people you train, the more you save. Volume discounts and invoicing available.</p>
+            </div>
+
+            <div class="biz-pricing-grid">
+                <!-- Tier 1 -->
+                <div class="biz-pricing-tier">
+                    <h4>2-5</h4>
+                    <span class="tier-label">people</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Standard pricing
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Pay by card
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="biz-pricing-tier">
+                    <h4>6-10</h4>
+                    <span class="tier-label">people</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            5% discount
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Invoice available
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="biz-pricing-tier" style="border-color:var(--green);">
+                    <h4>11-20</h4>
+                    <span class="tier-label">people</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            10% discount
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Invoice available
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Dedicated coordinator
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tier 4 -->
+                <div class="biz-pricing-tier">
+                    <h4>21+</h4>
+                    <span class="tier-label">people</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Custom pricing
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Call us to discuss
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Benefits -->
+            <div class="biz-benefits-list">
+                <div class="biz-benefit-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Attendee swaps allowed
+                </div>
+                <div class="biz-benefit-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Central compliance email pack
+                </div>
+                <div class="biz-benefit-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Flexible scheduling
+                </div>
+                <div class="biz-benefit-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Bulk invoicing
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <a href="courses.html" class="btn btn-primary btn-lg">Book Team Seats
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section 3: Training Credit Packs -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-eyebrow">Credit Packs</span>
+                <h2 class="section-title">Prepaid Training Credits</h2>
+                <p class="section-description">Buy credits upfront. Use them anytime. Never miss a renewal.</p>
+            </div>
+
+            <div class="biz-credit-grid">
+                <!-- Starter -->
+                <div class="biz-credit-card">
+                    <h3>Starter</h3>
+                    <p class="biz-credit-desc">For small teams</p>
+                    <span class="biz-credit-credits">10 credits</span>
+                    <span class="biz-credit-price">$1,490</span>
+                    <span class="biz-credit-save">Save $100</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Priority booking
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Attendee swaps
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Renewal reminders
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Consolidated invoicing
+                        </li>
+                    </ul>
+                    <a href="#inquiry-form" class="btn btn-outline" style="width:100%;">Talk to Us</a>
+                </div>
+
+                <!-- Professional (Most Popular) -->
+                <div class="biz-credit-card popular">
+                    <span class="biz-popular-badge">Most Popular</span>
+                    <h3>Professional</h3>
+                    <p class="biz-credit-desc">For growing teams</p>
+                    <span class="biz-credit-credits">25 credits</span>
+                    <span class="biz-credit-price">$3,475</span>
+                    <span class="biz-credit-save">Save $500</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Priority booking
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Attendee swaps
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Renewal reminders
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Consolidated invoicing
+                        </li>
+                    </ul>
+                    <a href="#inquiry-form" class="btn btn-primary" style="width:100%;">Talk to Us</a>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="biz-credit-card">
+                    <h3>Enterprise</h3>
+                    <p class="biz-credit-desc">For large organisations</p>
+                    <span class="biz-credit-credits">50 credits</span>
+                    <span class="biz-credit-price">$6,450</span>
+                    <span class="biz-credit-save">Save $1,500</span>
+                    <ul>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Priority booking
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Attendee swaps
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Renewal reminders
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Consolidated invoicing
+                        </li>
+                    </ul>
+                    <a href="#inquiry-form" class="btn btn-outline" style="width:100%;">Talk to Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section 4: Onsite / Private Training + Inquiry Form -->
+    <section class="section" style="background:var(--gray-50);" id="inquiry-form">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-eyebrow">Custom Training</span>
+                <h2 class="section-title">Onsite &amp; Private Training</h2>
+                <p class="section-description">We bring the trainer, equipment, and materials to your workplace. You just provide the room.</p>
+            </div>
+
+            <div class="biz-onsite-grid">
+                <!-- Left: Info -->
+                <div class="biz-onsite-info">
+                    <h3>Why Train Onsite?</h3>
+                    <p style="font-size:0.9375rem;color:var(--gray-600);line-height:1.7;">Onsite training eliminates travel time for your team, fits your schedule, and keeps everyone focused. Our trainers bring all equipment and tailor scenarios to your industry.</p>
+
+                    <div class="biz-onsite-features">
+                        <div class="biz-onsite-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Starting from <strong>$120 per person</strong> (min 6 people)</span>
+                        </div>
+                        <div class="biz-onsite-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Trainer comes to your workplace</span>
+                        </div>
+                        <div class="biz-onsite-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Flexible dates &mdash; weekdays, weekends, or after hours</span>
+                        </div>
+                        <div class="biz-onsite-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>All equipment provided</span>
+                        </div>
+                        <div class="biz-onsite-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Certificates issued same day</span>
+                        </div>
+                        <div class="biz-onsite-feature">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Townsville, Wide Bay &amp; surrounding regions</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:var(--space-6);padding:var(--space-4);background:var(--white);border-radius:12px;border:1px solid var(--gray-200);">
+                        <p style="font-size:0.8125rem;color:var(--gray-600);margin:0;">
+                            <strong style="color:var(--navy);">Prefer to talk?</strong> Call us on <a href="tel:0419675022" style="color:var(--red);font-weight:600;">0419 675 022</a> (Townsville) or <a href="tel:0488488467" style="color:var(--red);font-weight:600;">0488 488 467</a> (Wide Bay).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Right: Inquiry Form -->
+                <div class="biz-inquiry-form">
+                    <h3>Request a Quote</h3>
+                    <p class="form-subtitle">Tell us about your team and we'll get back to you within 1 business day.</p>
+
+                    <form id="businessInquiryForm" action="https://formspree.io/f/PLACEHOLDER_BUSINESS" method="POST">
+                        <input type="hidden" name="_next" value="https://jgold43.github.io/coral-sea-training/thanks.html?type=business">
+                        <input type="hidden" name="_subject" value="Business Training Enquiry">
+
+                        <div class="biz-form-row">
+                            <div class="biz-form-group">
+                                <label for="bizCompany">Company Name *</label>
+                                <input type="text" id="bizCompany" name="company" required>
+                            </div>
+                            <div class="biz-form-group">
+                                <label for="bizContact">Contact Name *</label>
+                                <input type="text" id="bizContact" name="contact_name" required>
+                            </div>
+                        </div>
+
+                        <div class="biz-form-row">
+                            <div class="biz-form-group">
+                                <label for="bizEmail">Email *</label>
+                                <input type="email" id="bizEmail" name="email" required>
+                            </div>
+                            <div class="biz-form-group">
+                                <label for="bizPhone">Phone *</label>
+                                <input type="tel" id="bizPhone" name="phone" required>
+                            </div>
+                        </div>
+
+                        <div class="biz-form-row">
+                            <div class="biz-form-group">
+                                <label for="bizTeamSize">Team Size</label>
+                                <select id="bizTeamSize" name="team_size">
+                                    <option value="">Select...</option>
+                                    <option value="2-5">2-5 people</option>
+                                    <option value="6-10">6-10 people</option>
+                                    <option value="11-20">11-20 people</option>
+                                    <option value="21-50">21-50 people</option>
+                                    <option value="50+">50+ people</option>
+                                </select>
+                            </div>
+                            <div class="biz-form-group">
+                                <label for="bizType">Training Type</label>
+                                <select id="bizType" name="training_type">
+                                    <option value="">Select...</option>
+                                    <option value="Public sessions">Public sessions</option>
+                                    <option value="Onsite">Onsite</option>
+                                    <option value="Private offsite">Private offsite</option>
+                                    <option value="Credit pack">Credit pack</option>
+                                    <option value="Not sure">Not sure</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="biz-form-group">
+                            <label for="bizDates">Preferred Dates <span style="font-weight:400;color:var(--gray-400);">(optional)</span></label>
+                            <input type="text" id="bizDates" name="preferred_dates" placeholder="e.g. March 2026, flexible">
+                        </div>
+
+                        <div class="biz-form-group">
+                            <label for="bizNotes">Notes <span style="font-weight:400;color:var(--gray-400);">(optional)</span></label>
+                            <textarea id="bizNotes" name="notes" rows="3" placeholder="Any special requirements, course types needed, etc."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">
+                            Send Enquiry
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+
+                        <p style="text-align:center;font-size:0.75rem;color:var(--gray-500);margin-top:var(--space-3);">We respond within 1 business day. No spam.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Section 5: Social Proof -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Trusted by Businesses Across Queensland</h2>
+            </div>
+
+            <!-- Stats -->
+            <div class="biz-proof-stats">
+                <div class="biz-proof-stat">
+                    <span class="stat-value">10,000+</span>
+                    <span class="stat-label">People Trained</span>
+                </div>
+                <div class="biz-proof-stat">
+                    <span class="stat-value">4.4 <span style="color:#FBBC04;">&#9733;</span></span>
+                    <span class="stat-label">Google Rating</span>
+                </div>
+                <div class="biz-proof-stat">
+                    <span class="stat-value">RTO #32221</span>
+                    <span class="stat-label">Nationally Accredited</span>
+                </div>
+                <div class="biz-proof-stat">
+                    <span class="stat-value">20+</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="biz-testimonials-grid">
+                <div class="biz-testimonial-card">
+                    <div class="biz-testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p>&ldquo;Coral Sea has trained our team of 30+ for three years running. Scheduling is effortless, the trainers are engaging, and we have never had a compliance gap. Highly recommend for any business.&rdquo;</p>
+                    <span class="biz-testimonial-author">&mdash; Sarah M., Operations Manager, Townsville</span>
+                </div>
+                <div class="biz-testimonial-card">
+                    <div class="biz-testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p>&ldquo;We switched to the credit pack model and it made renewals so much simpler. The team actually looks forward to training days now &mdash; the instructors make it practical and fun.&rdquo;</p>
+                    <span class="biz-testimonial-author">&mdash; Dan K., HR Coordinator, Wide Bay</span>
+                </div>
+                <div class="biz-testimonial-card">
+                    <div class="biz-testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p>&ldquo;Professional, thorough, and incredibly flexible with dates. They came onsite to our childcare centre and had everything sorted. Our ACECQA audit passed with flying colours.&rdquo;</p>
+                    <span class="biz-testimonial-author">&mdash; Michelle T., Centre Director, Aitkenvale</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Train Your Team?</h2>
+                <p>Get a tailored quote for your business. We respond within 1 business day.</p>
+                <div class="cta-buttons">
+                    <a href="#inquiry-form" class="btn btn-white btn-lg">Get a Quote</a>
+                    <a href="tel:0419675022" class="btn btn-outline btn-lg" style="color:white;border-color:white;">Call 0419 675 022</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer style="padding:var(--space-6) 0;text-align:center;font-size:0.75rem;color:var(--gray-400);border-top:1px solid var(--gray-200);">
+        <div class="container">
+            <p style="margin:0;">Coral Sea Training &bull; RTO #32221 &bull; Nationally Accredited &bull; &copy; 2026</p>
+        </div>
+    </footer>
+
+
+    <script src="js/main.js"></script>
+    <script>
+    // GA4: Business inquiry form tracking
+    (function() {
+        var bizForm = document.getElementById('businessInquiryForm');
+        if (bizForm) {
+            bizForm.addEventListener('submit', function() {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'business_inquiry_submit', {
+                        event_category: 'Business',
+                        event_label: document.getElementById('bizType').value || 'not_specified',
+                        team_size: document.getElementById('bizTeamSize').value || 'not_specified'
+                    });
+                }
+            });
+        }
+
+        // Track form start on first interaction
+        var formStartFired = false;
+        var fields = ['bizCompany', 'bizContact', 'bizEmail', 'bizPhone', 'bizTeamSize', 'bizType', 'bizDates', 'bizNotes'];
+        fields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('focus', function() {
+                    if (!formStartFired) {
+                        formStartFired = true;
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'business_form_start', { event_category: 'Business' });
+                        }
+                    }
+                }, { once: false });
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

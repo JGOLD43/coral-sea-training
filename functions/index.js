@@ -14,7 +14,8 @@ admin.initializeApp();
 // For local development, use Firebase emulator or add localhost origins temporarily
 const corsHandler = cors({
     origin: [
-        'https://jgold43.github.io'
+        'https://jgold43.github.io',
+        'http://localhost:5000'
     ],
     methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -464,3 +465,130 @@ exports.onBookingCreated = functions.firestore
 
         return null;
     });
+
+// =====================================================
+// Stripe Checkout — Public endpoint (no auth required)
+// =====================================================
+
+exports.createCheckoutSession = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method !== 'POST') {
+            res.status(405).json({ error: 'Method not allowed' });
+            return;
+        }
+
+        try {
+            const body = req.body || {};
+            const {
+                courseName,
+                courseCode,
+                pricePerPerson,
+                partySize,
+                addOns,
+                customerEmail,
+                customerName,
+                customerPhone,
+                sessionId,
+                sessionLabel,
+                location,
+                employer
+            } = body;
+
+            // Validate required fields
+            if (!courseName || typeof courseName !== 'string') {
+                res.status(400).json({ error: 'Missing or invalid courseName' });
+                return;
+            }
+            if (pricePerPerson === undefined || typeof pricePerPerson !== 'number' || pricePerPerson <= 0) {
+                res.status(400).json({ error: 'Missing or invalid pricePerPerson' });
+                return;
+            }
+            if (!partySize || typeof partySize !== 'number' || partySize < 1 || !Number.isInteger(partySize)) {
+                res.status(400).json({ error: 'Missing or invalid partySize' });
+                return;
+            }
+            if (!customerEmail || typeof customerEmail !== 'string') {
+                res.status(400).json({ error: 'Missing or invalid customerEmail' });
+                return;
+            }
+
+            // Initialise Stripe with secret key from Firebase config
+            const stripe = require('stripe')(functions.config().stripe.secret_key);
+
+            // Build line items — main course item
+            const lineItems = [
+                {
+                    price_data: {
+                        currency: 'aud',
+                        product_data: {
+                            name: courseName,
+                            description: [
+                                courseCode || '',
+                                sessionLabel || '',
+                                location || ''
+                            ].filter(Boolean).join(' — ')
+                        },
+                        unit_amount: Math.round(pricePerPerson * 100) // dollars to cents
+                    },
+                    quantity: partySize
+                }
+            ];
+
+            // Add each add-on as a separate line item
+            if (Array.isArray(addOns)) {
+                for (const addOn of addOns) {
+                    if (addOn && addOn.label && typeof addOn.price === 'number') {
+                        lineItems.push({
+                            price_data: {
+                                currency: 'aud',
+                                product_data: {
+                                    name: addOn.label
+                                },
+                                unit_amount: Math.round(addOn.price * 100)
+                            },
+                            quantity: 1
+                        });
+                    }
+                }
+            }
+
+            // Build metadata with all booking details
+            const metadata = {
+                customerName: customerName || '',
+                customerPhone: customerPhone || '',
+                customerEmail: customerEmail || '',
+                sessionId: sessionId || '',
+                location: location || '',
+                courseCode: courseCode || '',
+                partySize: String(partySize),
+                employer: employer || ''
+            };
+
+            // Include add-on IDs in metadata
+            if (Array.isArray(addOns) && addOns.length > 0) {
+                metadata.addOnIds = addOns
+                    .filter(a => a && a.id)
+                    .map(a => a.id)
+                    .join(',');
+            }
+
+            // Create Stripe Checkout Session
+            const session = await stripe.checkout.sessions.create({
+                mode: 'payment',
+                payment_method_types: ['card'],
+                customer_email: customerEmail,
+                line_items: lineItems,
+                metadata: metadata,
+                success_url: 'https://jgold43.github.io/coral-sea-training/thanks.html?type=booking&stripe_session={CHECKOUT_SESSION_ID}',
+                cancel_url: 'https://jgold43.github.io/coral-sea-training/courses.html'
+            });
+
+            res.status(200).json({ url: session.url });
+
+        } catch (err) {
+            functions.logger.error('Stripe Checkout error:', { message: err.message });
+            // Sanitize — never leak Stripe internals
+            res.status(500).json({ error: 'Payment session could not be created' });
+        }
+    });
+});

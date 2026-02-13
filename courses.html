@@ -202,7 +202,7 @@
             .bf-course-cards { grid-template-columns: 1fr 1fr; }
         }
         @media (min-width: 900px) {
-            .bf-course-cards { grid-template-columns: repeat(4, 1fr); }
+            .bf-course-cards { grid-template-columns: repeat(3, 1fr); }
         }
         .bf-course-card {
             background: var(--white);
@@ -272,6 +272,155 @@
             font-size: 0.6875rem;
             color: var(--gray-400);
             display: block;
+        }
+
+        /* Price hint */
+        .bf-price-hint {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: var(--space-1);
+        }
+
+        /* Course card outcome bullets */
+        .bf-outcome-list {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-2) 0 var(--space-1);
+            text-align: left;
+        }
+        .bf-outcome-list li {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            padding: 2px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .bf-outcome-list li svg {
+            width: 12px;
+            height: 12px;
+            color: var(--green);
+            flex-shrink: 0;
+        }
+
+        /* Guardrail text on course card */
+        .bf-guardrail {
+            font-size: 0.6875rem;
+            color: var(--gray-400);
+            font-style: italic;
+            margin-top: var(--space-1);
+            line-height: 1.4;
+        }
+
+        /* Step 2 links below cards */
+        .bf-step2-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-2) var(--space-5);
+            margin-top: var(--space-4);
+        }
+        .bf-step2-links a, .bf-step2-links button {
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            text-decoration: underline;
+            padding: var(--space-1);
+        }
+        .bf-step2-links a:hover, .bf-step2-links button:hover {
+            color: var(--green);
+        }
+
+        /* Order bumps */
+        .bf-addons {
+            margin: var(--space-4) 0 var(--space-2);
+        }
+        .bf-addon-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            margin-bottom: var(--space-2);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .bf-addon-row:hover { border-color: var(--green); }
+        .bf-addon-row.checked { border-color: var(--green); background: #f0faf3; }
+        .bf-addon-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        .bf-addon-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .bf-addon-row.checked .bf-addon-check {
+            background: var(--green);
+            border-color: var(--green);
+        }
+        .bf-addon-check svg { width: 14px; height: 14px; color: white; display: none; }
+        .bf-addon-row.checked .bf-addon-check svg { display: block; }
+        .bf-addon-label { font-size: 0.875rem; font-weight: 600; color: var(--navy); }
+        .bf-addon-desc { font-size: 0.75rem; color: var(--gray-500); }
+        .bf-addon-price { font-size: 0.875rem; font-weight: 700; color: var(--green); white-space: nowrap; }
+
+        /* Compare modal table */
+        .bf-compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8125rem;
+        }
+        .bf-compare-table th {
+            text-align: left;
+            padding: var(--space-2) var(--space-3);
+            border-bottom: 2px solid var(--gray-200);
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .bf-compare-table td {
+            padding: var(--space-2) var(--space-3);
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-700);
+        }
+        .bf-compare-table tr td:first-child {
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Included modal list */
+        .bf-included-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .bf-included-list li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) 0;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .bf-included-list li:last-child { border-bottom: none; }
+        .bf-included-list li svg {
+            width: 16px;
+            height: 16px;
+            color: var(--green);
+            flex-shrink: 0;
         }
 
         /* Help link */
@@ -672,13 +821,26 @@
                 <div class="funnel-step active" id="step-location">
                     <div class="funnel-step-header">
                         <h1 class="funnel-title">Pick a date near you</h1>
-                        <p class="funnel-subtitle">Book in under 30 seconds. Pay on the day.</p>
+                        <p class="funnel-subtitle">Book in under 30 seconds.</p>
+                        <p class="bf-price-hint">From $99 &bull; Secure checkout &bull; Instant confirmation</p>
+                    </div>
+
+                    <!-- Social proof (near CTA) -->
+                    <div class="funnel-social-proof" style="margin-bottom:var(--space-5);">
+                        <span style="font-weight:700;color:var(--navy);">4.4&#9733; on Google</span>
+                        <span style="color:var(--gray-400);">&bull;</span>
+                        <span>RTO #32221</span>
+                        <span style="color:var(--gray-400);">&bull;</span>
+                        <span><strong>10,000+</strong> trained</span>
                     </div>
 
                     <!-- Party size toggle -->
                     <div class="bf-party-toggle">
                         <button class="bf-party-btn active" data-size="1" onclick="setPartySize(1, this)">Just me</button>
                         <button class="bf-party-btn" data-size="2" onclick="setPartySize(2, this)">2+ people</button>
+                    </div>
+                    <div style="text-align:center;margin-top:-var(--space-3);margin-bottom:var(--space-4);">
+                        <a href="business.html" class="bf-help-link" onclick="fireEvent('bf_business_link_click',{source:'step1'})" style="font-size:0.8125rem;">Booking for staff? Onsite or invoice &rarr;</a>
                     </div>
 
                     <!-- Group size panel (hidden by default) -->
@@ -699,14 +861,6 @@
                         <div style="text-align:center;padding:var(--space-8);color:var(--gray-400);">Loading sessions...</div>
                     </div>
 
-                    <!-- Social proof -->
-                    <div class="funnel-social-proof" style="margin-top:var(--space-6);">
-                        <span style="font-weight:700;color:var(--navy);">4.4&#9733; on Google</span>
-                        <span style="color:var(--gray-400);">&bull;</span>
-                        <span>RTO #32221</span>
-                        <span style="color:var(--gray-400);">&bull;</span>
-                        <span><strong>10,000+</strong> trained</span>
-                    </div>
                 </div>
 
 
@@ -726,8 +880,14 @@
                             </div>
                             <h3>Keep me compliant</h3>
                             <p>Full First Aid + CPR</p>
+                            <ul class="bf-outcome-list">
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Covers most workplace requirements</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Full First Aid + CPR included</li>
+                                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Certificate issued same day</li>
+                            </ul>
                             <span class="bf-course-price">$159</span>
                             <span class="bf-course-meta">HLTAID011 &bull; 7 hours &bull; Valid 3 years</span>
+                            <button type="button" class="bf-help-link" onclick="event.stopPropagation();openIncludedModal('hltaid011')" style="font-size:0.75rem;margin-top:var(--space-1);">What's included?</button>
                         </div>
 
                         <!-- Card 2: CPR only -->
@@ -739,6 +899,8 @@
                             <p>Quick refresh</p>
                             <span class="bf-course-price">$99</span>
                             <span class="bf-course-meta">HLTAID009 &bull; 3 hours &bull; Valid 12 months</span>
+                            <p class="bf-guardrail">Only choose this if your employer specifically says CPR-only</p>
+                            <button type="button" class="bf-help-link" onclick="event.stopPropagation();openIncludedModal('hltaid009')" style="font-size:0.75rem;margin-top:var(--space-1);">What's included?</button>
                         </div>
 
                         <!-- Card 3: Childcare -->
@@ -750,23 +912,24 @@
                             <p>ACECQA approved</p>
                             <span class="bf-course-price">$199</span>
                             <span class="bf-course-meta">HLTAID012 &bull; 8 hours &bull; Valid 3 years</span>
-                        </div>
-
-                        <!-- Card 4: Advanced -->
-                        <div class="bf-course-card" data-course="hltaid015" onclick="selectCourse('hltaid015', this)">
-                            <div class="bf-course-icon" style="background:#faf5ff;color:#7c3aed;">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                            </div>
-                            <h3>Advanced Resuscitation</h3>
-                            <p>Healthcare professionals</p>
-                            <span class="bf-course-price">$199</span>
-                            <span class="bf-course-meta">HLTAID015 &bull; 6 hours &bull; Valid 12 months</span>
+                            <button type="button" class="bf-help-link" onclick="event.stopPropagation();openIncludedModal('hltaid012')" style="font-size:0.75rem;margin-top:var(--space-1);">What's included?</button>
                         </div>
                     </div>
 
+                    <!-- Links below cards -->
+                    <div class="bf-step2-links">
+                        <button type="button" onclick="openCompareModal()">Compare CPR vs Full First Aid</button>
+                        <button type="button" onclick="openOtherCoursesModal()">Other courses (Advanced Resuscitation)</button>
+                    </div>
+
                     <!-- Help me choose -->
-                    <div style="text-align:center;margin-top:var(--space-5);">
+                    <div style="text-align:center;margin-top:var(--space-4);">
                         <button class="bf-help-link" onclick="openHelpFlow()">Not sure? Help me choose (2 questions)</button>
+                    </div>
+
+                    <!-- Business link -->
+                    <div style="text-align:center;margin-top:var(--space-2);">
+                        <a href="business.html" class="bf-help-link" onclick="fireEvent('bf_business_link_click',{source:'step2'})" style="font-size:0.8125rem;">Need team training, onsite, or credits? Business options &rarr;</a>
                     </div>
                 </div>
 
@@ -802,7 +965,7 @@
 
                             <div class="bf-summary-price">
                                 <span class="bf-price-amount" id="confirmPrice">$159</span>
-                                <span class="bf-price-note" id="confirmPriceNote">per person &bull; pay on the day</span>
+                                <span class="bf-price-note" id="confirmPriceNote">per person</span>
                             </div>
 
                             <button class="bf-change-link" onclick="goBack()">Change selections</button>
@@ -811,7 +974,7 @@
                         <!-- Right: Booking form -->
                         <div class="bf-form-card">
                             <h3>Your details</h3>
-                            <p class="bf-form-sub">We'll confirm your spot within 2 hours.</p>
+                            <p class="bf-form-sub">Secure checkout &bull; Instant confirmation &bull; Seat guaranteed</p>
 
                             <!-- Group summary (hidden for solo) -->
                             <div class="bf-group-confirm" id="groupConfirmRow" style="display:none;">
@@ -839,22 +1002,46 @@
                                     <input type="text" id="bfCompany" class="form-input" placeholder="Company / organisation *" autocomplete="organization">
                                 </div>
 
+                                <!-- Order bumps -->
+                                <div class="bf-addons" id="addonSection">
+                                    <div class="bf-addon-row" data-addon="reschedule_protection" onclick="toggleAddon(this)">
+                                        <div class="bf-addon-left">
+                                            <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                            <div>
+                                                <span class="bf-addon-label">Reschedule protection</span>
+                                                <span class="bf-addon-desc">Free date change up to 24h before</span>
+                                            </div>
+                                        </div>
+                                        <span class="bf-addon-price">+$19</span>
+                                    </div>
+                                    <div class="bf-addon-row" data-addon="first_aid_kit" onclick="toggleAddon(this)">
+                                        <div class="bf-addon-left">
+                                            <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                            <div>
+                                                <span class="bf-addon-label">First aid kit &mdash; collect on the day</span>
+                                                <span class="bf-addon-desc">Workplace-ready kit to take home</span>
+                                            </div>
+                                        </div>
+                                        <span class="bf-addon-price">+$49</span>
+                                    </div>
+                                </div>
+
                                 <button type="button" class="btn btn-primary btn-lg bf-submit" id="submitBtn" onclick="submitBooking()">
-                                    Reserve My Spot
+                                    Pay &amp; Book &mdash; <span id="submitTotal">$159</span>
                                 </button>
 
-                                <p class="bf-pay-note">No payment now &mdash; pay on the day</p>
+                                <p class="bf-pay-note">Instant confirmation after payment &bull; Free date change up to 24 hours before your session</p>
                             </form>
 
                             <!-- Trust stack -->
                             <div class="bf-trust-stack">
                                 <div class="bf-trust-item">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                                    Fast confirmation (within 2 hours)
+                                    Instant confirmation after payment
                                 </div>
                                 <div class="bf-trust-item">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                                    Pay on the day
+                                    Secure checkout (Apple Pay, Google Pay, card)
                                 </div>
                                 <div class="bf-trust-item">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -930,6 +1117,67 @@
                 <h4 id="helpRecTitle">We recommend: Keep me compliant</h4>
                 <p id="helpRecReason">Most workplaces accept Full First Aid. It's the safest choice if you're unsure.</p>
                 <button class="btn btn-primary" id="helpRecBtn" onclick="applyHelpRecommendation()">Continue with this</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===== What's Included Modal ===== -->
+    <div class="bf-modal-overlay" id="includedModal" onclick="closeModal('includedModal', event)">
+        <div class="bf-modal" onclick="event.stopPropagation()">
+            <button class="bf-modal-close" onclick="closeModal('includedModal')">&times;</button>
+            <h3 id="includedModalTitle">What's included</h3>
+            <ul class="bf-included-list" id="includedModalList"></ul>
+            <div style="margin-top:var(--space-4);text-align:center;">
+                <button class="btn btn-primary" id="includedModalSelect" onclick="selectFromIncludedModal()">Select this course</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===== Compare CPR vs Full Modal ===== -->
+    <div class="bf-modal-overlay" id="compareModal" onclick="closeModal('compareModal', event)">
+        <div class="bf-modal" onclick="event.stopPropagation()" style="max-width:600px;">
+            <button class="bf-modal-close" onclick="closeModal('compareModal')">&times;</button>
+            <h3>CPR Only vs Full First Aid</h3>
+            <table class="bf-compare-table">
+                <thead>
+                    <tr><th></th><th>CPR Only</th><th>Full First Aid</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Code</td><td>HLTAID009</td><td>HLTAID011</td></tr>
+                    <tr><td>Price</td><td>$99</td><td>$159</td></tr>
+                    <tr><td>Duration</td><td>~3 hours</td><td>~7 hours</td></tr>
+                    <tr><td>Validity</td><td>12 months</td><td>3 years (CPR renewed annually)</td></tr>
+                    <tr><td>Covers CPR</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>Covers First Aid</td><td>No</td><td>Yes</td></tr>
+                    <tr><td>Workplace compliant</td><td>CPR only</td><td>Most workplaces</td></tr>
+                </tbody>
+            </table>
+            <p style="font-size:0.8125rem;color:var(--gray-500);margin-top:var(--space-4);text-align:center;">Not sure? Choose <strong>Full First Aid</strong> &mdash; it covers everything and most employers accept it.</p>
+        </div>
+    </div>
+
+
+    <!-- ===== Other Courses Modal (Advanced Resuscitation) ===== -->
+    <div class="bf-modal-overlay" id="otherCoursesModal" onclick="closeModal('otherCoursesModal', event)">
+        <div class="bf-modal" onclick="event.stopPropagation()">
+            <button class="bf-modal-close" onclick="closeModal('otherCoursesModal')">&times;</button>
+            <h3>Other Courses</h3>
+
+            <div style="border:2px solid var(--gray-200);border-radius:12px;padding:var(--space-5);margin-bottom:var(--space-4);">
+                <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);">
+                    <div class="bf-course-icon" style="background:#faf5ff;color:#7c3aed;flex-shrink:0;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <div>
+                        <h4 style="margin:0;font-size:1rem;color:var(--navy);">Advanced Resuscitation</h4>
+                        <span style="font-size:0.8125rem;color:var(--gray-500);">HLTAID015 &bull; $199 &bull; ~6 hours &bull; Valid 12 months</span>
+                    </div>
+                </div>
+                <p style="font-size:0.875rem;color:var(--gray-600);margin-bottom:var(--space-3);">For healthcare and emergency professionals. Covers advanced airway management, oxygen therapy, and pain management protocols.</p>
+                <ul class="bf-included-list" id="advancedIncludedList"></ul>
+                <button class="btn btn-primary" style="width:100%;margin-top:var(--space-4);" onclick="closeModal('otherCoursesModal');selectCourse('hltaid015', document.querySelector('.bf-course-card[data-course=hltaid015]') || null);">Select Advanced Resuscitation</button>
             </div>
         </div>
     </div>
@@ -1378,7 +1626,7 @@
         document.querySelectorAll('.bf-course-card').forEach(function(c) {
             c.classList.remove('selected');
         });
-        cardEl.classList.add('selected');
+        if (cardEl) cardEl.classList.add('selected');
         state.courseId = courseId;
 
         fireEvent('bf_course_selected', { course: courseId });
@@ -1492,10 +1740,14 @@
         var totalPrice = unitPrice * state.partySize;
         document.getElementById('confirmPrice').textContent = '$' + totalPrice;
         if (state.partySize > 1) {
-            document.getElementById('confirmPriceNote').textContent = '$' + unitPrice + ' x ' + state.partySize + ' people \u2022 pay on the day';
+            document.getElementById('confirmPriceNote').textContent = '$' + unitPrice + ' x ' + state.partySize + ' people';
         } else {
-            document.getElementById('confirmPriceNote').textContent = 'per person \u2022 pay on the day';
+            document.getElementById('confirmPriceNote').textContent = 'per person';
         }
+
+        // Reset add-ons
+        document.querySelectorAll('.bf-addon-row').forEach(function(r) { r.classList.remove('checked'); });
+        updateTotalWithAddons();
 
         // Swap notice
         var swapEl = document.getElementById('swapNotice');
@@ -1552,6 +1804,41 @@
         }
     }
 
+    // --- Add-ons ---
+    var addOns = [
+        { id: 'reschedule_protection', label: 'Reschedule protection', price: 19, desc: 'Free date change up to 24h before' },
+        { id: 'first_aid_kit', label: 'First aid kit (collect on day)', price: 49, desc: 'Workplace-ready kit to take home' }
+    ];
+
+    function toggleAddon(rowEl) {
+        rowEl.classList.toggle('checked');
+        var addonId = rowEl.getAttribute('data-addon');
+        var isEnabled = rowEl.classList.contains('checked');
+        fireEvent('bf_addon_toggle', { id: addonId, enabled: isEnabled });
+        updateTotalWithAddons();
+    }
+
+    function getSelectedAddons() {
+        var selected = [];
+        document.querySelectorAll('.bf-addon-row.checked').forEach(function(row) {
+            var id = row.getAttribute('data-addon');
+            for (var i = 0; i < addOns.length; i++) {
+                if (addOns[i].id === id) { selected.push(addOns[i]); break; }
+            }
+        });
+        return selected;
+    }
+
+    function updateTotalWithAddons() {
+        var course = courseMeta[state.courseId];
+        if (!course) return;
+        var baseTotal = course.price * state.partySize;
+        var addonTotal = 0;
+        getSelectedAddons().forEach(function(a) { addonTotal += a.price; });
+        var grandTotal = baseTotal + addonTotal;
+        document.getElementById('submitTotal').textContent = '$' + grandTotal;
+    }
+
     function submitBooking() {
         var firstName = document.getElementById('bfFirstName').value.trim();
         var lastName = document.getElementById('bfLastName').value.trim();
@@ -1568,11 +1855,64 @@
         if (state.partySize >= 4 && !company) { shakeField('bfCompany'); return; }
 
         var btn = document.getElementById('submitBtn');
-        btn.textContent = 'Reserving...';
+        btn.innerHTML = 'Redirecting to checkout&hellip;';
         btn.disabled = true;
         btn.style.opacity = '0.7';
 
         var course = courseMeta[state.courseId] || {};
+        var selectedAddons = getSelectedAddons();
+        var baseTotal = (course.price || 0) * state.partySize;
+        var addonTotal = 0;
+        selectedAddons.forEach(function(a) { addonTotal += a.price; });
+        var grandTotal = baseTotal + addonTotal;
+
+        fireEvent('bf_pay_start', {
+            course: state.courseId,
+            session_id: state.sessionId,
+            location: state.location,
+            party_size: state.partySize,
+            price: grandTotal,
+            addons: selectedAddons.map(function(a) { return a.id; }).join(',')
+        });
+
+        // Build payload for Cloud Function
+        var payload = {
+            courseName: (course.offerName || '') + ' (' + (course.code || '') + ')',
+            courseCode: course.code || '',
+            pricePerPerson: course.price || 0,
+            partySize: state.partySize,
+            addOns: selectedAddons,
+            customerEmail: email,
+            customerName: firstName + ' ' + lastName,
+            customerPhone: phone,
+            sessionId: state.sessionId || '',
+            sessionLabel: (state.sessionLabel || 'TBC') + ' ' + (state.sessionStart || '') + '-' + (state.sessionEnd || ''),
+            location: state.locationLabel || state.location || '',
+            employer: employer || company || ''
+        };
+
+        fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            if (data.url) {
+                fireEvent('bf_pay_redirect', { course: state.courseId, price: grandTotal });
+                window.location.href = data.url;
+            } else {
+                throw new Error(data.error || 'No checkout URL returned');
+            }
+        }).catch(function(err) {
+            console.error('Checkout error:', err);
+            fireEvent('bf_pay_error', { error: err.message || 'unknown' });
+            // Fallback: submit via Formspree instead
+            submitBookingFallback(firstName, lastName, email, phone, employer, company, course, grandTotal);
+        });
+    }
+
+    function submitBookingFallback(firstName, lastName, email, phone, employer, company, course, totalPrice) {
         var fd = new FormData();
         fd.append('first_name', firstName);
         fd.append('last_name', lastName);
@@ -1594,71 +1934,24 @@
             fd.append('session_date', 'Next available');
         }
 
-        if (state.swapped) {
-            fd.append('session_swapped', 'yes');
-            fd.append('original_session', state.originalSessionId || '');
+        var selectedAddons = getSelectedAddons();
+        if (selectedAddons.length > 0) {
+            fd.append('addons', selectedAddons.map(function(a) { return a.label + ' ($' + a.price + ')'; }).join(', '));
         }
 
-        var totalPrice = (course.price || 0) * state.partySize;
         fd.append('total_price', '$' + totalPrice);
-        fd.append('_subject', 'NEW BOOKING: ' + (course.offerName || state.courseId) + ' - ' + firstName + ' ' + lastName +
-            (state.sessionLabel ? ' (' + state.sessionLabel + ')' : ''));
-
-        fireEvent('bf_submit', {
-            course: state.courseId,
-            session_id: state.sessionId,
-            location: state.location,
-            party_size: state.partySize,
-            price: totalPrice
-        });
+        fd.append('payment_note', 'Stripe checkout failed — payment NOT collected');
+        fd.append('_subject', 'BOOKING (payment pending): ' + (course.offerName || state.courseId) + ' - ' + firstName + ' ' + lastName);
 
         fetch('https://formspree.io/f/PLACEHOLDER_BOOKING', {
             method: 'POST',
             body: fd,
             headers: { 'Accept': 'application/json' }
-        }).then(function(response) {
-            if (response.ok) {
-                fireEvent('bf_submit_success', {
-                    course: state.courseId,
-                    session_id: state.sessionId,
-                    price: totalPrice,
-                    party_size: state.partySize
-                });
-                window.location.href = 'thanks.html?type=booking';
-            } else {
-                handleSubmitError('response_not_ok');
-            }
+        }).then(function() {
+            window.location.href = 'thanks.html?type=booking';
         }).catch(function() {
-            handleSubmitError('network_error');
+            window.location.href = 'thanks.html?type=booking';
         });
-    }
-
-    function handleSubmitError(errorType) {
-        fireEvent('bf_submit_error', { error_type: errorType });
-        // Fallback: mailto
-        sendBookingEmailFallback();
-        window.location.href = 'thanks.html?type=booking';
-    }
-
-    function sendBookingEmailFallback() {
-        var course = courseMeta[state.courseId] || {};
-        var firstName = document.getElementById('bfFirstName').value.trim();
-        var lastName = document.getElementById('bfLastName').value.trim();
-        var email = document.getElementById('bfEmail').value.trim();
-        var phone = document.getElementById('bfPhone').value.trim();
-
-        var subject = encodeURIComponent('NEW BOOKING: ' + (course.offerName || '') + ' - ' + firstName + ' ' + lastName);
-        var body = encodeURIComponent(
-            'Name: ' + firstName + ' ' + lastName + '\n' +
-            'Email: ' + email + '\n' +
-            'Phone: ' + phone + '\n' +
-            'Course: ' + (course.offerName || '') + ' (' + (course.code || '') + ')\n' +
-            'Location: ' + (state.locationLabel || '') + '\n' +
-            'Date: ' + (state.sessionLabel || 'Next available') + ' ' + (state.sessionStart || '') + '\n' +
-            'Party size: ' + state.partySize + '\n' +
-            'Total: $' + ((course.price || 0) * state.partySize)
-        );
-        window.open('mailto:?subject=' + subject + '&body=' + body, '_self');
     }
 
     function shakeField(fieldId) {
@@ -1747,6 +2040,66 @@
             populateConfirmStep();
             navigateTo('step-confirm');
         }, 200);
+    }
+
+
+    // =====================================================
+    // NEW MODALS (What's Included, Compare, Other Courses)
+    // =====================================================
+
+    var includedModalCourseId = null;
+
+    function openIncludedModal(courseId) {
+        includedModalCourseId = courseId;
+        var course = courseMeta[courseId];
+        if (!course) return;
+        document.getElementById('includedModalTitle').textContent = course.offerName + ' — What\'s included';
+        var html = '';
+        if (course.includes && course.includes.length > 0) {
+            course.includes.forEach(function(item) {
+                html += '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + esc(item) + '</li>';
+            });
+        }
+        document.getElementById('includedModalList').innerHTML = html;
+        document.getElementById('includedModal').classList.add('open');
+        fireEvent('bf_what_included_open', { course: courseId });
+    }
+
+    function selectFromIncludedModal() {
+        var courseId = includedModalCourseId;
+        closeModal('includedModal');
+        var card = document.querySelector('.bf-course-card[data-course="' + courseId + '"]');
+        if (card) {
+            selectCourse(courseId, card);
+        } else {
+            // Advanced — not in grid, select directly
+            state.courseId = courseId;
+            fireEvent('bf_course_selected', { course: courseId, source: 'included_modal' });
+            setTimeout(function() {
+                checkSessionSwap();
+                populateConfirmStep();
+                navigateTo('step-confirm');
+            }, 200);
+        }
+    }
+
+    function openCompareModal() {
+        document.getElementById('compareModal').classList.add('open');
+        fireEvent('bf_compare_open', {});
+    }
+
+    function openOtherCoursesModal() {
+        // Populate advanced course includes
+        var course = courseMeta['hltaid015'];
+        if (course && course.includes) {
+            var html = '';
+            course.includes.forEach(function(item) {
+                html += '<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ' + esc(item) + '</li>';
+            });
+            document.getElementById('advancedIncludedList').innerHTML = html;
+        }
+        document.getElementById('otherCoursesModal').classList.add('open');
+        fireEvent('bf_other_courses_open', {});
     }
 
 

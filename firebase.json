@@ -5,5 +5,12 @@
   },
   "firestore": {
     "rules": "firestore.rules"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": ["firebase.json", "functions/**", "node_modules/**"],
+    "rewrites": [
+      { "source": "/api/checkout", "function": "createCheckoutSession" }
+    ]
   }
 }
