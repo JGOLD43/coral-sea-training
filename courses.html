@@ -338,6 +338,34 @@
         .bf-addons {
             margin: var(--space-4) 0 var(--space-2);
         }
+        .bf-participant-stack {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+        .bf-participant-card {
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: var(--space-4);
+            background: var(--gray-50);
+        }
+        .bf-participant-card h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: var(--space-3);
+        }
+        .bf-participant-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-3);
+        }
+        @media (min-width: 640px) {
+            .bf-participant-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
         .bf-addon-row {
             display: flex;
             align-items: center;
@@ -376,6 +404,12 @@
         .bf-addon-label { font-size: 0.875rem; font-weight: 600; color: var(--navy); }
         .bf-addon-desc { font-size: 0.75rem; color: var(--gray-500); }
         .bf-addon-price { font-size: 0.875rem; font-weight: 700; color: var(--green); white-space: nowrap; }
+        .bf-addon-price-was {
+            color: var(--gray-400);
+            text-decoration: line-through;
+            font-weight: 600;
+            margin-right: 6px;
+        }
 
         /* Compare modal table */
         .bf-compare-table {
@@ -1037,6 +1071,7 @@
                                 <div class="funnel-form-group">
                                     <input type="tel" id="bfPhone" class="form-input" placeholder="Mobile *" required autocomplete="tel">
                                 </div>
+                                <div id="extraParticipantFields"></div>
                                 <div class="funnel-form-group" id="employerField">
                                     <input type="text" id="bfEmployer" class="form-input" placeholder="Employer (optional)" autocomplete="organization">
                                 </div>
@@ -1050,11 +1085,11 @@
                                         <div class="bf-addon-left">
                                             <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
                                             <div>
-                                                <span class="bf-addon-label">Reschedule protection</span>
-                                                <span class="bf-addon-desc">Free date change up to 24h before</span>
+                                                <span class="bf-addon-label" id="addonRescheduleLabel">Reschedule protection</span>
+                                                <span class="bf-addon-desc" id="addonRescheduleDesc">Free date change up to 24h before</span>
                                             </div>
                                         </div>
-                                        <span class="bf-addon-price">+$19</span>
+                                        <span class="bf-addon-price" id="addonReschedulePrice">+$19</span>
                                     </div>
                                     <div class="bf-addon-row" data-addon="first_aid_kit" onclick="toggleAddon(this)">
                                         <div class="bf-addon-left">
@@ -1305,6 +1340,7 @@
         courseId: null,
         partySize: 1,
         companyName: '',
+        participantDetails: [],
         swapped: false,
         originalSessionId: null,
         helpUsed: false,
@@ -1345,7 +1381,8 @@
                 phone: document.getElementById('bfPhone') ? document.getElementById('bfPhone').value : '',
                 employer: document.getElementById('bfEmployer') ? document.getElementById('bfEmployer').value : '',
                 company: document.getElementById('bfCompany') ? document.getElementById('bfCompany').value : '',
-                companyStepOne: document.getElementById('companyName') ? document.getElementById('companyName').value : ''
+                companyStepOne: document.getElementById('companyName') ? document.getElementById('companyName').value : '',
+                participantDetails: syncParticipantDetailsFromForm()
             };
             localStorage.setItem(FUNNEL_STORAGE_KEY, JSON.stringify({
                 state: state,
@@ -1381,6 +1418,7 @@
         if (document.getElementById('bfEmployer')) document.getElementById('bfEmployer').value = formDraft.employer || '';
         if (document.getElementById('bfCompany')) document.getElementById('bfCompany').value = formDraft.company || '';
         if (document.getElementById('companyName')) document.getElementById('companyName').value = formDraft.companyStepOne || '';
+        if (Array.isArray(formDraft.participantDetails)) state.participantDetails = formDraft.participantDetails;
     }
 
     function restoreDraftState(draft) {
@@ -1409,6 +1447,7 @@
 
         applyDraftFormValues(draft.formDraft);
         renderLocationCards();
+        renderParticipantFields();
 
         if (state.courseId) {
             var selectedCard = document.querySelector('.bf-course-card[data-course="' + state.courseId + '"]');
@@ -1433,6 +1472,95 @@
 
         renderCurrentStep();
         return true;
+    }
+
+    function syncParticipantDetailsFromForm() {
+        var participants = [];
+        document.querySelectorAll('#extraParticipantFields .bf-participant-card').forEach(function(card) {
+            participants.push({
+                firstName: (card.querySelector('[data-field="firstName"]') || {}).value || '',
+                lastName: (card.querySelector('[data-field="lastName"]') || {}).value || ''
+            });
+        });
+        state.participantDetails = participants;
+        return participants;
+    }
+
+    function renderParticipantFields() {
+        var container = document.getElementById('extraParticipantFields');
+        if (!container) return;
+        if (state.partySize <= 1) {
+            container.innerHTML = '';
+            state.participantDetails = [];
+            return;
+        }
+
+        var existing = syncParticipantDetailsFromForm();
+        var source = existing.length ? existing : (Array.isArray(state.participantDetails) ? state.participantDetails : []);
+        var html = '';
+        for (var i = 2; i <= state.partySize; i++) {
+            var participant = source[i - 2] || { firstName: '', lastName: '' };
+            html += '<div class="bf-participant-card">' +
+                '<h4>Participant ' + i + '</h4>' +
+                '<div class="bf-participant-grid">' +
+                    '<div class="funnel-form-group" style="margin-bottom:0;">' +
+                        '<input type="text" class="form-input" data-field="firstName" data-index="' + (i - 2) + '" placeholder="First name *" value="' + esc(participant.firstName) + '">' +
+                    '</div>' +
+                    '<div class="funnel-form-group" style="margin-bottom:0;">' +
+                        '<input type="text" class="form-input" data-field="lastName" data-index="' + (i - 2) + '" placeholder="Last name *" value="' + esc(participant.lastName) + '">' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        }
+        container.innerHTML = '<div class="bf-participant-stack">' + html + '</div>';
+        syncParticipantDetailsFromForm();
+    }
+
+    function getAllParticipants() {
+        var participants = [{
+            firstName: document.getElementById('bfFirstName').value.trim(),
+            lastName: document.getElementById('bfLastName').value.trim()
+        }];
+        syncParticipantDetailsFromForm().forEach(function(p) {
+            participants.push({
+                firstName: (p.firstName || '').trim(),
+                lastName: (p.lastName || '').trim()
+            });
+        });
+        return participants;
+    }
+
+    function validateParticipantDetails() {
+        var cards = document.querySelectorAll('#extraParticipantFields .bf-participant-card');
+        for (var i = 0; i < cards.length; i++) {
+            var first = cards[i].querySelector('[data-field="firstName"]');
+            var last = cards[i].querySelector('[data-field="lastName"]');
+            if (!first.value.trim()) { shakeField(first); return false; }
+            if (!last.value.trim()) { shakeField(last); return false; }
+        }
+        return true;
+    }
+
+    function getAddonPrice(addon) {
+        return addon.price;
+    }
+
+    function refreshAddonUI() {
+        var rescheduleAddon = addOns.find(function(addon) { return addon.id === 'reschedule_protection'; });
+        var labelEl = document.getElementById('addonRescheduleLabel');
+        var descEl = document.getElementById('addonRescheduleDesc');
+        var priceEl = document.getElementById('addonReschedulePrice');
+        if (!rescheduleAddon || !labelEl || !descEl || !priceEl) return;
+
+        if (state.partySize === 2) {
+            labelEl.textContent = 'Reschedule protection for both people';
+            descEl.textContent = '2-for-1 deal applied. Normally $38, today $19 total.';
+            priceEl.innerHTML = '<span class="bf-addon-price-was">$38</span>+$19';
+        } else {
+            labelEl.textContent = 'Reschedule protection';
+            descEl.textContent = rescheduleAddon.desc;
+            priceEl.textContent = '+$' + getAddonPrice(rescheduleAddon);
+        }
     }
 
     function navigateTo(stepId) {
@@ -1629,6 +1757,9 @@
         }
         fireEvent('bf_party_toggle', { party_size: size === 1 ? 1 : size === 4 ? 'group' : '2+' });
         renderLocationCards();
+        renderParticipantFields();
+        refreshAddonUI();
+        updateTotalWithAddons();
         saveDraftState();
     }
 
@@ -1643,6 +1774,9 @@
         document.getElementById('groupSizeDisplay').textContent = newSize;
         updateGroupCompanyField();
         renderLocationCards();
+        renderParticipantFields();
+        refreshAddonUI();
+        updateTotalWithAddons();
         fireEvent('bf_group_size_set', { size: newSize });
         saveDraftState();
     }
@@ -1897,6 +2031,8 @@
         }
 
         document.getElementById('confirmLocation').innerHTML = esc(state.locationLabel) + ' &mdash; ' + esc(state.locationAddress);
+        renderParticipantFields();
+        refreshAddonUI();
 
         var includesHtml = '';
         if (course.includes && course.includes.length > 0) {
@@ -2003,7 +2139,15 @@
         document.querySelectorAll('.bf-addon-row.checked').forEach(function(row) {
             var id = row.getAttribute('data-addon');
             for (var i = 0; i < addOns.length; i++) {
-                if (addOns[i].id === id) { selected.push(addOns[i]); break; }
+                if (addOns[i].id === id) {
+                    selected.push({
+                        id: addOns[i].id,
+                        label: addOns[i].label,
+                        desc: addOns[i].desc,
+                        price: getAddonPrice(addOns[i])
+                    });
+                    break;
+                }
             }
         });
         return selected;
@@ -2033,6 +2177,7 @@
         if (!email || email.indexOf('@') === -1) { shakeField('bfEmail'); return; }
         if (!phone || phone.length < 8) { shakeField('bfPhone'); return; }
         if (state.partySize >= 4 && !company) { shakeField('bfCompany'); return; }
+        if (!validateParticipantDetails()) return;
 
         var btn = document.getElementById('submitBtn');
         btn.innerHTML = 'Redirecting to checkout&hellip;';
@@ -2041,6 +2186,7 @@
 
         var course = courseMeta[state.courseId] || {};
         var selectedAddons = getSelectedAddons();
+        var participants = getAllParticipants();
         var baseTotal = (course.price || 0) * state.partySize;
         var addonTotal = 0;
         selectedAddons.forEach(function(a) { addonTotal += a.price; });
@@ -2062,6 +2208,7 @@
             pricePerPerson: course.price || 0,
             partySize: state.partySize,
             addOns: selectedAddons,
+            participants: participants,
             customerEmail: email,
             customerName: firstName + ' ' + lastName,
             customerPhone: phone,
@@ -2089,11 +2236,11 @@
             console.error('Checkout error:', err);
             fireEvent('bf_pay_error', { error: err.message || 'unknown' });
             // Fallback: submit via Formspree instead
-            submitBookingFallback(firstName, lastName, email, phone, employer, company, course, grandTotal);
+            submitBookingFallback(firstName, lastName, email, phone, employer, company, course, grandTotal, participants, selectedAddons);
         });
     }
 
-    function submitBookingFallback(firstName, lastName, email, phone, employer, company, course, totalPrice) {
+    function submitBookingFallback(firstName, lastName, email, phone, employer, company, course, totalPrice, participants, selectedAddons) {
         var fd = new FormData();
         fd.append('first_name', firstName);
         fd.append('last_name', lastName);
@@ -2115,9 +2262,13 @@
             fd.append('session_date', 'Next available');
         }
 
-        var selectedAddons = getSelectedAddons();
         if (selectedAddons.length > 0) {
             fd.append('addons', selectedAddons.map(function(a) { return a.label + ' ($' + a.price + ')'; }).join(', '));
+        }
+        if (participants && participants.length > 0) {
+            fd.append('participants', participants.map(function(p, index) {
+                return 'Participant ' + (index + 1) + ': ' + p.firstName + ' ' + p.lastName;
+            }).join('\n'));
         }
 
         fd.append('total_price', '$' + totalPrice);
@@ -2138,7 +2289,8 @@
     }
 
     function shakeField(fieldId) {
-        var el = document.getElementById(fieldId);
+        var el = typeof fieldId === 'string' ? document.getElementById(fieldId) : fieldId;
+        if (!el) return;
         el.focus();
         el.style.borderColor = 'var(--red)';
         el.classList.add('shake');
@@ -2304,6 +2456,13 @@
         if (stepOneCompany) {
             stepOneCompany.addEventListener('input', function() {
                 state.companyName = stepOneCompany.value.trim();
+                saveDraftState();
+            });
+        }
+        var extraParticipantFields = document.getElementById('extraParticipantFields');
+        if (extraParticipantFields) {
+            extraParticipantFields.addEventListener('input', function() {
+                syncParticipantDetailsFromForm();
                 saveDraftState();
             });
         }
