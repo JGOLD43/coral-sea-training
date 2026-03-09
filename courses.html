@@ -536,6 +536,42 @@
             padding-top: var(--space-4);
             border-top: 1px solid var(--gray-200);
         }
+        .bf-summary-includes {
+            margin-top: var(--space-4);
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-200);
+        }
+        .bf-summary-includes h4 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: var(--space-3);
+        }
+        .bf-summary-includes ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        .bf-summary-includes li {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-2);
+            font-size: 0.8125rem;
+            line-height: 1.45;
+            color: var(--gray-700);
+        }
+        .bf-summary-includes li svg {
+            width: 14px;
+            height: 14px;
+            color: var(--green);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
         .bf-price-amount {
             font-size: 1.75rem;
             font-weight: 800;
@@ -958,6 +994,16 @@
                             </div>
 
                             <div id="swapNotice" class="bf-swap-notice" style="display:none;"></div>
+
+                            <div class="bf-summary-includes">
+                                <h4>What's included</h4>
+                                <ul id="confirmIncludes">
+                                    <li>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <span>Nationally recognised first aid training</span>
+                                    </li>
+                                </ul>
+                            </div>
 
                             <div class="bf-summary-price">
                                 <span class="bf-price-amount" id="confirmPrice">$159</span>
@@ -1851,6 +1897,22 @@
         }
 
         document.getElementById('confirmLocation').innerHTML = esc(state.locationLabel) + ' &mdash; ' + esc(state.locationAddress);
+
+        var includesHtml = '';
+        if (course.includes && course.includes.length > 0) {
+            course.includes.slice(0, 4).forEach(function(item) {
+                includesHtml += '<li>' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
+                    '<span>' + esc(item) + '</span>' +
+                '</li>';
+            });
+        } else {
+            includesHtml = '<li>' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
+                '<span>Nationally recognised training and same-day certification support</span>' +
+            '</li>';
+        }
+        document.getElementById('confirmIncludes').innerHTML = includesHtml;
 
         // Price
         var unitPrice = course.price;
