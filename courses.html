@@ -809,7 +809,7 @@
                 <!-- Progress Bar -->
                 <div class="funnel-progress-wrapper">
                     <div class="funnel-progress-bar">
-                        <div class="funnel-progress-fill" id="progressFill" style="width: 33%"></div>
+                        <div class="funnel-progress-fill" id="progressFill" style="transform: scaleX(0.33)"></div>
                     </div>
                     <div style="display:flex;justify-content:space-between;margin-top:6px;">
                         <span class="funnel-step-label" id="stepLabel">Step 1 of 3 &mdash; Location &amp; Date</span>
@@ -1316,7 +1316,7 @@
     function updateProgressUI() {
         var cfg = stepConfig[currentStep];
         if (!cfg) return;
-        document.getElementById('progressFill').style.width = cfg.progress + '%';
+        document.getElementById('progressFill').style.transform = 'scaleX(' + (cfg.progress / 100) + ')';
         document.getElementById('stepLabel').innerHTML = 'Step ' + cfg.num + ' of 3 &mdash; ' + cfg.label;
 
         var backBtn = document.getElementById('funnelHeaderBack');
