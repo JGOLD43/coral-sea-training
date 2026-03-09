@@ -783,13 +783,13 @@
                         Back
                     </button>
                 </div>
-                <div class="logo" style="pointer-events:none;">
+                <a href="index.html" class="logo" aria-label="Coral Sea Training home">
                     <img src="assets/coral-sea-training-logo.png" alt="Coral Sea Training logo" class="logo-image" width="52" height="52">
                     <div class="logo-text">
                         <span class="logo-name">Coral Sea Training</span>
                         <span class="logo-tagline">RTO #32221</span>
                     </div>
-                </div>
+                </a>
                 <div style="justify-self:end;">
                     <a href="contact.html?show=form" style="display:flex;align-items:center;gap:6px;text-decoration:none;font-family:var(--font-body);font-size:0.875rem;font-weight:600;color:rgba(255,255,255,0.85);padding:var(--space-2) var(--space-3);border-radius:8px;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -820,8 +820,8 @@
                 <!-- ===== STEP A: Location + Dates ===== -->
                 <div class="funnel-step active" id="step-location">
                     <div class="funnel-step-header">
-                        <h1 class="funnel-title">Pick a date near you</h1>
-                        <p class="funnel-subtitle">Book in under 30 seconds.</p>
+                        <h1 class="funnel-title">Book in under 30 seconds</h1>
+                        <p class="funnel-subtitle">Choose your location, date, and course in one quick flow.</p>
                         <p class="bf-price-hint">From $99 &bull; Secure checkout &bull; Instant confirmation</p>
                     </div>
 
@@ -1268,6 +1268,7 @@
         helpUsed: false,
         helpRecommendation: null
     };
+    var FUNNEL_STORAGE_KEY = 'coralSeaBookingDraft';
 
     // --- Session Data ---
     var sessionData = null;
@@ -1284,6 +1285,113 @@
         'step-confirm':  { num: 3, label: 'Confirm & Book',   progress: 100 }
     };
 
+    function renderCurrentStep() {
+        document.querySelectorAll('.funnel-step').forEach(function(s) {
+            s.classList.remove('active');
+        });
+        var el = document.getElementById(currentStep);
+        if (el) el.classList.add('active');
+        updateProgressUI();
+    }
+
+    function saveDraftState() {
+        try {
+            var formDraft = {
+                firstName: document.getElementById('bfFirstName') ? document.getElementById('bfFirstName').value : '',
+                lastName: document.getElementById('bfLastName') ? document.getElementById('bfLastName').value : '',
+                email: document.getElementById('bfEmail') ? document.getElementById('bfEmail').value : '',
+                phone: document.getElementById('bfPhone') ? document.getElementById('bfPhone').value : '',
+                employer: document.getElementById('bfEmployer') ? document.getElementById('bfEmployer').value : '',
+                company: document.getElementById('bfCompany') ? document.getElementById('bfCompany').value : '',
+                companyStepOne: document.getElementById('companyName') ? document.getElementById('companyName').value : ''
+            };
+            localStorage.setItem(FUNNEL_STORAGE_KEY, JSON.stringify({
+                state: state,
+                currentStep: currentStep,
+                stepHistory: stepHistory,
+                formDraft: formDraft,
+                selectedAddons: getSelectedAddons().map(function(a) { return a.id; })
+            }));
+        } catch (err) {}
+    }
+
+    function clearDraftState() {
+        try {
+            localStorage.removeItem(FUNNEL_STORAGE_KEY);
+        } catch (err) {}
+    }
+
+    function loadDraftState() {
+        try {
+            var raw = localStorage.getItem(FUNNEL_STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    function applyDraftFormValues(formDraft) {
+        if (!formDraft) return;
+        if (document.getElementById('bfFirstName')) document.getElementById('bfFirstName').value = formDraft.firstName || '';
+        if (document.getElementById('bfLastName')) document.getElementById('bfLastName').value = formDraft.lastName || '';
+        if (document.getElementById('bfEmail')) document.getElementById('bfEmail').value = formDraft.email || '';
+        if (document.getElementById('bfPhone')) document.getElementById('bfPhone').value = formDraft.phone || '';
+        if (document.getElementById('bfEmployer')) document.getElementById('bfEmployer').value = formDraft.employer || '';
+        if (document.getElementById('bfCompany')) document.getElementById('bfCompany').value = formDraft.company || '';
+        if (document.getElementById('companyName')) document.getElementById('companyName').value = formDraft.companyStepOne || '';
+    }
+
+    function restoreDraftState(draft) {
+        if (!draft || !draft.state) return false;
+
+        Object.keys(state).forEach(function(key) {
+            if (Object.prototype.hasOwnProperty.call(draft.state, key)) {
+                state[key] = draft.state[key];
+            }
+        });
+
+        if (state.partySize > 1) {
+            document.querySelectorAll('.bf-party-btn').forEach(function(b) { b.classList.remove('active'); });
+            var groupBtn = document.querySelector('.bf-party-btn[data-size="2"]');
+            if (groupBtn) groupBtn.classList.add('active');
+            document.getElementById('groupSizePanel').style.display = 'block';
+            document.getElementById('groupSizeDisplay').textContent = String(state.partySize);
+            updateGroupCompanyField();
+        } else {
+            document.querySelectorAll('.bf-party-btn').forEach(function(b) { b.classList.remove('active'); });
+            var soloBtn = document.querySelector('.bf-party-btn[data-size="1"]');
+            if (soloBtn) soloBtn.classList.add('active');
+            document.getElementById('groupSizePanel').style.display = 'none';
+        }
+
+        applyDraftFormValues(draft.formDraft);
+        renderLocationCards();
+
+        if (state.courseId) {
+            var selectedCard = document.querySelector('.bf-course-card[data-course="' + state.courseId + '"]');
+            document.querySelectorAll('.bf-course-card').forEach(function(c) { c.classList.remove('selected'); });
+            if (selectedCard) selectedCard.classList.add('selected');
+        }
+
+        stepHistory = Array.isArray(draft.stepHistory) ? draft.stepHistory : [];
+        currentStep = stepConfig[draft.currentStep] ? draft.currentStep : 'step-location';
+
+        if (currentStep === 'step-confirm' && state.courseId) {
+            checkSessionSwap();
+            populateConfirmStep();
+            if (Array.isArray(draft.selectedAddons)) {
+                document.querySelectorAll('.bf-addon-row').forEach(function(row) {
+                    var addonId = row.getAttribute('data-addon');
+                    row.classList.toggle('checked', draft.selectedAddons.indexOf(addonId) !== -1);
+                });
+                updateTotalWithAddons();
+            }
+        }
+
+        renderCurrentStep();
+        return true;
+    }
+
     function navigateTo(stepId) {
         document.querySelectorAll('.funnel-step').forEach(function(s) {
             s.classList.remove('active');
@@ -1294,6 +1402,7 @@
         stepHistory.push(currentStep);
         currentStep = stepId;
         updateProgressUI();
+        saveDraftState();
         window.scrollTo({ top: 0, behavior: 'instant' });
         fireEvent('bf_step_view', { step_id: stepId });
     }
@@ -1310,6 +1419,7 @@
         document.getElementById(prev).classList.add('active');
         currentStep = prev;
         updateProgressUI();
+        saveDraftState();
         window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
@@ -1471,6 +1581,7 @@
         }
         fireEvent('bf_party_toggle', { party_size: size === 1 ? 1 : '2+' });
         renderLocationCards();
+        saveDraftState();
     }
 
     function adjustGroupSize(delta) {
@@ -1485,6 +1596,7 @@
         updateGroupCompanyField();
         renderLocationCards();
         fireEvent('bf_group_size_set', { size: newSize });
+        saveDraftState();
     }
 
     function updateGroupCompanyField() {
@@ -1508,6 +1620,7 @@
         state.sessionEnd = s.end;
 
         fireEvent('bf_location_selected', { location: locationId, method: 'earliest', session_id: s.id });
+        saveDraftState();
         navigateTo('step-course');
     }
 
@@ -1600,6 +1713,7 @@
 
         closeModal('sessionModal');
         fireEvent('bf_session_selected', { session_id: sessionId, location: locId, course: courseId });
+        saveDraftState();
         navigateTo('step-course');
     }
 
@@ -1630,6 +1744,7 @@
         state.courseId = courseId;
 
         fireEvent('bf_course_selected', { course: courseId });
+        saveDraftState();
 
         // Small delay for visual feedback
         setTimeout(function() {
@@ -1816,6 +1931,7 @@
         var isEnabled = rowEl.classList.contains('checked');
         fireEvent('bf_addon_toggle', { id: addonId, enabled: isEnabled });
         updateTotalWithAddons();
+        saveDraftState();
     }
 
     function getSelectedAddons() {
@@ -1900,6 +2016,7 @@
         }).then(function(data) {
             if (data.url) {
                 fireEvent('bf_pay_redirect', { course: state.courseId, price: grandTotal });
+                clearDraftState();
                 window.location.href = data.url;
             } else {
                 throw new Error(data.error || 'No checkout URL returned');
@@ -1948,8 +2065,10 @@
             body: fd,
             headers: { 'Accept': 'application/json' }
         }).then(function() {
+            clearDraftState();
             window.location.href = 'thanks.html?type=booking';
         }).catch(function() {
+            clearDraftState();
             window.location.href = 'thanks.html?type=booking';
         });
     }
@@ -2009,6 +2128,7 @@
     function showHelpResult(courseId, title, reason) {
         state.helpUsed = true;
         state.helpRecommendation = courseId;
+        saveDraftState();
 
         document.getElementById('helpQ1').style.display = 'none';
         document.getElementById('helpQ2').style.display = 'none';
@@ -2034,6 +2154,7 @@
 
         state.courseId = courseId;
         fireEvent('bf_course_selected', { course: courseId, source: 'help_flow' });
+        saveDraftState();
 
         setTimeout(function() {
             checkSessionSwap();
@@ -2113,7 +2234,16 @@
         formFields.forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.addEventListener('focus', trackFormStart, { once: true });
+            if (el) el.addEventListener('input', saveDraftState);
         });
+        var stepOneCompany = document.getElementById('companyName');
+        if (stepOneCompany) {
+            stepOneCompany.addEventListener('input', function() {
+                state.companyName = stepOneCompany.value.trim();
+                saveDraftState();
+            });
+        }
+        window.addEventListener('beforeunload', saveDraftState);
 
         // Load data and render
         loadSessionData().then(function() {
@@ -2123,8 +2253,13 @@
             var params = new URLSearchParams(window.location.search);
             var locParam = params.get('location');
             var courseParam = params.get('course');
+            var restoredFromDraft = false;
 
-            if (locParam && locationMeta[locParam]) {
+            if (!locParam && !courseParam) {
+                restoredFromDraft = restoreDraftState(loadDraftState());
+            }
+
+            if (!restoredFromDraft && locParam && locationMeta[locParam]) {
                 state.location = locParam;
                 state.locationLabel = locationMeta[locParam].label;
                 state.locationAddress = locationMeta[locParam].address;
