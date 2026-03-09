@@ -38,7 +38,7 @@
             background: var(--gray-100);
             border-radius: 100px;
             padding: 4px;
-            max-width: 280px;
+            max-width: 420px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -837,9 +837,7 @@
                     <div class="bf-party-toggle">
                         <button class="bf-party-btn active" data-size="1" onclick="setPartySize(1, this)">Just me</button>
                         <button class="bf-party-btn" data-size="2" onclick="setPartySize(2, this)">2+ people</button>
-                    </div>
-                    <div style="text-align:center;margin-top:-var(--space-3);margin-bottom:var(--space-4);">
-                        <a href="business.html" class="bf-help-link" onclick="fireEvent('bf_business_link_click',{source:'step1'})" style="font-size:0.8125rem;">Booking for staff? Onsite or invoice &rarr;</a>
+                        <button class="bf-party-btn" data-size="4" onclick="setPartySize(4, this)">Group</button>
                     </div>
 
                     <!-- Group size panel (hidden by default) -->
@@ -1351,7 +1349,8 @@
 
         if (state.partySize > 1) {
             document.querySelectorAll('.bf-party-btn').forEach(function(b) { b.classList.remove('active'); });
-            var groupBtn = document.querySelector('.bf-party-btn[data-size="2"]');
+            var sizeKey = state.partySize >= 4 ? '4' : '2';
+            var groupBtn = document.querySelector('.bf-party-btn[data-size="' + sizeKey + '"]');
             if (groupBtn) groupBtn.classList.add('active');
             document.getElementById('groupSizePanel').style.display = 'block';
             document.getElementById('groupSizeDisplay').textContent = String(state.partySize);
@@ -1572,13 +1571,18 @@
         if (size === 1) {
             state.partySize = 1;
             document.getElementById('groupSizePanel').style.display = 'none';
+        } else if (size === 4) {
+            state.partySize = 4;
+            document.getElementById('groupSizePanel').style.display = 'block';
+            document.getElementById('groupSizeDisplay').textContent = '4';
+            updateGroupCompanyField();
         } else {
             state.partySize = 2;
             document.getElementById('groupSizePanel').style.display = 'block';
             document.getElementById('groupSizeDisplay').textContent = '2';
             updateGroupCompanyField();
         }
-        fireEvent('bf_party_toggle', { party_size: size === 1 ? 1 : '2+' });
+        fireEvent('bf_party_toggle', { party_size: size === 1 ? 1 : size === 4 ? 'group' : '2+' });
         renderLocationCards();
         saveDraftState();
     }
