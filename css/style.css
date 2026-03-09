@@ -246,24 +246,21 @@ h1, h2, h3, h4, h5, h6 {
     gap: var(--space-3);
 }
 
-.logo-mark {
-    width: 48px;
-    height: 48px;
-    background: var(--white);
+.logo-image {
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--green);
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: var(--font-display);
-    border: 3px solid var(--red);
+    display: block;
+    flex-shrink: 0;
+    object-fit: cover;
+    background: var(--white);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .logo-text {
     display: flex;
     flex-direction: column;
+    gap: 2px;
 }
 
 .logo-name {
@@ -1374,11 +1371,6 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: 1fr;
     gap: var(--space-10);
     margin-bottom: var(--space-12);
-}
-
-.footer-brand .logo-mark {
-    background: var(--green);
-    border-color: var(--red);
 }
 
 .footer-brand .logo-name {
