@@ -12,6 +12,7 @@ window.CST_PUBLIC_CONFIG = Object.assign(
             kits: ''
         },
         checkoutEndpoint: '',
+        publicApiBaseUrl: '',
         adminFunctionsBaseUrl: '',
         fallbackContact: {
             email: 'admin@coralseatraining.com.au',

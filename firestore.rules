@@ -13,6 +13,11 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Public website bookings - Cloud Functions only
+    match /publicBookings/{bookingId} {
+      allow read, write: if false;
+    }
+
     // Partner documents
     match /partners/{partnerId} {
       // Partners can read their own document

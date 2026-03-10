@@ -122,17 +122,20 @@
     <script src="js/main.js"></script>
     <script>
     (function() {
-        var type = new URLSearchParams(window.location.search).get('type') || 'general';
+        var params = new URLSearchParams(window.location.search);
+        var type = params.get('type') || 'general';
+        var stripeSessionId = params.get('stripe_session') || '';
+        var requestedStatus = params.get('status') || '';
 
         var content = {
             booking: {
                 icon: 'calendar',
-                title: "Your Booking Request is Confirmed!",
-                message: "We've received your details and will call you within 2 business hours to confirm your course date.",
+                title: "Your Booking Request is Received!",
+                message: "We're saving your booking now.",
                 steps: [
-                    "We'll call to confirm your preferred date and answer any questions",
-                    "You'll receive an email with course preparation info",
-                    "Show up, get trained, leave certified &mdash; pay on the day"
+                    "We'll confirm the booking details and payment status",
+                    "You'll receive your course preparation info",
+                    "If anything needs manual follow-up, we'll contact you"
                 ],
                 cta: { text: "Browse First Aid Kits", href: "shop.html" },
                 ctaSecondary: { text: "Back to Homepage", href: "index.html" }
@@ -171,37 +174,123 @@
             }
         };
 
-        var c = content[type] || content.general;
-
-        var stepsHTML = '';
-        if (c.steps.length > 0) {
-            stepsHTML = '<div style="text-align:left;max-width:480px;margin:var(--space-8) auto 0;background:var(--gray-50);border-radius:12px;padding:var(--space-6);">';
-            stepsHTML += '<h4 style="font-family:var(--font-display);font-size:1.125rem;color:var(--navy);margin-bottom:var(--space-4);">What Happens Next</h4>';
-            for (var i = 0; i < c.steps.length; i++) {
-                stepsHTML += '<div style="display:flex;align-items:start;gap:var(--space-3);margin-bottom:var(--space-3);">';
-                stepsHTML += '<span style="flex-shrink:0;width:28px;height:28px;background:var(--red);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8125rem;">' + (i + 1) + '</span>';
-                stepsHTML += '<p style="font-size:0.9375rem;color:var(--gray-700);margin:0;padding-top:3px;">' + c.steps[i] + '</p>';
-                stepsHTML += '</div>';
+        function getBookingContent() {
+            if (stripeSessionId) {
+                return {
+                    icon: 'calendar',
+                    title: 'Confirming your payment...',
+                    message: 'Please wait while we verify your Stripe payment and lock in your booking.',
+                    steps: [],
+                    cta: { text: 'Back to Homepage', href: 'index.html' },
+                    ctaSecondary: { text: 'View Courses', href: 'courses.html' }
+                };
             }
-            stepsHTML += '</div>';
+
+            if (requestedStatus === 'requested') {
+                return {
+                    icon: 'calendar',
+                    title: 'Booking request received',
+                    message: "We've saved your booking request, but payment has not been collected online. We'll follow up with you directly.",
+                    steps: [
+                        "We've recorded your booking request",
+                        "We'll contact you to confirm next steps",
+                        "Payment will be handled manually"
+                    ],
+                    cta: { text: 'Browse First Aid Kits', href: 'shop.html' },
+                    ctaSecondary: { text: 'Back to Homepage', href: 'index.html' }
+                };
+            }
+
+            return content.booking;
         }
 
-        var html = '' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:64px;height:64px;color:var(--green);margin:0 auto var(--space-4);display:block;">' +
-                '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' +
-            '</svg>' +
-            '<h1 style="font-family:var(--font-display);font-size:clamp(1.75rem,4vw,2.5rem);color:var(--navy);margin-bottom:var(--space-3);">' + c.title + '</h1>' +
-            '<p style="font-size:1.125rem;color:var(--gray-600);max-width:480px;margin:0 auto;">' + c.message + '</p>' +
-            stepsHTML +
-            '<div style="margin-top:var(--space-8);display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-3);">' +
-                '<a href="' + c.cta.href + '" class="btn btn-primary btn-lg">' + c.cta.text + '</a>' +
-                '<a href="' + c.ctaSecondary.href + '" class="btn btn-outline btn-lg">' + c.ctaSecondary.text + '</a>' +
-            '</div>' +
-            '<div style="margin-top:var(--space-8);padding-top:var(--space-6);border-top:1px solid var(--gray-200);">' +
-                '<p style="font-size:0.875rem;color:var(--gray-500);">Questions? Call <a href="tel:0419675022" style="color:var(--red);font-weight:600;">0419 675 022</a> or email <a href="mailto:admin@coralseatraining.com.au" style="color:var(--red);font-weight:600;">admin@coralseatraining.com.au</a></p>' +
-            '</div>';
+        function renderContent(c) {
+            var stepsHTML = '';
+            if (c.steps.length > 0) {
+                stepsHTML = '<div style="text-align:left;max-width:480px;margin:var(--space-8) auto 0;background:var(--gray-50);border-radius:12px;padding:var(--space-6);">';
+                stepsHTML += '<h4 style="font-family:var(--font-display);font-size:1.125rem;color:var(--navy);margin-bottom:var(--space-4);">What Happens Next</h4>';
+                for (var i = 0; i < c.steps.length; i++) {
+                    stepsHTML += '<div style="display:flex;align-items:start;gap:var(--space-3);margin-bottom:var(--space-3);">';
+                    stepsHTML += '<span style="flex-shrink:0;width:28px;height:28px;background:var(--red);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8125rem;">' + (i + 1) + '</span>';
+                    stepsHTML += '<p style="font-size:0.9375rem;color:var(--gray-700);margin:0;padding-top:3px;">' + c.steps[i] + '</p>';
+                    stepsHTML += '</div>';
+                }
+                stepsHTML += '</div>';
+            }
 
-        document.getElementById('thanksContent').innerHTML = html;
+            var html = '' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:64px;height:64px;color:var(--green);margin:0 auto var(--space-4);display:block;">' +
+                    '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' +
+                '</svg>' +
+                '<h1 style="font-family:var(--font-display);font-size:clamp(1.75rem,4vw,2.5rem);color:var(--navy);margin-bottom:var(--space-3);">' + c.title + '</h1>' +
+                '<p style="font-size:1.125rem;color:var(--gray-600);max-width:480px;margin:0 auto;">' + c.message + '</p>' +
+                stepsHTML +
+                '<div style="margin-top:var(--space-8);display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-3);">' +
+                    '<a href="' + c.cta.href + '" class="btn btn-primary btn-lg">' + c.cta.text + '</a>' +
+                    '<a href="' + c.ctaSecondary.href + '" class="btn btn-outline btn-lg">' + c.ctaSecondary.text + '</a>' +
+                '</div>' +
+                '<div style="margin-top:var(--space-8);padding-top:var(--space-6);border-top:1px solid var(--gray-200);">' +
+                    '<p style="font-size:0.875rem;color:var(--gray-500);">Questions? Call <a href="tel:0419675022" style="color:var(--red);font-weight:600;">0419 675 022</a> or email <a href="mailto:admin@coralseatraining.com.au" style="color:var(--red);font-weight:600;">admin@coralseatraining.com.au</a></p>' +
+                '</div>';
+
+            document.getElementById('thanksContent').innerHTML = html;
+        }
+
+        renderContent(type === 'booking' ? getBookingContent() : (content[type] || content.general));
+
+        if (type === 'booking' && stripeSessionId && window.CST && typeof window.CST.getPublicApiEndpoint === 'function') {
+            var verifyEndpoint = window.CST.getPublicApiEndpoint('verifyCheckoutSession');
+            if (verifyEndpoint) {
+                fetch(verifyEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId: stripeSessionId })
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(data) {
+                    if (data && data.paid) {
+                        renderContent({
+                            icon: 'calendar',
+                            title: 'Payment confirmed',
+                            message: 'Your payment has been received and your booking is now confirmed.',
+                            steps: [
+                                'Your booking record has been saved',
+                                'Your payment has been matched to the booking',
+                                "We'll send your course details and next steps"
+                            ],
+                            cta: { text: 'Browse First Aid Kits', href: 'shop.html' },
+                            ctaSecondary: { text: 'Back to Homepage', href: 'index.html' }
+                        });
+                    } else {
+                        renderContent({
+                            icon: 'calendar',
+                            title: 'Booking received',
+                            message: 'We saved your booking, but the payment is still pending. If you were charged, we will reconcile it shortly.',
+                            steps: [
+                                'Your booking record has been saved',
+                                'Payment verification is still pending',
+                                "We'll follow up if anything needs manual review"
+                            ],
+                            cta: { text: 'Browse First Aid Kits', href: 'shop.html' },
+                            ctaSecondary: { text: 'Back to Homepage', href: 'index.html' }
+                        });
+                    }
+                }).catch(function() {
+                    renderContent({
+                        icon: 'calendar',
+                        title: 'Booking received',
+                        message: 'We saved your booking request, but we could not verify payment status from this page.',
+                        steps: [
+                            'Your booking record has been saved',
+                            'Payment will be reconciled on the server',
+                            "We'll contact you if anything needs manual follow-up"
+                        ],
+                        cta: { text: 'Browse First Aid Kits', href: 'shop.html' },
+                        ctaSecondary: { text: 'Back to Homepage', href: 'index.html' }
+                    });
+                });
+            }
+        }
 
         // Fire GA4 conversion event
         if (typeof gtag !== 'undefined') {

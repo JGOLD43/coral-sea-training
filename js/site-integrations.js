@@ -94,7 +94,43 @@
     }
 
     function getCheckoutEndpoint() {
-        return isConfiguredUrl(config.checkoutEndpoint) ? config.checkoutEndpoint : '';
+        if (isConfiguredUrl(config.checkoutEndpoint)) {
+            return config.checkoutEndpoint;
+        }
+
+        var publicApiBase = getPublicApiBaseUrl();
+        return publicApiBase ? publicApiBase + '/createCheckoutSession' : '';
+    }
+
+    function getConfiguredProjectId() {
+        var firebaseConfig = window.firebaseConfig || {};
+        var projectId = typeof firebaseConfig.projectId === 'string' ? firebaseConfig.projectId.trim() : '';
+        if (!projectId || projectId.indexOf('YOUR_') !== -1) {
+            return '';
+        }
+        return projectId;
+    }
+
+    function getPublicApiBaseUrl() {
+        if (isConfiguredUrl(config.publicApiBaseUrl)) {
+            return config.publicApiBaseUrl.replace(/\/$/, '');
+        }
+        if (isConfiguredUrl(config.adminFunctionsBaseUrl)) {
+            return config.adminFunctionsBaseUrl.replace(/\/$/, '');
+        }
+        if (isConfiguredUrl(config.checkoutEndpoint)) {
+            return config.checkoutEndpoint.replace(/\/[^/]+$/, '');
+        }
+        var projectId = getConfiguredProjectId();
+        if (projectId) {
+            return 'https://us-central1-' + projectId + '.cloudfunctions.net';
+        }
+        return '';
+    }
+
+    function getPublicApiEndpoint(name) {
+        var base = getPublicApiBaseUrl();
+        return base ? base + '/' + name.replace(/^\//, '') : '';
     }
 
     ensureDataLayer();
@@ -110,6 +146,8 @@
         config: config,
         getFormEndpoint: getFormEndpoint,
         getCheckoutEndpoint: getCheckoutEndpoint,
+        getPublicApiBaseUrl: getPublicApiBaseUrl,
+        getPublicApiEndpoint: getPublicApiEndpoint,
         getFallbackContactMessage: getFallbackContactMessage,
         showFormMessage: showFormMessage,
         track: function(name, params) {

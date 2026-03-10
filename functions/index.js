@@ -95,6 +95,86 @@ function handleError(res, err) {
     res.status(status).json({ error: sanitized });
 }
 
+function getStripeClient() {
+    const secretKey = functions.config().stripe && functions.config().stripe.secret_key;
+    if (!secretKey) {
+        const err = new Error('Stripe secret key is not configured');
+        err.status = 500;
+        throw err;
+    }
+    return require('stripe')(secretKey);
+}
+
+function normalizeString(value, maxLength) {
+    if (typeof value !== 'string') return '';
+    const trimmed = value.trim();
+    return typeof maxLength === 'number' ? trimmed.slice(0, maxLength) : trimmed;
+}
+
+function normalizeParticipants(participants, fallbackName) {
+    if (!Array.isArray(participants)) return [];
+    return participants.map((participant, index) => ({
+        firstName: normalizeString(participant && participant.firstName, 100) || (index === 0 ? fallbackName.split(' ')[0] || '' : ''),
+        lastName: normalizeString(participant && participant.lastName, 100) || (index === 0 ? fallbackName.split(' ').slice(1).join(' ') : '')
+    })).filter(p => p.firstName || p.lastName);
+}
+
+function normalizeAddOns(addOns) {
+    if (!Array.isArray(addOns)) return [];
+    return addOns.filter(Boolean).map(addOn => ({
+        id: normalizeString(addOn.id, 80),
+        label: normalizeString(addOn.label, 200),
+        price: typeof addOn.price === 'number' ? addOn.price : 0
+    })).filter(addOn => addOn.label && addOn.price >= 0);
+}
+
+function buildBookingRecord(body, extras) {
+    const customerName = normalizeString(body.customerName, 200);
+    const participants = normalizeParticipants(body.participants, customerName);
+    const addOns = normalizeAddOns(body.addOns);
+    const pricePerPerson = typeof body.pricePerPerson === 'number' ? body.pricePerPerson : 0;
+    const partySize = typeof body.partySize === 'number' ? body.partySize : participants.length || 1;
+    const addOnTotal = addOns.reduce((sum, addOn) => sum + addOn.price, 0);
+    const courseTotal = pricePerPerson * partySize;
+
+    return {
+        source: 'website',
+        bookingStatus: extras.bookingStatus,
+        paymentStatus: extras.paymentStatus,
+        paymentMethod: extras.paymentMethod || 'stripe',
+        paymentReference: extras.paymentReference || '',
+        paymentNote: extras.paymentNote || '',
+        customer: {
+            name: customerName,
+            email: normalizeString(body.customerEmail, 254),
+            phone: normalizeString(body.customerPhone, 40),
+            employer: normalizeString(body.employer, 200)
+        },
+        course: {
+            name: normalizeString(body.courseName, 300),
+            code: normalizeString(body.courseCode, 50),
+            pricePerPerson: pricePerPerson,
+            partySize: partySize,
+            total: courseTotal
+        },
+        session: {
+            id: normalizeString(body.sessionId, 120),
+            label: normalizeString(body.sessionLabel, 200),
+            location: normalizeString(body.location, 200)
+        },
+        addOns: addOns,
+        participants: participants,
+        totals: {
+            addOns: addOnTotal,
+            grandTotal: courseTotal + addOnTotal
+        },
+        stripe: {
+            checkoutSessionId: extras.checkoutSessionId || ''
+        },
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+}
+
 // =====================================================
 // Proxy Endpoints
 // =====================================================
@@ -512,8 +592,14 @@ exports.createCheckoutSession = functions.https.onRequest((req, res) => {
                 return;
             }
 
-            // Initialise Stripe with secret key from Firebase config
-            const stripe = require('stripe')(functions.config().stripe.secret_key);
+            const stripe = getStripeClient();
+            const db = admin.firestore();
+            const bookingRef = db.collection('publicBookings').doc();
+            const bookingRecord = buildBookingRecord(body, {
+                bookingStatus: 'pending_payment',
+                paymentStatus: 'awaiting_payment',
+                paymentMethod: 'stripe'
+            });
 
             // Build line items — main course item
             const lineItems = [
@@ -554,6 +640,7 @@ exports.createCheckoutSession = functions.https.onRequest((req, res) => {
 
             // Build metadata with all booking details
             const metadata = {
+                bookingId: bookingRef.id,
                 customerName: customerName || '',
                 customerPhone: customerPhone || '',
                 customerEmail: customerEmail || '',
@@ -572,18 +659,33 @@ exports.createCheckoutSession = functions.https.onRequest((req, res) => {
                     .join(',');
             }
 
+            await bookingRef.set({
+                bookingId: bookingRef.id,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                ...bookingRecord
+            });
+
             // Create Stripe Checkout Session
             const session = await stripe.checkout.sessions.create({
                 mode: 'payment',
                 payment_method_types: ['card'],
                 customer_email: customerEmail,
+                client_reference_id: bookingRef.id,
                 line_items: lineItems,
                 metadata: metadata,
-                success_url: 'https://jgold43.github.io/coral-sea-training/thanks.html?type=booking&stripe_session={CHECKOUT_SESSION_ID}',
+                success_url: 'https://jgold43.github.io/coral-sea-training/thanks.html?type=booking&stripe_session={CHECKOUT_SESSION_ID}&booking_id=' + bookingRef.id,
                 cancel_url: 'https://jgold43.github.io/coral-sea-training/courses.html'
             });
 
-            res.status(200).json({ url: session.url });
+            await bookingRef.set({
+                stripe: {
+                    checkoutSessionId: session.id
+                },
+                paymentReference: session.id,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            res.status(200).json({ url: session.url, bookingId: bookingRef.id });
 
         } catch (err) {
             functions.logger.error('Stripe Checkout error:', { message: err.message });
@@ -591,4 +693,151 @@ exports.createCheckoutSession = functions.https.onRequest((req, res) => {
             res.status(500).json({ error: 'Payment session could not be created' });
         }
     });
+});
+
+exports.createBookingRequest = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method !== 'POST') {
+            res.status(405).json({ error: 'Method not allowed' });
+            return;
+        }
+
+        try {
+            const body = req.body || {};
+            if (!body.courseName || typeof body.courseName !== 'string') {
+                res.status(400).json({ error: 'Missing or invalid courseName' });
+                return;
+            }
+            if (!body.customerEmail || typeof body.customerEmail !== 'string') {
+                res.status(400).json({ error: 'Missing or invalid customerEmail' });
+                return;
+            }
+
+            const bookingRef = admin.firestore().collection('publicBookings').doc();
+            const bookingRecord = buildBookingRecord(body, {
+                bookingStatus: 'booking_request',
+                paymentStatus: 'payment_not_collected',
+                paymentMethod: 'manual_follow_up',
+                paymentNote: normalizeString(body.paymentNote, 500)
+            });
+
+            await bookingRef.set({
+                bookingId: bookingRef.id,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                ...bookingRecord
+            });
+
+            res.status(200).json({ bookingId: bookingRef.id });
+        } catch (err) {
+            functions.logger.error('Booking request error:', { message: err.message });
+            res.status(500).json({ error: 'Booking request could not be saved' });
+        }
+    });
+});
+
+exports.verifyCheckoutSession = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method !== 'POST') {
+            res.status(405).json({ error: 'Method not allowed' });
+            return;
+        }
+
+        try {
+            const sessionId = normalizeString(req.body && req.body.sessionId, 200);
+            if (!sessionId) {
+                res.status(400).json({ error: 'Missing sessionId' });
+                return;
+            }
+
+            const stripe = getStripeClient();
+            const session = await stripe.checkout.sessions.retrieve(sessionId);
+            const bookingId = normalizeString(
+                (session.metadata && session.metadata.bookingId) || session.client_reference_id,
+                200
+            );
+
+            if (!bookingId) {
+                res.status(404).json({ error: 'Booking not found' });
+                return;
+            }
+
+            const bookingRef = admin.firestore().collection('publicBookings').doc(bookingId);
+            const paymentStatus = session.payment_status === 'paid' ? 'paid' : 'awaiting_payment';
+            const bookingStatus = session.payment_status === 'paid' ? 'confirmed' : 'pending_payment';
+
+            await bookingRef.set({
+                bookingId: bookingId,
+                bookingStatus: bookingStatus,
+                paymentStatus: paymentStatus,
+                paymentReference: session.id,
+                stripe: {
+                    checkoutSessionId: session.id,
+                    amountTotal: typeof session.amount_total === 'number' ? session.amount_total : null,
+                    currency: session.currency || 'aud'
+                },
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                paidAt: session.payment_status === 'paid'
+                    ? admin.firestore.FieldValue.serverTimestamp()
+                    : null
+            }, { merge: true });
+
+            res.status(200).json({
+                bookingId: bookingId,
+                bookingStatus: bookingStatus,
+                paymentStatus: paymentStatus,
+                paid: session.payment_status === 'paid'
+            });
+        } catch (err) {
+            functions.logger.error('Checkout verification error:', { message: err.message });
+            res.status(500).json({ error: 'Checkout session could not be verified' });
+        }
+    });
+});
+
+exports.stripeWebhook = functions.https.onRequest(async (req, res) => {
+    if (req.method !== 'POST') {
+        res.status(405).send('Method Not Allowed');
+        return;
+    }
+
+    try {
+        const stripe = getStripeClient();
+        const webhookSecret = functions.config().stripe && functions.config().stripe.webhook_secret;
+        if (!webhookSecret) {
+            res.status(403).send('Forbidden');
+            return;
+        }
+
+        const signature = req.headers['stripe-signature'];
+        const event = stripe.webhooks.constructEvent(req.rawBody, signature, webhookSecret);
+
+        if (event.type === 'checkout.session.completed') {
+            const session = event.data.object;
+            const bookingId = normalizeString(
+                (session.metadata && session.metadata.bookingId) || session.client_reference_id,
+                200
+            );
+
+            if (bookingId) {
+                await admin.firestore().collection('publicBookings').doc(bookingId).set({
+                    bookingId: bookingId,
+                    bookingStatus: 'confirmed',
+                    paymentStatus: 'paid',
+                    paymentReference: session.id,
+                    stripe: {
+                        checkoutSessionId: session.id,
+                        amountTotal: typeof session.amount_total === 'number' ? session.amount_total : null,
+                        currency: session.currency || 'aud'
+                    },
+                    paidAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            }
+        }
+
+        res.status(200).json({ received: true });
+    } catch (err) {
+        functions.logger.error('Stripe webhook error:', { message: err.message });
+        res.status(400).send('Webhook Error');
+    }
 });

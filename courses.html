@@ -2266,7 +2266,7 @@
             addons: selectedAddons.map(function(a) { return a.id; }).join(',')
         });
 
-        // Build payload for Cloud Function
+        // Build payload for booking persistence + checkout
         var payload = {
             courseName: (course.offerName || '') + ' (' + (course.code || '') + ')',
             courseCode: course.code || '',
@@ -2289,7 +2289,7 @@
 
         if (!checkoutEndpoint) {
             fireEvent('bf_pay_error', { error: 'checkout_not_configured' });
-            submitBookingFallback(firstName, lastName, email, phone, employer, company, course, grandTotal, participants, selectedAddons);
+            submitBookingFallback(payload, course, grandTotal, participants, selectedAddons);
             return;
         }
 
@@ -2311,27 +2311,65 @@
             console.error('Checkout error:', err);
             fireEvent('bf_pay_error', { error: err.message || 'unknown' });
             // Fallback: submit via Formspree instead
-            submitBookingFallback(firstName, lastName, email, phone, employer, company, course, grandTotal, participants, selectedAddons);
+            submitBookingFallback(payload, course, grandTotal, participants, selectedAddons);
         });
     }
 
-    function submitBookingFallback(firstName, lastName, email, phone, employer, company, course, totalPrice, participants, selectedAddons) {
+    function submitBookingFallback(payload, course, totalPrice, participants, selectedAddons) {
+        var bookingRequestEndpoint = window.CST && typeof window.CST.getPublicApiEndpoint === 'function'
+            ? window.CST.getPublicApiEndpoint('createBookingRequest')
+            : '';
+
+        if (bookingRequestEndpoint) {
+            fetch(bookingRequestEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    courseName: payload.courseName,
+                    courseCode: payload.courseCode,
+                    pricePerPerson: payload.pricePerPerson,
+                    partySize: payload.partySize,
+                    addOns: payload.addOns,
+                    participants: payload.participants,
+                    customerEmail: payload.customerEmail,
+                    customerName: payload.customerName,
+                    customerPhone: payload.customerPhone,
+                    sessionId: payload.sessionId,
+                    sessionLabel: payload.sessionLabel,
+                    location: payload.location,
+                    employer: payload.employer,
+                    paymentNote: 'Stripe checkout failed or was not configured — payment NOT collected'
+                })
+            }).then(function() {
+                clearDraftState();
+                window.location.href = 'thanks.html?type=booking&status=requested';
+            }).catch(function() {
+                fallbackToFormspree(payload, course, totalPrice, participants, selectedAddons);
+            });
+            return;
+        }
+
+        fallbackToFormspree(payload, course, totalPrice, participants, selectedAddons);
+    }
+
+    function fallbackToFormspree(payload, course, totalPrice, participants, selectedAddons) {
+        var firstName = (payload.customerName || '').split(' ')[0] || '';
+        var lastName = (payload.customerName || '').split(' ').slice(1).join(' ');
         var fd = new FormData();
         fd.append('first_name', firstName);
         fd.append('last_name', lastName);
-        fd.append('email', email);
-        fd.append('phone', phone);
-        if (employer) fd.append('employer', employer);
-        if (company) fd.append('company', company);
-        fd.append('course', (course.offerName || '') + ' (' + (course.code || '') + ')');
+        fd.append('email', payload.customerEmail);
+        fd.append('phone', payload.customerPhone);
+        if (payload.employer) fd.append('employer', payload.employer);
+        fd.append('course', payload.courseName);
         fd.append('price', '$' + (course.price || ''));
-        fd.append('location', state.locationLabel || state.location);
-        fd.append('party_size', state.partySize);
+        fd.append('location', payload.location);
+        fd.append('party_size', payload.partySize);
 
-        if (state.sessionId) {
-            fd.append('session_id', state.sessionId);
+        if (payload.sessionId) {
+            fd.append('session_id', payload.sessionId);
             fd.append('session_date', state.sessionDate);
-            fd.append('session_label', state.sessionLabel + ' ' + state.sessionStart + '-' + state.sessionEnd);
+            fd.append('session_label', payload.sessionLabel);
         } else {
             fd.append('session_id', 'request_next_available');
             fd.append('session_date', 'Next available');
@@ -2347,8 +2385,8 @@
         }
 
         fd.append('total_price', '$' + totalPrice);
-        fd.append('payment_note', 'Stripe checkout failed — payment NOT collected');
-        fd.append('_subject', 'BOOKING (payment pending): ' + (course.offerName || state.courseId) + ' - ' + firstName + ' ' + lastName);
+        fd.append('payment_note', 'Stripe checkout failed or was not configured — payment NOT collected');
+        fd.append('_subject', 'BOOKING (payment pending): ' + (course.offerName || state.courseId) + ' - ' + payload.customerName);
 
         var bookingEndpoint = window.CST && typeof window.CST.getFormEndpoint === 'function'
             ? window.CST.getFormEndpoint('booking')
@@ -2365,10 +2403,10 @@
             headers: { 'Accept': 'application/json' }
         }).then(function() {
             clearDraftState();
-            window.location.href = 'thanks.html?type=booking';
+            window.location.href = 'thanks.html?type=booking&status=requested';
         }).catch(function() {
             clearDraftState();
-            window.location.href = 'thanks.html?type=booking';
+            window.location.href = 'thanks.html?type=booking&status=requested';
         });
     }
 
