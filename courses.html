@@ -107,6 +107,67 @@
             max-width: 680px;
             margin: 0 auto;
         }
+        .bf-fast-lane {
+            max-width: 680px;
+            margin: 0 auto var(--space-5);
+            padding: var(--space-5);
+            background: linear-gradient(135deg, #f0faf3 0%, #ffffff 100%);
+            border: 2px solid rgba(27, 138, 61, 0.2);
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(27, 138, 61, 0.08);
+        }
+        .bf-fast-lane-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--green);
+            margin-bottom: var(--space-2);
+        }
+        .bf-fast-lane h2 {
+            font-size: 1.375rem;
+            color: var(--navy);
+            margin-bottom: var(--space-2);
+        }
+        .bf-fast-lane p {
+            color: var(--gray-600);
+            margin-bottom: var(--space-3);
+        }
+        .bf-fast-lane-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+        .bf-fast-lane-meta span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--navy);
+            background: rgba(255,255,255,0.9);
+            border: 1px solid var(--gray-200);
+            border-radius: 999px;
+            padding: 6px 12px;
+        }
+        .bf-reassurance-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-2);
+            max-width: 760px;
+            margin: 0 auto var(--space-5);
+        }
+        .bf-reassurance-pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--navy);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 999px;
+            padding: 7px 12px;
+        }
         @media (min-width: 640px) {
             .bf-location-cards { grid-template-columns: 1fr 1fr; }
         }
@@ -510,6 +571,10 @@
             padding: var(--space-2);
         }
         .bf-help-link:hover { color: var(--green); }
+        .bf-help-link-minor {
+            margin-top: var(--space-1);
+            font-size: 0.75rem;
+        }
 
         /* Help flow */
         .bf-help-options {
@@ -715,6 +780,50 @@
             gap: 6px;
         }
         .bf-trust-item svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
+        .bf-optional-extras {
+            margin-top: var(--space-4);
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
+            background: var(--gray-50);
+            overflow: hidden;
+        }
+        .bf-optional-extras summary {
+            position: relative;
+            list-style: none;
+            cursor: pointer;
+            padding: var(--space-4);
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--navy);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+        .bf-optional-extras summary::-webkit-details-marker {
+            display: none;
+        }
+        .bf-optional-extras summary::after {
+            content: '+';
+            position: absolute;
+            right: var(--space-4);
+            top: var(--space-4);
+            font-size: 1.125rem;
+            color: var(--green);
+        }
+        .bf-optional-extras[open] summary::after {
+            content: '−';
+        }
+        .bf-optional-extras-copy {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            padding-right: var(--space-6);
+        }
+        .bf-optional-extras-body {
+            padding: 0 var(--space-4) var(--space-4);
+        }
 
         /* Group summary row on confirm */
         .bf-group-confirm {
@@ -938,6 +1047,7 @@
                 <div class="funnel-step active" id="step-location">
                     <div class="funnel-step-header">
                         <h1 class="funnel-title">Book in under 30 seconds</h1>
+                        <p class="funnel-subtitle">Take the fastest path below or compare all upcoming sessions by location.</p>
                     </div>
 
                     <!-- Social proof (near CTA) -->
@@ -949,11 +1059,27 @@
                         <span><strong>10,000+</strong> trained</span>
                     </div>
 
+                    <div class="bf-reassurance-row">
+                        <span class="bf-reassurance-pill">Nationally recognised certificate</span>
+                        <span class="bf-reassurance-pill">Instant confirmation after payment</span>
+                        <span class="bf-reassurance-pill">Same-day certificate support</span>
+                    </div>
+
+                    <div class="bf-fast-lane" id="fastLaneCard" style="display:none;">
+                        <span class="bf-fast-lane-label">Fastest Option</span>
+                        <h2 id="fastLaneTitle">Full First Aid + CPR</h2>
+                        <p id="fastLaneDescription">Book the most common workplace course in the next available session.</p>
+                        <div class="bf-fast-lane-meta" id="fastLaneMeta"></div>
+                        <button type="button" class="btn btn-primary btn-lg" id="fastLaneBtn" onclick="bookFastLane()">
+                            Book this recommended session
+                        </button>
+                    </div>
+
                     <!-- Party size toggle -->
                     <div class="bf-party-toggle">
                         <button class="bf-party-btn active" data-size="1" onclick="setPartySize(1, this)">Just me</button>
-                        <button class="bf-party-btn" data-size="2" onclick="setPartySize(2, this)">2+ people</button>
-                        <button class="bf-party-btn" data-size="4" onclick="setPartySize(4, this)">Group</button>
+                        <button class="bf-party-btn" data-size="2" onclick="setPartySize(2, this)">2-3 people</button>
+                        <button class="bf-party-btn" data-size="4" onclick="setPartySize(4, this)">4+ people / workplace group</button>
                     </div>
 
                     <!-- Group size panel (hidden by default) -->
@@ -981,8 +1107,8 @@
                 <!-- ===== STEP B: Course Requirement ===== -->
                 <div class="funnel-step" id="step-course">
                     <div class="funnel-step-header">
-                        <h2 class="funnel-title">What do you need?</h2>
-                        <p class="funnel-subtitle">Not sure? Choose the recommended option to stay compliant for most workplaces.</p>
+                        <h2 class="funnel-title">Choose your certificate</h2>
+                        <p class="funnel-subtitle">Full First Aid + CPR is right for most workplaces and is already marked as recommended.</p>
                     </div>
 
                     <div class="bf-step-summary" id="courseStepSummary" style="display:none;">
@@ -1009,7 +1135,6 @@
                             <span class="bf-course-price">$159</span>
                             <span class="bf-course-meta">HLTAID011 &bull; 7 hours &bull; Valid 3 years</span>
                         </button>
-                            <button type="button" class="bf-help-link" onclick="openIncludedModal('hltaid011')" style="font-size:0.75rem;">What's included?</button>
                         </div>
 
                         <!-- Card 2: CPR only -->
@@ -1029,7 +1154,6 @@
                             <span class="bf-course-meta">HLTAID009 &bull; 3 hours &bull; Valid 12 months</span>
                             <p class="bf-guardrail">Only choose this if your employer specifically says CPR-only</p>
                         </button>
-                            <button type="button" class="bf-help-link" onclick="openIncludedModal('hltaid009')" style="font-size:0.75rem;">What's included?</button>
                         </div>
 
                         <!-- Card 3: Childcare -->
@@ -1048,24 +1172,15 @@
                             <span class="bf-course-price">$199</span>
                             <span class="bf-course-meta">HLTAID012 &bull; 8 hours &bull; Valid 3 years</span>
                         </button>
-                            <button type="button" class="bf-help-link" onclick="openIncludedModal('hltaid012')" style="font-size:0.75rem;">What's included?</button>
                         </div>
-                    </div>
-
-                    <!-- Links below cards -->
-                    <div class="bf-step2-links">
-                        <button type="button" onclick="openCompareModal()">Compare CPR vs Full First Aid</button>
-                        <button type="button" onclick="openOtherCoursesModal()">Other courses (Advanced Resuscitation)</button>
                     </div>
 
                     <!-- Help me choose -->
                     <div style="text-align:center;margin-top:var(--space-4);">
-                        <button class="bf-help-link" onclick="openHelpFlow()">Not sure? Help me choose (2 questions)</button>
-                    </div>
-
-                    <!-- Business link -->
-                    <div style="text-align:center;margin-top:var(--space-2);">
-                        <a href="business.html" class="bf-help-link" onclick="fireEvent('bf_business_link_click',{source:'step2'})" style="font-size:0.8125rem;">Need team training, onsite, or credits? Business options &rarr;</a>
+                        <button class="bf-help-link" onclick="openHelpFlow()">Not sure? Help me choose in 2 questions</button>
+                        <div>
+                            <button type="button" class="bf-help-link bf-help-link-minor" onclick="openOtherCoursesModal()">Need a different course? See advanced options</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1073,7 +1188,7 @@
                 <!-- ===== STEP C: Confirm + Booking Form ===== -->
                 <div class="funnel-step" id="step-confirm">
                     <div class="funnel-step-header">
-                        <h2 class="funnel-title">Confirm your booking</h2>
+                        <h2 class="funnel-title" id="confirmHeading">Secure your place</h2>
                     </div>
 
                     <div class="bf-confirm-layout">
@@ -1120,7 +1235,7 @@
                         <!-- Right: Booking form -->
                         <div class="bf-form-card">
                             <h3>Your details</h3>
-                            <p class="bf-form-sub">Secure checkout &bull; Instant confirmation &bull; Seat guaranteed</p>
+                            <p class="bf-form-sub" id="confirmFormSub">Complete payment to lock in this session instantly.</p>
 
                             <!-- Group summary (hidden for solo) -->
                             <div class="bf-group-confirm" id="groupConfirmRow" style="display:none;">
@@ -1155,35 +1270,42 @@
                                     <input type="text" id="bfCompany" name="company" class="form-input" placeholder="Company / organisation *" autocomplete="organization">
                                 </div>
 
-                                <!-- Order bumps -->
-                                <div class="bf-addons" id="addonSection">
-                                    <button type="button" class="bf-addon-row" data-addon="reschedule_protection" aria-pressed="false" onclick="toggleAddon(this)">
-                                        <div class="bf-addon-left">
-                                            <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-                                            <div>
-                                                <span class="bf-addon-label" id="addonRescheduleLabel">Reschedule protection</span>
-                                                <span class="bf-addon-desc" id="addonRescheduleDesc">Free date change up to 24h before</span>
-                                            </div>
-                                        </div>
-                                        <span class="bf-addon-price" id="addonReschedulePrice">+$19</span>
-                                    </button>
-                                    <button type="button" class="bf-addon-row" data-addon="first_aid_kit" aria-pressed="false" onclick="toggleAddon(this)">
-                                        <div class="bf-addon-left">
-                                            <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-                                            <div>
-                                                <span class="bf-addon-label">First aid kit &mdash; collect on the day</span>
-                                                <span class="bf-addon-desc">Workplace-ready kit to take home</span>
-                                            </div>
-                                        </div>
-                                        <span class="bf-addon-price">+$49</span>
-                                    </button>
-                                </div>
-
                                 <button type="button" class="btn btn-primary btn-lg bf-submit" id="submitBtn" onclick="submitBooking()">
                                     Pay &amp; Book &mdash; <span id="submitTotal">$159</span>
                                 </button>
 
                                 <p class="bf-pay-note">Instant confirmation after payment &bull; Free date change up to 24 hours before your session</p>
+
+                                <details class="bf-optional-extras" id="optionalExtras">
+                                    <summary>
+                                        Optional extras
+                                        <span class="bf-optional-extras-copy">Add flexibility or a take-home first aid kit after you’ve decided to book.</span>
+                                    </summary>
+                                    <div class="bf-optional-extras-body">
+                                        <div class="bf-addons" id="addonSection">
+                                            <button type="button" class="bf-addon-row" data-addon="reschedule_protection" aria-pressed="false" onclick="toggleAddon(this)">
+                                                <div class="bf-addon-left">
+                                                    <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                                    <div>
+                                                        <span class="bf-addon-label" id="addonRescheduleLabel">Reschedule protection</span>
+                                                        <span class="bf-addon-desc" id="addonRescheduleDesc">Free date change up to 24h before</span>
+                                                    </div>
+                                                </div>
+                                                <span class="bf-addon-price" id="addonReschedulePrice">+$19</span>
+                                            </button>
+                                            <button type="button" class="bf-addon-row" data-addon="first_aid_kit" aria-pressed="false" onclick="toggleAddon(this)">
+                                                <div class="bf-addon-left">
+                                                    <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                                    <div>
+                                                        <span class="bf-addon-label">First aid kit &mdash; collect on the day</span>
+                                                        <span class="bf-addon-desc">Workplace-ready kit to take home</span>
+                                                    </div>
+                                                </div>
+                                                <span class="bf-addon-price">+$49</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
                             </form>
 
                             <!-- Trust stack -->
@@ -1440,9 +1562,9 @@
     var stepHistory = [];
     var currentStep = 'step-location';
     var stepConfig = {
-        'step-location': { num: 1, label: 'Location & Date', progress: 33 },
-        'step-course':   { num: 2, label: 'Your Requirement', progress: 66 },
-        'step-confirm':  { num: 3, label: 'Confirm & Book',   progress: 100 }
+        'step-location': { num: 1, label: 'Choose Session', progress: 33 },
+        'step-course':   { num: 2, label: 'Choose Certificate', progress: 66 },
+        'step-confirm':  { num: 3, label: 'Secure Your Spot', progress: 100 }
     };
 
     function renderCurrentStep() {
@@ -1786,6 +1908,48 @@
         return earliest ? { session: earliest, courseId: earliestCourse } : null;
     }
 
+    function getFastLaneSession() {
+        var preferredCourseId = 'hltaid011';
+        var best = null;
+        Object.keys(locationMeta).forEach(function(locationId) {
+            var sessions = sessionIndex[preferredCourseId] && sessionIndex[preferredCourseId][locationId];
+            if (!sessions || sessions.length === 0) return;
+            for (var i = 0; i < sessions.length; i++) {
+                var session = sessions[i];
+                if (session.seatsLeft < state.partySize) continue;
+                if (!best || session.dateISO < best.session.dateISO) {
+                    best = {
+                        locationId: locationId,
+                        location: locationMeta[locationId],
+                        session: session,
+                        courseId: preferredCourseId
+                    };
+                }
+                break;
+            }
+        });
+        return best;
+    }
+
+    function renderFastLaneCard() {
+        var card = document.getElementById('fastLaneCard');
+        var meta = document.getElementById('fastLaneMeta');
+        if (!card || !meta) return;
+
+        var best = getFastLaneSession();
+        if (!best) {
+            card.style.display = 'none';
+            return;
+        }
+
+        card.style.display = 'block';
+        meta.innerHTML = '' +
+            '<span>' + esc(best.session.label) + '</span>' +
+            '<span>' + esc(best.session.start) + ' - ' + esc(best.session.end) + '</span>' +
+            '<span>' + esc(best.location.label) + '</span>' +
+            '<span>$' + esc(String(courseMeta[best.courseId].price)) + ' per person</span>';
+    }
+
     // Get all sessions at a location, across all courses, for a given filter
     function getSessionsForLocation(locationId, filterCourseId) {
         var results = [];
@@ -1815,6 +1979,7 @@
     // =====================================================
 
     function renderLocationCards() {
+        renderFastLaneCard();
         var html = '';
         var locIds = Object.keys(locationMeta);
         locIds.forEach(function(locId) {
@@ -1845,7 +2010,7 @@
                 nextHtml +
                 '<button class="btn btn-primary bf-book-earliest"' + bookDisabled +
                     ' onclick="selectEarliestSession(\'' + locId + '\')">' +
-                    'Book earliest' +
+                    'Choose this location' +
                 '</button>' +
                 '<button class="bf-see-all" onclick="openSessionModal(\'' + locId + '\')">See all dates</button>' +
             '</div>';
@@ -1924,6 +2089,33 @@
         populateCourseStepSummary();
         saveDraftState();
         navigateTo('step-course');
+    }
+
+    function bookFastLane() {
+        var best = getFastLaneSession();
+        if (!best) return;
+
+        state.location = best.locationId;
+        state.locationLabel = best.location.label;
+        state.locationAddress = best.location.address;
+        state.sessionId = best.session.id;
+        state.sessionDate = best.session.dateISO;
+        state.sessionLabel = best.session.label;
+        state.sessionStart = best.session.start;
+        state.sessionEnd = best.session.end;
+        state.provisionalCourseId = best.courseId;
+        state.courseId = best.courseId;
+        state.swapped = false;
+
+        fireEvent('bf_fast_lane_book', {
+            location: best.locationId,
+            session_id: best.session.id,
+            course: best.courseId,
+            party_size: state.partySize
+        });
+        saveDraftState();
+        populateConfirmStep();
+        navigateTo('step-confirm');
     }
 
 
@@ -2145,6 +2337,8 @@
     function populateConfirmStep() {
         var course = courseMeta[state.courseId];
         if (!course) return;
+        var confirmHeading = document.getElementById('confirmHeading');
+        var confirmFormSub = document.getElementById('confirmFormSub');
 
         document.getElementById('confirmCourseName').textContent = course.offerName;
         document.getElementById('confirmCourseCode').textContent = course.code;
@@ -2157,6 +2351,16 @@
         }
 
         document.getElementById('confirmLocation').innerHTML = esc(state.locationLabel) + ' &mdash; ' + esc(state.locationAddress);
+        if (confirmHeading) {
+            confirmHeading.textContent = 'Secure your ' + course.offerName;
+        }
+        if (confirmFormSub) {
+            if (state.sessionLabel) {
+                confirmFormSub.textContent = 'Complete payment to lock in ' + course.offerName + ' on ' + state.sessionLabel + ' in ' + state.locationLabel + '.';
+            } else {
+                confirmFormSub.textContent = 'Complete payment to lock in your place instantly.';
+            }
+        }
         renderParticipantFields();
         refreshAddonUI();
 
@@ -2197,8 +2401,8 @@
         var swapEl = document.getElementById('swapNotice');
         if (state.swapped && state.sessionId) {
             swapEl.style.display = 'block';
-            swapEl.innerHTML = '<strong>Date adjusted:</strong> Your original date isn\'t available for ' + esc(course.code) + '. ' +
-                'We\'ve moved you to <strong>' + esc(state.sessionLabel) + '</strong> (the nearest date). ' +
+            swapEl.innerHTML = '<strong>Closest available session reserved:</strong> Your original date is no longer available for ' + esc(course.code) + '. ' +
+                'We\'ve reserved <strong>' + esc(state.sessionLabel) + '</strong> so you can still complete this booking today. ' +
                 '<button class="bf-see-all" style="display:inline;" onclick="openSessionModal(\'' + state.location + '\')">Choose a different date</button>';
             fireEvent('bf_session_swap', {
                 original_session: state.originalSessionId,
@@ -2283,6 +2487,14 @@
         return selected;
     }
 
+    function syncOptionalExtrasState() {
+        var optionalExtras = document.getElementById('optionalExtras');
+        if (!optionalExtras) return;
+        if (getSelectedAddons().length > 0) {
+            optionalExtras.open = true;
+        }
+    }
+
     function updateTotalWithAddons() {
         var course = courseMeta[state.courseId];
         if (!course) return;
@@ -2291,6 +2503,7 @@
         getSelectedAddons().forEach(function(a) { addonTotal += a.price; });
         var grandTotal = baseTotal + addonTotal;
         document.getElementById('submitTotal').textContent = '$' + grandTotal;
+        syncOptionalExtrasState();
     }
 
     function submitBooking() {
