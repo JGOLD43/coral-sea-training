@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 533" role="img" aria-labelledby="title desc">
+  <title id="title">Coral Sea Training instructor illustration</title>
+  <desc id="desc">Illustrated instructor teaching CPR and first aid skills to a small class.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8f2"/>
+      <stop offset="100%" stop-color="#f1f6ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="533" fill="url(#bg)"/>
+  <rect x="88" y="94" width="624" height="344" rx="28" fill="#ffffff" stroke="#dbe5e8" stroke-width="4"/>
+  <rect x="116" y="124" width="274" height="172" rx="20" fill="#1a2332"/>
+  <rect x="422" y="126" width="260" height="90" rx="18" fill="#1b8a3d" opacity="0.1"/>
+  <rect x="422" y="236" width="260" height="130" rx="18" fill="#f3f4f6"/>
+  <path d="M218 178h30v30h30v30h-30v30h-30v-30h-30v-30h30z" fill="#ffffff"/>
+  <circle cx="518" cy="170" r="22" fill="#d90a0a"/>
+  <rect x="548" y="150" width="98" height="14" rx="7" fill="#d90a0a" opacity="0.25"/>
+  <rect x="548" y="176" width="76" height="14" rx="7" fill="#1a2332" opacity="0.12"/>
+  <ellipse cx="256" cy="414" rx="84" ry="28" fill="#d90a0a" opacity="0.12"/>
+  <ellipse cx="560" cy="414" rx="110" ry="28" fill="#1b8a3d" opacity="0.12"/>
+  <circle cx="248" cy="348" r="34" fill="#f3c2a0"/>
+  <path d="M202 430c8-38 28-64 46-64 18 0 38 26 46 64" fill="#d90a0a"/>
+  <path d="M214 324c10-18 25-28 40-28 16 0 30 10 42 28" fill="#1a2332"/>
+  <circle cx="560" cy="334" r="26" fill="#f3c2a0"/>
+  <path d="M526 402c6-30 22-52 34-52 13 0 28 22 34 52" fill="#1b8a3d"/>
+  <circle cx="622" cy="348" r="20" fill="#f3c2a0"/>
+  <path d="M596 406c5-22 16-40 26-40s21 18 26 40" fill="#1a2332"/>
+  <text x="118" y="86" fill="#1a2332" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Practical CPR instruction</text>
+</svg>

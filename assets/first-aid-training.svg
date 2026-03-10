@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 533" role="img" aria-labelledby="title desc">
+  <title id="title">Coral Sea Training classroom illustration</title>
+  <desc id="desc">Illustrated first aid training scene with trainer, students, and course materials.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3faf5"/>
+      <stop offset="100%" stop-color="#eef4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="533" fill="url(#bg)"/>
+  <circle cx="642" cy="98" r="54" fill="#d90a0a" opacity="0.08"/>
+  <circle cx="132" cy="118" r="70" fill="#1b8a3d" opacity="0.08"/>
+  <rect x="92" y="112" width="616" height="312" rx="28" fill="#ffffff" stroke="#dbe5e8" stroke-width="4"/>
+  <rect x="132" y="152" width="258" height="180" rx="20" fill="#1b8a3d" opacity="0.08"/>
+  <rect x="424" y="152" width="244" height="120" rx="20" fill="#d90a0a" opacity="0.08"/>
+  <rect x="424" y="292" width="244" height="80" rx="18" fill="#f3f4f6"/>
+  <path d="M250 204h34v34h34v34h-34v34h-34v-34h-34v-34h34z" fill="#d90a0a"/>
+  <circle cx="520" cy="196" r="30" fill="#1b8a3d"/>
+  <circle cx="592" cy="196" r="30" fill="#1b8a3d" opacity="0.78"/>
+  <circle cx="556" cy="228" r="30" fill="#1b8a3d" opacity="0.58"/>
+  <rect x="206" y="378" width="388" height="24" rx="12" fill="#e5e7eb"/>
+  <rect x="206" y="378" width="242" height="24" rx="12" fill="#1b8a3d"/>
+  <circle cx="166" cy="426" r="40" fill="#1a2332"/>
+  <circle cx="166" cy="366" r="28" fill="#f6c6a8"/>
+  <path d="M126 480c8-34 32-58 58-58 26 0 50 24 58 58" fill="#d90a0a"/>
+  <circle cx="634" cy="426" r="34" fill="#1a2332"/>
+  <circle cx="634" cy="374" r="24" fill="#f2c4a5"/>
+  <path d="M600 478c7-30 26-52 48-52 22 0 41 22 48 52" fill="#1b8a3d"/>
+  <circle cx="512" cy="446" r="28" fill="#1a2332"/>
+  <circle cx="512" cy="404" r="20" fill="#f2c4a5"/>
+  <path d="M484 490c6-26 22-44 40-44s34 18 40 44" fill="#1a2332"/>
+  <text x="132" y="108" fill="#1a2332" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">Hands-on First Aid Training</text>
+</svg>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https: http://localhost:* http://127.0.0.1:* https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https: http://localhost:* http://127.0.0.1:* https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Contact Coral Sea Training for First Aid courses in Townsville and Wide Bay. Phone: 0419 675 022 (Townsville), 0488 488 467 (Wide Bay). RTO #32221.">
     <meta property="og:title" content="Contact Us | Coral Sea Training">
@@ -62,7 +62,7 @@
                         0419 675 022
                     </a>
                     <a href="courses.html" class="btn btn-primary">View Courses</a>
-                    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                    <button class="mobile-toggle" id="mobileToggle" aria-label="Menu" aria-controls="mobileMenu" aria-expanded="false">
                         <span></span><span></span><span></span>
                     </button>
                 </div>
@@ -97,7 +97,7 @@
         <div class="container">
             <div class="contact-route-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-4);max-width:800px;margin:0 auto var(--space-12);">
 
-                <a href="courses.html" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:all 0.2s ease;">
+                <a href="courses.html" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;">
                     <div style="width:56px;height:56px;background:var(--red-light);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-3);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;color:var(--red);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     </div>
@@ -105,7 +105,7 @@
                     <p style="font-size:0.8125rem;color:var(--gray-600);margin:0;">Find dates and book your First Aid certification</p>
                 </a>
 
-                <a href="corporate.html" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:all 0.2s ease;">
+                <a href="corporate.html" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;">
                     <div style="width:56px;height:56px;background:var(--green-light);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-3);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;color:var(--green);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     </div>
@@ -113,7 +113,7 @@
                     <p style="font-size:0.8125rem;color:var(--gray-600);margin:0;">Annual compliance packages for businesses</p>
                 </a>
 
-                <a href="order-kits.html" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:all 0.2s ease;">
+                <a href="order-kits.html" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;">
                     <div style="width:56px;height:56px;background:var(--gray-100);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-3);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;color:var(--navy);"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                     </div>
@@ -121,7 +121,7 @@
                     <p style="font-size:0.8125rem;color:var(--gray-600);margin:0;">Workplace-compliant kits delivered to your door</p>
                 </a>
 
-                <button onclick="document.getElementById('generalEnquirySection').style.display='block';this.closest('.contact-route-card').style.borderColor='var(--red)';this.closest('.contact-route-card').style.background='var(--red-light)';document.getElementById('generalEnquirySection').scrollIntoView({behavior:'smooth',block:'start'});" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:all 0.2s ease;cursor:pointer;font-family:inherit;">
+                <button type="button" id="generalEnquiryToggle" aria-controls="generalEnquirySection" aria-expanded="false" class="contact-route-card" style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--space-6);background:var(--white);border-radius:16px;border:2px solid var(--gray-200);text-decoration:none;color:inherit;transition:border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;cursor:pointer;font-family:inherit;">
                     <div style="width:56px;height:56px;background:var(--gray-100);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-3);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px;color:var(--navy);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </div>
@@ -133,7 +133,7 @@
     </section>
 
     <!-- General Enquiry Form (hidden until clicked) -->
-    <section class="section" id="generalEnquirySection" style="display:none;padding-top:0;">
+    <section class="section" id="generalEnquirySection" style="padding-top:0;" hidden>
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-info">
@@ -346,10 +346,34 @@
 
     <script src="js/main.js"></script>
     <script>
-        // If ?show=form is in URL, auto-reveal the general enquiry form
-        if (new URLSearchParams(window.location.search).get('show') === 'form') {
-            document.getElementById('generalEnquirySection').style.display = 'block';
-        }
+        (function() {
+            var toggle = document.getElementById('generalEnquiryToggle');
+            var section = document.getElementById('generalEnquirySection');
+            var formHeading = document.querySelector('#contactFormWrapper h3');
+
+            function openGeneralEnquiry(moveFocus) {
+                if (!toggle || !section) return;
+                section.hidden = false;
+                toggle.setAttribute('aria-expanded', 'true');
+                toggle.style.borderColor = 'var(--red)';
+                toggle.style.background = 'var(--red-light)';
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (moveFocus && formHeading) {
+                    formHeading.setAttribute('tabindex', '-1');
+                    formHeading.focus();
+                }
+            }
+
+            if (toggle) {
+                toggle.addEventListener('click', function() {
+                    openGeneralEnquiry(true);
+                });
+            }
+
+            if (new URLSearchParams(window.location.search).get('show') === 'form') {
+                openGeneralEnquiry(false);
+            }
+        })();
     </script>
 </body>
 </html>

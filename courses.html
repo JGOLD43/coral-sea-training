@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https: http://localhost:* http://127.0.0.1:* https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https: http://localhost:* http://127.0.0.1:* https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Book your First Aid course in under 30 seconds. See available dates, pick a session, and reserve your spot. CPR, First Aid, Childcare & Advanced courses. RTO #32221.">
     <meta property="og:title" content="Book Your Course | Coral Sea Training">
@@ -49,7 +49,7 @@
             cursor: pointer;
             background: transparent;
             color: var(--gray-600);
-            transition: all 0.2s var(--ease-out);
+            transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
         }
         .bf-party-btn.active {
             background: var(--white);
@@ -88,7 +88,7 @@
             align-items: center;
             justify-content: center;
             color: var(--navy);
-            transition: all 0.15s;
+            transition: border-color 0.15s, color 0.15s, background-color 0.15s;
         }
         .bf-stepper button:hover { border-color: var(--red); color: var(--red); }
         .bf-stepper span {
@@ -230,15 +230,24 @@
         @media (min-width: 900px) {
             .bf-course-cards { grid-template-columns: repeat(3, 1fr); }
         }
+        .bf-course-card-shell {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
         .bf-course-card {
+            appearance: none;
+            width: 100%;
             background: var(--white);
             border: 2px solid var(--gray-200);
             border-radius: 16px;
             padding: var(--space-5) var(--space-4);
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s var(--ease-out);
+            transition: border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
             position: relative;
+            font: inherit;
+            color: inherit;
         }
         .bf-course-card:hover {
             border-color: var(--green);
@@ -393,6 +402,9 @@
             }
         }
         .bf-addon-row {
+            appearance: none;
+            width: 100%;
+            background: var(--white);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -401,7 +413,10 @@
             border-radius: 10px;
             margin-bottom: var(--space-2);
             cursor: pointer;
-            transition: all 0.15s;
+            transition: border-color 0.15s, background-color 0.15s;
+            font: inherit;
+            color: inherit;
+            text-align: left;
         }
         .bf-addon-row:hover { border-color: var(--green); }
         .bf-addon-row.checked { border-color: var(--green); background: #f0faf3; }
@@ -418,7 +433,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s;
+            transition: border-color 0.15s, background-color 0.15s;
             flex-shrink: 0;
         }
         .bf-addon-row.checked .bf-addon-check {
@@ -514,7 +529,7 @@
             font-weight: 600;
             color: var(--navy);
             text-align: center;
-            transition: all 0.15s;
+            transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s, opacity 0.15s;
         }
         .bf-help-btn:hover { border-color: var(--green); background: #f0faf3; }
         .bf-help-btn small {
@@ -784,6 +799,9 @@
 
         /* Session items in modal */
         .bf-session-item {
+            appearance: none;
+            width: 100%;
+            background: var(--white);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -793,6 +811,9 @@
             margin-bottom: var(--space-2);
             cursor: pointer;
             transition: all 0.15s;
+            font: inherit;
+            color: inherit;
+            text-align: left;
         }
         .bf-session-item:hover { border-color: var(--green); }
         .bf-session-item.disabled {
@@ -944,7 +965,8 @@
                             <button type="button" onclick="adjustGroupSize(1)">+</button>
                         </div>
                         <div id="groupCompanyField" style="display:none;max-width:300px;margin:0 auto;">
-                            <input type="text" id="companyName" class="form-input" placeholder="Company name (optional)" style="text-align:center;">
+                            <label class="sr-only" for="companyName">Company name</label>
+                            <input type="text" id="companyName" class="form-input" placeholder="Company name (optional)" style="text-align:center;" autocomplete="organization">
                         </div>
                     </div>
 
@@ -971,7 +993,8 @@
 
                     <div class="bf-course-cards" id="courseCards">
                         <!-- Card 1: Recommended -->
-                        <div class="bf-course-card bf-recommended" data-course="hltaid011" onclick="selectCourse('hltaid011', this)">
+                        <div class="bf-course-card-shell">
+                        <button type="button" class="bf-course-card bf-recommended" data-course="hltaid011" aria-pressed="false" onclick="selectCourse('hltaid011', this)">
                             <span class="bf-rec-badge">Recommended</span>
                             <div class="bf-course-icon" style="background:#f0faf3;color:var(--green);">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -985,11 +1008,13 @@
                             </ul>
                             <span class="bf-course-price">$159</span>
                             <span class="bf-course-meta">HLTAID011 &bull; 7 hours &bull; Valid 3 years</span>
-                            <button type="button" class="bf-help-link" onclick="event.stopPropagation();openIncludedModal('hltaid011')" style="font-size:0.75rem;margin-top:var(--space-1);">What's included?</button>
+                        </button>
+                            <button type="button" class="bf-help-link" onclick="openIncludedModal('hltaid011')" style="font-size:0.75rem;">What's included?</button>
                         </div>
 
                         <!-- Card 2: CPR only -->
-                        <div class="bf-course-card" data-course="hltaid009" onclick="selectCourse('hltaid009', this)">
+                        <div class="bf-course-card-shell">
+                        <button type="button" class="bf-course-card" data-course="hltaid009" aria-pressed="false" onclick="selectCourse('hltaid009', this)">
                             <div class="bf-course-icon" style="background:#fef2f2;color:var(--red);">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                             </div>
@@ -1003,11 +1028,13 @@
                             <span class="bf-course-price">$99</span>
                             <span class="bf-course-meta">HLTAID009 &bull; 3 hours &bull; Valid 12 months</span>
                             <p class="bf-guardrail">Only choose this if your employer specifically says CPR-only</p>
-                            <button type="button" class="bf-help-link" onclick="event.stopPropagation();openIncludedModal('hltaid009')" style="font-size:0.75rem;margin-top:var(--space-1);">What's included?</button>
+                        </button>
+                            <button type="button" class="bf-help-link" onclick="openIncludedModal('hltaid009')" style="font-size:0.75rem;">What's included?</button>
                         </div>
 
                         <!-- Card 3: Childcare -->
-                        <div class="bf-course-card" data-course="hltaid012" onclick="selectCourse('hltaid012', this)">
+                        <div class="bf-course-card-shell">
+                        <button type="button" class="bf-course-card" data-course="hltaid012" aria-pressed="false" onclick="selectCourse('hltaid012', this)">
                             <div class="bf-course-icon" style="background:#eff6ff;color:#2563eb;">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                             </div>
@@ -1020,7 +1047,8 @@
                             </ul>
                             <span class="bf-course-price">$199</span>
                             <span class="bf-course-meta">HLTAID012 &bull; 8 hours &bull; Valid 3 years</span>
-                            <button type="button" class="bf-help-link" onclick="event.stopPropagation();openIncludedModal('hltaid012')" style="font-size:0.75rem;margin-top:var(--space-1);">What's included?</button>
+                        </button>
+                            <button type="button" class="bf-help-link" onclick="openIncludedModal('hltaid012')" style="font-size:0.75rem;">What's included?</button>
                         </div>
                     </div>
 
@@ -1102,28 +1130,34 @@
 
                             <form id="bookingForm" onsubmit="return false;">
                                 <div class="funnel-form-group">
-                                    <input type="text" id="bfFirstName" class="form-input" placeholder="First name *" required autocomplete="given-name">
+                                    <label class="sr-only" for="bfFirstName">First name</label>
+                                    <input type="text" id="bfFirstName" name="firstName" class="form-input" placeholder="First name *" required autocomplete="given-name">
                                 </div>
                                 <div class="funnel-form-group">
-                                    <input type="text" id="bfLastName" class="form-input" placeholder="Last name *" required autocomplete="family-name">
+                                    <label class="sr-only" for="bfLastName">Last name</label>
+                                    <input type="text" id="bfLastName" name="lastName" class="form-input" placeholder="Last name *" required autocomplete="family-name">
                                 </div>
                                 <div class="funnel-form-group">
-                                    <input type="email" id="bfEmail" class="form-input" placeholder="Email *" required autocomplete="email">
+                                    <label class="sr-only" for="bfEmail">Email</label>
+                                    <input type="email" id="bfEmail" name="email" class="form-input" placeholder="Email *" required autocomplete="email">
                                 </div>
                                 <div class="funnel-form-group">
-                                    <input type="tel" id="bfPhone" class="form-input" placeholder="Mobile *" required autocomplete="tel">
+                                    <label class="sr-only" for="bfPhone">Mobile</label>
+                                    <input type="tel" id="bfPhone" name="phone" class="form-input" placeholder="Mobile *" required autocomplete="tel">
                                 </div>
                                 <div id="extraParticipantFields"></div>
                                 <div class="funnel-form-group" id="employerField">
-                                    <input type="text" id="bfEmployer" class="form-input" placeholder="Employer (optional)" autocomplete="organization">
+                                    <label class="sr-only" for="bfEmployer">Employer</label>
+                                    <input type="text" id="bfEmployer" name="employer" class="form-input" placeholder="Employer (optional)" autocomplete="organization">
                                 </div>
                                 <div class="funnel-form-group" id="companyFieldConfirm" style="display:none;">
-                                    <input type="text" id="bfCompany" class="form-input" placeholder="Company / organisation *" autocomplete="organization">
+                                    <label class="sr-only" for="bfCompany">Company or organisation</label>
+                                    <input type="text" id="bfCompany" name="company" class="form-input" placeholder="Company / organisation *" autocomplete="organization">
                                 </div>
 
                                 <!-- Order bumps -->
                                 <div class="bf-addons" id="addonSection">
-                                    <div class="bf-addon-row" data-addon="reschedule_protection" onclick="toggleAddon(this)">
+                                    <button type="button" class="bf-addon-row" data-addon="reschedule_protection" aria-pressed="false" onclick="toggleAddon(this)">
                                         <div class="bf-addon-left">
                                             <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
                                             <div>
@@ -1132,8 +1166,8 @@
                                             </div>
                                         </div>
                                         <span class="bf-addon-price" id="addonReschedulePrice">+$19</span>
-                                    </div>
-                                    <div class="bf-addon-row" data-addon="first_aid_kit" onclick="toggleAddon(this)">
+                                    </button>
+                                    <button type="button" class="bf-addon-row" data-addon="first_aid_kit" aria-pressed="false" onclick="toggleAddon(this)">
                                         <div class="bf-addon-left">
                                             <div class="bf-addon-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
                                             <div>
@@ -1142,7 +1176,7 @@
                                             </div>
                                         </div>
                                         <span class="bf-addon-price">+$49</span>
-                                    </div>
+                                    </button>
                                 </div>
 
                                 <button type="button" class="btn btn-primary btn-lg bf-submit" id="submitBtn" onclick="submitBooking()">
@@ -1505,8 +1539,14 @@
 
         if (state.courseId) {
             var selectedCard = document.querySelector('.bf-course-card[data-course="' + state.courseId + '"]');
-            document.querySelectorAll('.bf-course-card').forEach(function(c) { c.classList.remove('selected'); });
-            if (selectedCard) selectedCard.classList.add('selected');
+            document.querySelectorAll('.bf-course-card').forEach(function(c) {
+                c.classList.remove('selected');
+                c.setAttribute('aria-pressed', 'false');
+            });
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+                selectedCard.setAttribute('aria-pressed', 'true');
+            }
         }
         populateCourseStepSummary();
 
@@ -1519,7 +1559,9 @@
             if (Array.isArray(draft.selectedAddons)) {
                 document.querySelectorAll('.bf-addon-row').forEach(function(row) {
                     var addonId = row.getAttribute('data-addon');
-                    row.classList.toggle('checked', draft.selectedAddons.indexOf(addonId) !== -1);
+                    var isChecked = draft.selectedAddons.indexOf(addonId) !== -1;
+                    row.classList.toggle('checked', isChecked);
+                    row.setAttribute('aria-pressed', isChecked ? 'true' : 'false');
                 });
                 updateTotalWithAddons();
             }
@@ -1572,14 +1614,18 @@
         var html = '';
         for (var i = 2; i <= state.partySize; i++) {
             var participant = source[i - 2] || { firstName: '', lastName: '' };
+            var firstId = 'participantFirstName' + i;
+            var lastId = 'participantLastName' + i;
             html += '<div class="bf-participant-card">' +
                 '<h4>Participant ' + i + '</h4>' +
                 '<div class="bf-participant-grid">' +
                     '<div class="funnel-form-group" style="margin-bottom:0;">' +
-                        '<input type="text" class="form-input" data-field="firstName" data-index="' + (i - 2) + '" placeholder="First name *" value="' + esc(participant.firstName) + '">' +
+                        '<label class="sr-only" for="' + firstId + '">Participant ' + i + ' first name</label>' +
+                        '<input type="text" id="' + firstId + '" class="form-input" data-field="firstName" data-index="' + (i - 2) + '" placeholder="First name *" value="' + esc(participant.firstName) + '">' +
                     '</div>' +
                     '<div class="funnel-form-group" style="margin-bottom:0;">' +
-                        '<input type="text" class="form-input" data-field="lastName" data-index="' + (i - 2) + '" placeholder="Last name *" value="' + esc(participant.lastName) + '">' +
+                        '<label class="sr-only" for="' + lastId + '">Participant ' + i + ' last name</label>' +
+                        '<input type="text" id="' + lastId + '" class="form-input" data-field="lastName" data-index="' + (i - 2) + '" placeholder="Last name *" value="' + esc(participant.lastName) + '">' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -1929,8 +1975,8 @@
             var seatsClass = s.seatsLeft <= 4 ? 'low' : 'ok';
             var disabledClass = hasSpace ? '' : ' disabled';
 
-            html += '<div class="bf-session-item' + disabledClass + '"' +
-                (hasSpace ? ' onclick="selectSessionFromModal(\'' + s.id + '\', \'' + r.courseId + '\')"' : '') + '>' +
+            html += '<button type="button" class="bf-session-item' + disabledClass + '"' +
+                (hasSpace ? ' onclick="selectSessionFromModal(\'' + s.id + '\', \'' + r.courseId + '\')"' : ' disabled') + '>' +
                 '<div>' +
                     '<div class="bf-session-date">' + esc(s.label) + '</div>' +
                     '<div class="bf-session-time">' + esc(s.start) + ' &ndash; ' + esc(s.end) + '</div>' +
@@ -1941,7 +1987,7 @@
                 '<span class="bf-seats ' + seatsClass + '">' +
                     (hasSpace ? s.seatsLeft + ' seats' : 'Only ' + s.seatsLeft + ' seat' + (s.seatsLeft !== 1 ? 's' : '')) +
                 '</span>' +
-            '</div>';
+            '</button>';
         });
 
         document.getElementById('sessionModalList').innerHTML = html;
@@ -1997,8 +2043,12 @@
     function selectCourse(courseId, cardEl) {
         document.querySelectorAll('.bf-course-card').forEach(function(c) {
             c.classList.remove('selected');
+            c.setAttribute('aria-pressed', 'false');
         });
-        if (cardEl) cardEl.classList.add('selected');
+        if (cardEl) {
+            cardEl.classList.add('selected');
+            cardEl.setAttribute('aria-pressed', 'true');
+        }
         state.courseId = courseId;
 
         fireEvent('bf_course_selected', { course: courseId });
@@ -2137,7 +2187,10 @@
         }
 
         // Reset add-ons
-        document.querySelectorAll('.bf-addon-row').forEach(function(r) { r.classList.remove('checked'); });
+        document.querySelectorAll('.bf-addon-row').forEach(function(r) {
+            r.classList.remove('checked');
+            r.setAttribute('aria-pressed', 'false');
+        });
         updateTotalWithAddons();
 
         // Swap notice
@@ -2205,6 +2258,7 @@
         rowEl.classList.toggle('checked');
         var addonId = rowEl.getAttribute('data-addon');
         var isEnabled = rowEl.classList.contains('checked');
+        rowEl.setAttribute('aria-pressed', isEnabled ? 'true' : 'false');
         fireEvent('bf_addon_toggle', { id: addonId, enabled: isEnabled });
         updateTotalWithAddons();
         saveDraftState();
@@ -2515,8 +2569,12 @@
         // Select the card visually
         var card = document.querySelector('.bf-course-card[data-course="' + courseId + '"]');
         if (card) {
-            document.querySelectorAll('.bf-course-card').forEach(function(c) { c.classList.remove('selected'); });
+            document.querySelectorAll('.bf-course-card').forEach(function(c) {
+                c.classList.remove('selected');
+                c.setAttribute('aria-pressed', 'false');
+            });
             card.classList.add('selected');
+            card.setAttribute('aria-pressed', 'true');
         }
 
         state.courseId = courseId;
