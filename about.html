@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="About Coral Sea Training - Queensland's trusted First Aid training provider. RTO #32221. Over 20 years experience serving Townsville and Wide Bay.">
     <meta property="og:title" content="About Us | Coral Sea Training">
     <meta property="og:description" content="Queensland's trusted First Aid training provider. RTO #32221. Over 20 years experience.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jgold43.github.io/coral-sea-training/about.html">
-    <meta property="og:image" content="https://images.pexels.com/photos/11655091/pexels-photo-11655091.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2">
+    <meta property="og:image" content="https://jgold43.github.io/coral-sea-training/assets/coral-sea-training-logo.png">
     <link rel="canonical" href="https://jgold43.github.io/coral-sea-training/about.html">
     <title>About Us | Coral Sea Training | RTO #32221</title>
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <script src="js/site-config.js"></script>
+    <script src="js/site-integrations.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -323,7 +319,7 @@
                     <div style="color:#f59e0b;font-size:0.875rem;">&#9733;&#9733;&#9733;&#9733;<span style="opacity:0.3;">&#9733;</span> <strong style="color:var(--navy);font-size:0.9375rem;">4.4/5</strong></div>
                     <span style="font-size:0.8125rem;color:var(--gray-600);">Read our verified reviews</span>
                 </div>
-                <a href="https://www.google.com/search?q=Coral+Sea+Training+reviews" target="_blank" rel="noopener" id="googleReviewsLink" class="btn btn-outline" style="margin-left:var(--space-2);">Read Reviews</a>
+                <a href="https://www.google.com/search?q=Coral+Sea+Training+reviews" target="_blank" rel="noopener noreferrer" id="googleReviewsLink" class="btn btn-outline" style="margin-left:var(--space-2);">Read Reviews</a>
             </div>
         </div>
     </section>

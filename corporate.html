@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Annual First Aid compliance packages for businesses. On-site training, auto-renewals, certificate tracking. Never worry about compliance again. RTO #32221.">
     <meta property="og:title" content="Corporate & Team Training | Coral Sea Training">
     <meta property="og:description" content="Annual First Aid compliance packages for businesses. On-site training, auto-renewals, certificate tracking.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jgold43.github.io/coral-sea-training/corporate.html">
-    <meta property="og:image" content="https://images.pexels.com/photos/11655091/pexels-photo-11655091.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2">
+    <meta property="og:image" content="https://jgold43.github.io/coral-sea-training/assets/coral-sea-training-logo.png">
     <link rel="canonical" href="https://jgold43.github.io/coral-sea-training/corporate.html">
     <title>Corporate &amp; Team Training | Coral Sea Training | RTO #32221</title>
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <script src="js/site-config.js"></script>
+    <script src="js/site-integrations.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -293,7 +289,7 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form id="corporateForm" action="https://formspree.io/f/PLACEHOLDER_CORPORATE" method="POST">
+                    <form id="corporateForm" data-form-key="corporate" method="POST">
                         <input type="hidden" name="_next" value="https://jgold43.github.io/coral-sea-training/thanks.html?type=corporate">
                         <input type="hidden" name="_subject" value="Corporate Training Enquiry">
 
@@ -411,7 +407,7 @@
             <div style="max-width:640px;margin:0 auto;text-align:center;background:var(--navy);border-radius:16px;padding:var(--space-8);color:white;">
                 <h3 style="font-family:var(--font-display);font-size:clamp(1.25rem,3vw,1.75rem);margin-bottom:var(--space-3);">Free: First Aid Compliance Checklist (QLD)</h3>
                 <p style="color:rgba(255,255,255,0.8);font-size:0.9375rem;margin-bottom:var(--space-6);">Not ready for a quote yet? Download our free checklist to see where your business stands. Covers WHS requirements, renewal timelines, and common gaps.</p>
-                <form action="https://formspree.io/f/PLACEHOLDER_LEAD" method="POST" style="display:flex;gap:var(--space-2);max-width:420px;margin:0 auto;">
+                <form data-form-key="lead" method="POST" style="display:flex;gap:var(--space-2);max-width:420px;margin:0 auto;">
                     <input type="hidden" name="_subject" value="Corporate Lead Magnet - Compliance Checklist">
                     <input type="email" name="email" placeholder="Work email" required class="form-input" style="flex:1;margin:0;">
                     <button type="submit" class="btn btn-primary">Get Checklist</button>

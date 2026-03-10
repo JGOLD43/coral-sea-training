@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Book your First Aid course in under 30 seconds. See available dates, pick a session, and reserve your spot. CPR, First Aid, Childcare & Advanced courses. RTO #32221.">
     <meta property="og:title" content="Book Your Course | Coral Sea Training">
     <meta property="og:description" content="See available dates and book your First Aid course in under 30 seconds. RTO #32221.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jgold43.github.io/coral-sea-training/courses.html">
-    <meta property="og:image" content="https://images.pexels.com/photos/11655091/pexels-photo-11655091.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2">
+    <meta property="og:image" content="https://jgold43.github.io/coral-sea-training/assets/coral-sea-training-logo.png">
     <link rel="canonical" href="https://jgold43.github.io/coral-sea-training/courses.html">
     <title>Book Your Course | Coral Sea Training | RTO #32221</title>
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <script src="js/site-config.js"></script>
+    <script src="js/site-integrations.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2287,7 +2283,17 @@
             employer: employer || company || ''
         };
 
-        fetch('/api/checkout', {
+        var checkoutEndpoint = window.CST && typeof window.CST.getCheckoutEndpoint === 'function'
+            ? window.CST.getCheckoutEndpoint()
+            : '';
+
+        if (!checkoutEndpoint) {
+            fireEvent('bf_pay_error', { error: 'checkout_not_configured' });
+            submitBookingFallback(firstName, lastName, email, phone, employer, company, course, grandTotal, participants, selectedAddons);
+            return;
+        }
+
+        fetch(checkoutEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -2344,7 +2350,16 @@
         fd.append('payment_note', 'Stripe checkout failed — payment NOT collected');
         fd.append('_subject', 'BOOKING (payment pending): ' + (course.offerName || state.courseId) + ' - ' + firstName + ' ' + lastName);
 
-        fetch('https://formspree.io/f/PLACEHOLDER_BOOKING', {
+        var bookingEndpoint = window.CST && typeof window.CST.getFormEndpoint === 'function'
+            ? window.CST.getFormEndpoint('booking')
+            : '';
+
+        if (!bookingEndpoint) {
+            alert('Online booking follow-up is not configured yet. Please call 0419 675 022 or email admin@coralseatraining.com.au.');
+            return;
+        }
+
+        fetch(bookingEndpoint, {
             method: 'POST',
             body: fd,
             headers: { 'Accept': 'application/json' }

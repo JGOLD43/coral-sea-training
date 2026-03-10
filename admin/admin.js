@@ -13,7 +13,8 @@
     const CONFIG = {
         sessionTimeout: 30 * 60 * 1000, // 30 minutes
         storagePrefix: 'cst_admin_',
-        functionsBaseUrl: 'https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net'
+        functionsBaseUrl: '',
+        adminEmail: 'admin@coralseatraining.com.au'
     };
 
     const DEFAULT_DATA = {
@@ -114,23 +115,9 @@
         }
     };
 
-    const DEFAULT_CREDENTIALS = {
-        username: 'admin',
-        passwordHash: 'a8e5f5f8b3c4d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7'
-    };
-
     // =====================================================
     // Utility Functions
     // =====================================================
-
-    // Simple SHA-256 hash function
-    async function sha256(message) {
-        const msgBuffer = new TextEncoder().encode(message);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        return hashHex;
-    }
 
     // Storage helpers
     function getStorage(key, defaultValue = null) {
@@ -183,20 +170,6 @@
     // Authentication
     // =====================================================
 
-    function getCredentials() {
-        return getStorage('credentials', DEFAULT_CREDENTIALS);
-    }
-
-    async function validateLogin(username, password) {
-        const credentials = getCredentials();
-        const passwordHash = await sha256(password);
-
-        if (username === credentials.username && passwordHash === credentials.passwordHash) {
-            return true;
-        }
-        return false;
-    }
-
     function createSession() {
         const session = {
             created: Date.now(),
@@ -226,7 +199,10 @@
     }
 
     function isAuthenticated() {
-        return getSession() !== null;
+        return getSession() !== null &&
+            typeof firebase !== 'undefined' &&
+            firebase.auth &&
+            !!firebase.auth().currentUser;
     }
 
     // =====================================================
@@ -613,22 +589,23 @@
     // =====================================================
 
     async function changePassword(currentPassword, newPassword) {
-        const credentials = getCredentials();
-
-        // Validate current password
-        const currentHash = await sha256(currentPassword);
-        if (currentHash !== credentials.passwordHash) {
-            return { success: false, message: 'Current password is incorrect' };
+        if (!window.CST_FIREBASE_READY || typeof firebase === 'undefined' || !firebase.auth) {
+            return { success: false, message: 'Firebase auth is not configured' };
         }
 
-        // Hash and save new password
-        const newHash = await sha256(newPassword);
-        setStorage('credentials', {
-            username: credentials.username,
-            passwordHash: newHash
-        });
+        var user = firebase.auth().currentUser;
+        if (!user || !user.email) {
+            return { success: false, message: 'Sign in again before changing the password' };
+        }
 
-        return { success: true, message: 'Password changed successfully' };
+        try {
+            var credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+            await user.reauthenticateWithCredential(credential);
+            await user.updatePassword(newPassword);
+            return { success: true, message: 'Password changed successfully' };
+        } catch (error) {
+            return { success: false, message: error.message || 'Password change failed' };
+        }
     }
 
     function exportData() {
@@ -684,13 +661,18 @@
         return date.toISOString().split('T')[0];
     }
 
-    // Firebase admin login (runs alongside existing localStorage auth)
-    function firebaseAdminLogin(password) {
-        if (typeof firebase === 'undefined' || !firebase.auth) return;
-        var adminEmail = 'admin@coralseatraining.com.au';
-        firebase.auth().signInWithEmailAndPassword(adminEmail, password).catch(function(err) {
-            console.warn('Firebase admin auth failed:', err.message);
-        });
+    function getFunctionsBaseUrl() {
+        var configured = window.CST_PUBLIC_CONFIG && window.CST_PUBLIC_CONFIG.adminFunctionsBaseUrl;
+        if (configured) {
+            return configured.replace(/\/$/, '');
+        }
+
+        var projectId = window.firebaseConfig && window.firebaseConfig.projectId;
+        if (projectId && projectId.indexOf('YOUR_') === -1) {
+            return 'https://us-central1-' + projectId + '.cloudfunctions.net';
+        }
+
+        return '';
     }
 
     // Get Firebase ID token for Cloud Functions calls
@@ -706,8 +688,12 @@
     // Acuity API client (calls Cloud Functions proxy)
     async function acuityFetch(endpoint, options) {
         options = options || {};
+        var functionsBaseUrl = CONFIG.functionsBaseUrl || getFunctionsBaseUrl();
+        if (!functionsBaseUrl) {
+            throw new Error('Cloud Functions base URL is not configured');
+        }
         var token = await getFirebaseToken();
-        var url = new URL(CONFIG.functionsBaseUrl + '/' + endpoint.replace(/^\//, ''));
+        var url = new URL(functionsBaseUrl + '/' + endpoint.replace(/^\//, ''));
 
         if (options.params) {
             Object.keys(options.params).forEach(function(k) {
@@ -1204,17 +1190,23 @@
         // Login form
         UI.loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('password').value;
 
-            if (await validateLogin(username, password)) {
+            if (!window.CST_FIREBASE_READY || typeof firebase === 'undefined' || !firebase.auth) {
+                UI.loginError.textContent = 'Firebase auth is not configured for this admin panel.';
+                UI.loginError.style.display = 'block';
+                return;
+            }
+
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
                 createSession();
-                // Also sign into Firebase for Cloud Functions auth
-                firebaseAdminLogin(password);
                 showDashboard();
                 UI.loginError.style.display = 'none';
-            } else {
-                UI.loginError.textContent = 'Invalid username or password';
+            } catch (error) {
+                destroySession();
+                UI.loginError.textContent = error.message || 'Sign in failed';
                 UI.loginError.style.display = 'block';
             }
         });
@@ -1323,16 +1315,28 @@
     // =====================================================
 
     function init() {
+        CONFIG.functionsBaseUrl = getFunctionsBaseUrl();
+
         // Initialize default data if not present
         if (!getStorage('data')) {
             setStorage('data', DEFAULT_DATA);
         }
 
-        // Check authentication
-        if (isAuthenticated()) {
-            showDashboard();
+        if (window.CST_FIREBASE_READY && typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user && getSession()) {
+                    showDashboard();
+                } else {
+                    destroySession();
+                    showLoginScreen();
+                }
+            });
         } else {
             showLoginScreen();
+            if (UI.loginError) {
+                UI.loginError.textContent = 'Firebase auth is not configured for this admin panel.';
+                UI.loginError.style.display = 'block';
+            }
         }
 
         // Initialize event listeners

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /partner/
+
+Sitemap: https://jgold43.github.io/coral-sea-training/sitemap.xml

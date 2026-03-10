@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Contact Coral Sea Training for First Aid courses in Townsville and Wide Bay. Phone: 0419 675 022 (Townsville), 0488 488 467 (Wide Bay). RTO #32221.">
     <meta property="og:title" content="Contact Us | Coral Sea Training">
     <meta property="og:description" content="Get in touch to book your First Aid course. Townsville: 0419 675 022. Wide Bay: 0488 488 467.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jgold43.github.io/coral-sea-training/contact.html">
-    <meta property="og:image" content="https://images.pexels.com/photos/11655091/pexels-photo-11655091.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2">
+    <meta property="og:image" content="https://jgold43.github.io/coral-sea-training/assets/coral-sea-training-logo.png">
     <link rel="canonical" href="https://jgold43.github.io/coral-sea-training/contact.html">
     <title>Contact Us | Coral Sea Training | RTO #32221</title>
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <script src="js/site-config.js"></script>
+    <script src="js/site-integrations.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -186,7 +182,7 @@
 
                 <div class="contact-form" id="contactFormWrapper">
                     <h3>Send Us a Message</h3>
-                    <form id="contactForm" action="https://formspree.io/f/PLACEHOLDER_CONTACT" method="POST">
+                    <form id="contactForm" data-form-key="contact" method="POST">
                         <input type="hidden" name="_next" value="https://jgold43.github.io/coral-sea-training/thanks.html?type=general">
                         <input type="hidden" name="_subject" value="Website Contact Form">
                         <div class="form-group">

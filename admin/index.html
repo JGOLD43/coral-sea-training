@@ -20,12 +20,12 @@
                     <span class="logo-text">Coral Sea Training</span>
                 </div>
                 <h1>Admin Login</h1>
-                <p>Enter your credentials to access the admin panel</p>
+                <p>Sign in with the configured Firebase admin account to access the admin panel</p>
             </div>
             <form id="loginForm" class="login-form">
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required autocomplete="username">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" required autocomplete="username" value="admin@coralseatraining.com.au">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
@@ -89,7 +89,7 @@
             <header class="content-header">
                 <h1 id="sectionTitle">Dashboard</h1>
                 <div class="header-actions">
-                    <a href="../" target="_blank" class="btn btn-outline">View Site</a>
+                    <a href="../" target="_blank" rel="noopener noreferrer" class="btn btn-outline">View Site</a>
                 </div>
             </header>
 
@@ -383,6 +383,7 @@
     <!-- Firebase SDK (for admin auth to Cloud Functions) -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="../js/site-config.js"></script>
     <script src="../js/firebase-config.js"></script>
     <script src="admin.js"></script>
 </body>
