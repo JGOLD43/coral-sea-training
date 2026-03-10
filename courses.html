@@ -1387,7 +1387,8 @@
         swapped: false,
         originalSessionId: null,
         helpUsed: false,
-        helpRecommendation: null
+        helpRecommendation: null,
+        bookingAttemptId: null
     };
     var FUNNEL_STORAGE_KEY = 'coralSeaBookingDraft';
 
@@ -1413,6 +1414,12 @@
         var el = document.getElementById(currentStep);
         if (el) el.classList.add('active');
         updateProgressUI();
+    }
+
+    function getOrCreateBookingAttemptId() {
+        if (state.bookingAttemptId) return state.bookingAttemptId;
+        state.bookingAttemptId = 'pb_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+        return state.bookingAttemptId;
     }
 
     function saveDraftState() {
@@ -2268,6 +2275,7 @@
 
         // Build payload for booking persistence + checkout
         var payload = {
+            idempotencyKey: getOrCreateBookingAttemptId(),
             courseName: (course.offerName || '') + ' (' + (course.code || '') + ')',
             courseCode: course.code || '',
             pricePerPerson: course.price || 0,
@@ -2280,7 +2288,9 @@
             sessionId: state.sessionId || '',
             sessionLabel: (state.sessionLabel || 'TBC') + ' ' + (state.sessionStart || '') + '-' + (state.sessionEnd || ''),
             location: state.locationLabel || state.location || '',
-            employer: employer || company || ''
+            employer: employer || company || '',
+            successUrl: new URL('thanks.html', window.location.href).href,
+            cancelUrl: window.location.href
         };
 
         var checkoutEndpoint = window.CST && typeof window.CST.getCheckoutEndpoint === 'function'
