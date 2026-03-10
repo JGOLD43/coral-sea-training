@@ -1,7 +1,9 @@
 window.CST_PUBLIC_CONFIG = Object.assign(
     {
         analytics: {
-            measurementId: ''
+            measurementId: '',
+            posthogKey: '',
+            posthogHost: ''
         },
         forms: {
             contact: '',
@@ -12,6 +14,7 @@ window.CST_PUBLIC_CONFIG = Object.assign(
             kits: ''
         },
         checkoutEndpoint: '',
+        metricsEndpoint: '',
         publicApiBaseUrl: '',
         adminFunctionsBaseUrl: '',
         fallbackContact: {

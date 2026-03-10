@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io; img-src 'self' data: https://images.pexels.com https://www.googletagmanager.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https: http://localhost:* http://127.0.0.1:* https://formspree.io https://www.google-analytics.com https://www.googletagmanager.com https://*.cloudfunctions.net;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Book your First Aid course in under 30 seconds. See available dates, pick a session, and reserve your spot. CPR, First Aid, Childcare & Advanced courses. RTO #32221.">
     <meta property="og:title" content="Book Your Course | Coral Sea Training">
@@ -1364,6 +1364,10 @@
 
     // --- Analytics ---
     function fireEvent(name, params) {
+        if (window.CST && typeof window.CST.track === 'function') {
+            window.CST.track(name, params || {});
+            return;
+        }
         if (typeof gtag !== 'undefined') {
             gtag('event', name, params || {});
         }
@@ -2274,6 +2278,10 @@
         });
 
         // Build payload for booking persistence + checkout
+        var attribution = window.CST && typeof window.CST.getAttributionPayload === 'function'
+            ? window.CST.getAttributionPayload()
+            : {};
+
         var payload = {
             idempotencyKey: getOrCreateBookingAttemptId(),
             courseName: (course.offerName || '') + ' (' + (course.code || '') + ')',
@@ -2289,6 +2297,17 @@
             sessionLabel: (state.sessionLabel || 'TBC') + ' ' + (state.sessionStart || '') + '-' + (state.sessionEnd || ''),
             location: state.locationLabel || state.location || '',
             employer: employer || company || '',
+            anonymousId: attribution.anonymousId || '',
+            analyticsSessionId: attribution.analyticsSessionId || '',
+            landingPage: attribution.landingPage || '',
+            referrer: attribution.referrer || '',
+            utmSource: attribution.utmSource || '',
+            utmMedium: attribution.utmMedium || '',
+            utmCampaign: attribution.utmCampaign || '',
+            utmTerm: attribution.utmTerm || '',
+            utmContent: attribution.utmContent || '',
+            gclid: attribution.gclid || '',
+            fbclid: attribution.fbclid || '',
             successUrl: new URL('thanks.html', window.location.href).href,
             cancelUrl: window.location.href
         };
