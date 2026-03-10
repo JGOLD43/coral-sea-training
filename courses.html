@@ -198,6 +198,36 @@
             max-width: 820px;
             margin: 0 auto;
         }
+        .bf-step-summary {
+            max-width: 820px;
+            margin: 0 auto var(--space-5);
+            padding: var(--space-4) var(--space-5);
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .bf-step-summary-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+        }
+        .bf-step-summary-main {
+            font-size: 0.9375rem;
+            color: var(--navy);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .bf-step-summary-sub {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            line-height: 1.5;
+        }
         @media (min-width: 640px) {
             .bf-course-cards { grid-template-columns: 1fr 1fr; }
         }
@@ -937,6 +967,12 @@
                         <p class="funnel-subtitle">Not sure? Choose the recommended option to stay compliant for most workplaces.</p>
                     </div>
 
+                    <div class="bf-step-summary" id="courseStepSummary" style="display:none;">
+                        <span class="bf-step-summary-label">Selected Session</span>
+                        <div class="bf-step-summary-main" id="courseStepSummaryMain"></div>
+                        <div class="bf-step-summary-sub" id="courseStepSummarySub"></div>
+                    </div>
+
                     <div class="bf-course-cards" id="courseCards">
                         <!-- Card 1: Recommended -->
                         <div class="bf-course-card bf-recommended" data-course="hltaid011" onclick="selectCourse('hltaid011', this)">
@@ -1341,6 +1377,7 @@
         partySize: 1,
         companyName: '',
         participantDetails: [],
+        provisionalCourseId: null,
         swapped: false,
         originalSessionId: null,
         helpUsed: false,
@@ -1454,6 +1491,7 @@
             document.querySelectorAll('.bf-course-card').forEach(function(c) { c.classList.remove('selected'); });
             if (selectedCard) selectedCard.classList.add('selected');
         }
+        populateCourseStepSummary();
 
         stepHistory = Array.isArray(draft.stepHistory) ? draft.stepHistory : [];
         currentStep = stepConfig[draft.currentStep] ? draft.currentStep : 'step-location';
@@ -1472,6 +1510,27 @@
 
         renderCurrentStep();
         return true;
+    }
+
+    function populateCourseStepSummary() {
+        var wrap = document.getElementById('courseStepSummary');
+        var main = document.getElementById('courseStepSummaryMain');
+        var sub = document.getElementById('courseStepSummarySub');
+        if (!wrap || !main || !sub) return;
+
+        if (!state.sessionLabel || !state.locationLabel) {
+            wrap.style.display = 'none';
+            return;
+        }
+
+        wrap.style.display = 'flex';
+        main.innerHTML = esc(state.sessionLabel) + ' &bull; ' + esc(state.sessionStart || '') + ' - ' + esc(state.sessionEnd || '') + ' &bull; ' + esc(state.locationLabel);
+
+        if (state.provisionalCourseId && courseMeta[state.provisionalCourseId]) {
+            sub.textContent = 'This session was selected from the ' + courseMeta[state.provisionalCourseId].code + ' calendar entry. Choose the course option below to confirm the right booking.';
+        } else {
+            sub.textContent = 'You already picked your session. Choose the course option below to match your booking.';
+        }
     }
 
     function syncParticipantDetailsFromForm() {
@@ -1800,8 +1859,10 @@
         state.sessionLabel = s.label;
         state.sessionStart = s.start;
         state.sessionEnd = s.end;
+        state.provisionalCourseId = earliest.courseId || null;
 
         fireEvent('bf_location_selected', { location: locationId, method: 'earliest', session_id: s.id });
+        populateCourseStepSummary();
         saveDraftState();
         navigateTo('step-course');
     }
@@ -1892,9 +1953,11 @@
         state.sessionLabel = sess.label;
         state.sessionStart = sess.start;
         state.sessionEnd = sess.end;
+        state.provisionalCourseId = courseId || null;
 
         closeModal('sessionModal');
         fireEvent('bf_session_selected', { session_id: sessionId, location: locId, course: courseId });
+        populateCourseStepSummary();
         saveDraftState();
         navigateTo('step-course');
     }
