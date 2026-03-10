@@ -1525,12 +1525,8 @@
 
         wrap.style.display = 'flex';
         main.innerHTML = esc(state.sessionLabel) + ' &bull; ' + esc(state.sessionStart || '') + ' - ' + esc(state.sessionEnd || '') + ' &bull; ' + esc(state.locationLabel);
-
-        if (state.provisionalCourseId && courseMeta[state.provisionalCourseId]) {
-            sub.textContent = 'This session was selected from the ' + courseMeta[state.provisionalCourseId].code + ' calendar entry. Choose the course option below to confirm the right booking.';
-        } else {
-            sub.textContent = 'You already picked your session. Choose the course option below to match your booking.';
-        }
+        sub.style.display = 'none';
+        sub.textContent = '';
     }
 
     function syncParticipantDetailsFromForm() {
